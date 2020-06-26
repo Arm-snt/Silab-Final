@@ -92,7 +92,7 @@ class TodoContextProvider extends Component {
 
 	createPrestamo(event, data) {
 		console.log(data);
-		if (data.elemento_id.constructor === Array) {
+		/*if (data.elemento_id.constructor === Array) {
 			data.elemento_id.forEach((elemento) => {
 				let informacion = {
 					estudiante_id: data.estudiante_id,
@@ -104,27 +104,7 @@ class TodoContextProvider extends Component {
 				};
 				console.log(informacion);
 				event.preventDefault();
-				axios
-					.post('api/prestamo/create', informacion)
-					.then((response) => {
-						if (response.data.message.level === 'success') {
-							let data = [ ...this.state.todos ];
-							data.push(response.data.todo);
-							this.setState({
-								todos: data,
-								message: response.data.message
-							});
-						} else {
-							this.setState({
-								message: response.data.message
-							});
-						}
-					})
-					.catch((error) => {
-						console.error(error);
-					});
-			});
-		} else {
+		*/
 			event.preventDefault();
 			axios
 				.post('api/prestamo/create', data)
@@ -146,7 +126,7 @@ class TodoContextProvider extends Component {
 					console.error(error);
 				});
 		}
-	}
+	
 
 	//delete
 	deleteTodo(data) {

@@ -49,8 +49,6 @@ class PrestamoController extends AbstractController
         $observacion=$content['observacion'];
         $estado=$content['estado'];
         $elemento=$content['elemento_id'];
-        $cantidad=$content['cantidad'];
-        
 
         try {
             
@@ -58,7 +56,15 @@ class PrestamoController extends AbstractController
             $todo = $this->prestamoRepository->Insertar($estudiante_id,$registro,$observacion,$estado);
             $prestamo_id = $this->prestamoRepository->BuscarId();
             $id = $prestamo_id['id'];
-            $todo = $this->prestamoRepository->InsertarPrestamo($id, $elemento, $cantidad);
+
+            if(is_array($elemento)){
+                foreach ($elemento as $info => $valor) {
+                    $elemento = $valor['editElemento'];
+                    $cantidad = $valor['cantidad'];
+                    $todo = $this->prestamoRepository->InsertarPrestamo($id, $elemento, $cantidad);
+                }
+            }
+            
                 
         } catch (Exception $exception) {
             return $this->json([ 
