@@ -62,6 +62,13 @@ class PrestamoController extends AbstractController
                     $elemento = $valor['editElemento'];
                     $cantidad = $valor['cantidad'];
                     $todo = $this->prestamoRepository->InsertarPrestamo($id, $elemento, $cantidad);
+                    //ahora lo que vas a hacer es, usar la variable elemento para buscar la informacion del elemento, atravez de una nueva función de BuscarElemento
+                    //luego retornas esa info como hacemos con los buscar
+                    $info = $this->prestamoRepository->BuscarElemento($elemento);
+                    //de esa $info sacas el stock del elemento
+                    //aqui va  a haber unas validaciones (si hay la cantidad que se pide y eso)-->futuro
+                    //creas una variable nueva cantidad y le asignas los valores de $nuevacantidad = $stock - $cantidad;
+                    //escribes una funcion que se llame UpdateElemento y le mandas $elemento que es el id y $nuevacantidad
                 }
             }
             

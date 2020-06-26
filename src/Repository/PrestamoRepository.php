@@ -65,6 +65,20 @@ class PrestamoRepository extends ServiceEntityRepository
         }
     }
 
+    public function BuscarElemento($elemento){
+        try {
+            $conn = $this->getEntityManager()->getConnection();
+            $stm = $conn->prepare(" SELECT id, elemento, stock
+            FROM elemento
+            WHERE elemento.id=:id");
+            if($stm->execute(array(':id'=>$elemento)))
+            $res = $stm->fetch();
+            return $res;
+        } catch (Exception $e) {
+            return $e;
+        }
+    }
+
 
     public function Buscar($id){
         try {
