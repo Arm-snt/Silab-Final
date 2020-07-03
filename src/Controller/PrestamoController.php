@@ -27,6 +27,16 @@ class PrestamoController extends AbstractController
 
    
     /**
+     * @Route("/readPrestamoElemento", name="api_prestamo_readPrestamoElemento", methods={"GET"})
+     */
+    public function readPrestamoElemento()
+    {
+        $todos = $this->getDoctrine()->getRepository(Prestamo::class, 'default');
+        $todos = $this->prestamoRepository->MostrarPrestatoEle();
+        return $this->json($todos);
+    }
+
+        /**
      * @Route("/read", name="api_prestamo_read", methods={"GET"})
      */
     public function read()
@@ -44,85 +54,118 @@ class PrestamoController extends AbstractController
     public function create(Request $request)
     {
         $content = json_decode($request->getContent(), true);
+
         $estudiante_id=$content['estudiante_id'];
         $registro=$content['registro'];
         $observacion=$content['observacion'];
         $estado=$content['estado'];
         $elemento=$content['elemento_id'];
+        $autorizacion=false;
 
         try {
-            
-            $todo = $this->getDoctrine()->getRepository(Prestamo::class, 'default');
-            $todo = $this->prestamoRepository->Insertar($estudiante_id,$registro,$observacion,$estado);
-            $prestamo_id = $this->prestamoRepository->BuscarId();
-            $id = $prestamo_id['id'];
-
-            if(is_array($elemento)){
+                
+                $todo = $this->getDoctrine()->getRepository(Prestamo::class, 'default');
+                $todo = $this->prestamoRepository->Insertar($estudiante_id,$registro,$observacion,$estado);
+                $prestamo_id = $this->prestamoRepository->BuscarId();
+                $id = $prestamo_id['id'];
+                
                 foreach ($elemento as $info => $valor) {
-                    $elemento = $valor['editElemento'];
+
+                    $idelemento = $valor['editElemento'];
                     $cantidad = $valor['cantidad'];
-                    $todo = $this->prestamoRepository->InsertarPrestamo($id, $elemento, $cantidad);
-                    //ahora lo que vas a hacer es, usar la variable elemento para buscar la informacion del elemento, atravez de una nueva función de BuscarElemento
-                    //luego retornas esa info como hacemos con los buscar
-                    $info = $this->prestamoRepository->BuscarElemento($elemento);
-                    //de esa $info sacas el stock del elemento
-                    //aqui va  a haber unas validaciones (si hay la cantidad que se pide y eso)-->futuro
-                    //creas una variable nueva cantidad y le asignas los valores de $nuevacantidad = $stock - $cantidad;
-                    //escribes una funcion que se llame UpdateElemento y le mandas $elemento que es el id y $nuevacantidad
+                    $informacion = $this->prestamoRepository->BuscarElemento($idelemento);
+                    $stock = $informacion['stock'];
+                    $nombre = $informacion['elemento'];
+                    $nuevacantidad = $stock - $cantidad; 
+
+                    $todo = $this->prestamoRepository->InsertarPrestamo($id, $idelemento, $cantidad);
+                    $informacion = $this->prestamoRepository->UpdateStock($idelemento, $nuevacantidad);
+
                 }
-            }
-            
+                return $this->json([
+                    'message' => ['text'=>['El prestamo se realizó a : '.$estudiante_id,] , 'level'=>'success']      
+                     ]);
                 
         } catch (Exception $exception) {
             return $this->json([ 
                 'message' => ['text'=>['El Prestamo no se ha podido registrar!'.$exception] , 'level'=>'error']
                 ]);
         }  
-            return $this->json([
-                'message' => ['text'=>['El Prestamo de '.$estudiante_id, 'se ha registrado!' ] , 'level'=>'success']      
-                 ]);
     }
 
     /**
      * @Route("/update/{id}", name="api_prestamo_update", methods={"PUT"})
      * @param Request $request
-     * @param Prestamo $todo
      * @return JsonResponse
      */
-    public function update(Request $request, Prestamo $todo)
+    public function update(Request $request)
     {
         $content = json_decode($request->getContent());
-        
+
         $id=$content->id;
         $estudiante_id=$content->estudiante_id;
         $registro=$content->registro;
         $observacion=$content->observacion;
         $estado=$content->estado;
+        $elemento=$content->elemento_id;
+        $check=false;
         
         $todo = $this->getDoctrine()->getRepository(Prestamo::class, 'default');
-        $todo = $this->prestamoRepository->Buscar($id);
+        $todo = $this->prestamoRepository->BuscarArray($id);
         
+        foreach ($elemento as $info => $valor) {
+            $idelemento=$valor->editElemento;
+            $cantidad=$valor->cantidad;
+            foreach ($todo as $info => $dato) {
+                $idelemento_bd=$dato['elemento_id'];
+                $cantidad_bd=$dato['cantidad'];
+                if ($idelemento!=$idelemento_bd && $cantidad!=$cantidad_bd) {
+                    $check=true;
+                }
+            }           
+        }
+        
+        $todo = $this->prestamoRepository->Buscar($id);
         $estudiante_id_bd=$todo['estudiante_id'];
         $registro_bd=$todo['registro'];
         $observacion_bd=$todo['observacion'];
         $nombre_bd=$todo['nombre'];
         $estado_bd=$todo['estado'];
 
-        if ($estudiante_id===$estudiante_id_bd && $registro===$registro_bd && $observacion===$observacion_bd && $estado===$estado_bd) {
+        if ($estudiante_id===$estudiante_id_bd && $registro===$registro_bd && $observacion===$observacion_bd && $estado===$estado_bd && $check==false) {
             return $this->json([
                 'message' => ['text'=>['No se realizaron cambios al Préstamo realizado a: '.$nombre_bd] , 'level'=>'warning']
             ]);
         }
-
+             
+        
         try {
             if($registro === '' && $observacion === '' && $estado === ''){
                 $registro=$registro_bd;
                 $observacion=$observacion_bd;
                 $estado=$estado_bd;
             }
+
             $todo = $this->getDoctrine()->getRepository(Prestamo::class, 'default');
             $todo = $this->prestamoRepository->Actualizar($id,$estudiante_id,$registro,$observacion,$estado);
-            $todo = $this->prestamoRepository->Buscar($id);
+            
+            foreach ($elemento as $info => $valor) {
+
+                $idelemento = $valor->editElemento;
+                $cantidad = $valor->cantidad;
+                $informacion = $this->prestamoRepository->BuscarElemento($idelemento);
+                $stock = $informacion['stock'];
+                $nombre = $informacion['elemento'];
+                $nuevacantidad = $stock - $cantidad; 
+
+                $todo = $this->prestamoRepository->InsertarPrestamo($id, $idelemento, $cantidad);
+                $informacion = $this->prestamoRepository->UpdateStock($idelemento, $nuevacantidad);
+
+            }
+            return $this->json([
+                'message' => ['text'=>['El Prestamo del estudiante '.$nombre_bd,' se ha actualizado' ] , 'level'=>'success']        
+                 ]);            
+            
 
         } catch (Exception $exception) {
             return $this->json([ 
@@ -131,10 +174,19 @@ class PrestamoController extends AbstractController
         }
  
         return $this->json([
-            'todo'    => $todo,
-            'message' => ['text'=>['El Prestamo del estudiante '.$todo['nombre'], ' se ha actualizado' ] , 'level'=>'success']      
+            'message' => ['text'=>['El Prestamo del estudiante '.$nombre_bd,' se ha actualizado' ] , 'level'=>'success']      
         ]);
  
+    }
+
+        /**
+     * @Route("/updatePrestamoEle/{id}", name="api_prestamo_updatePrestamoEle", methods={"PUT"})
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function updatePrestamoEle(Request $request)
+    {
+        //actualizar cantidad elemento, y eliminarlo de prestamoelemento;
     }
 
     /**

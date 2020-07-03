@@ -35,18 +35,19 @@ const style = {
 	}
 };
 
-
 function EditarPrestamo(data) {
+	console.log(data);
 	const context = useContext(TodoContext);
 	const [ editId, seteditId ] = useState(data['data'].id);
 	const [ editEstudiante_id, seteditEstudiante_id ] = useState(data['data'].estudiante_id);
 	const [ editregistro, seteditregistro ] = useState(data['data'].registro);
 	const [ editObservacion, seteditObservacion ] = useState(data['data'].observacion);
 	const [ editEstado, seteditEstado ] = useState(data['data'].estado);
+	const [ cantidad, setcantidad ] = useState('');
+	const [ Stock, setStock ] = useState('');
 	const [ editElemento, seteditElemento ] = useState('');
 	const [ editElementop, seteditElementop ] = useState([]);
 
-	console.log(editId);
 	const onEditSubmit = (editId, event) => {
 		event.preventDefault();
 		context.updateTodo({
@@ -55,25 +56,28 @@ function EditarPrestamo(data) {
 			registro: editregistro,
 			observacion: editObservacion,
 			estado: editEstado,
+			elemento_id: editElementop
 		});
-		if (editElementop.length) {
-			context.updateElemento({
-				id: editElementop,
-				prestamo_id: editId
-			});
-		}
 	};
 
 	function cargar() {
-		editElementop.push(editElemento);
+		editElementop.push({ editElemento, cantidad });
 		seteditElemento('');
+		setcantidad('');
+	}
+
+	function HandleStock() {
+		context.ele.map((res) => {
+			if (res.id == editElemento) {
+				setStock(res.stock);
+			}
+		});
 	}
 
 	function historyBack() {
 		window.history.back();
 	}
 
-	
 	const estado = [ { state: 'Activo' }, { state: 'Inactivo' } ];
 
 	return (
@@ -154,14 +158,37 @@ function EditarPrestamo(data) {
 						<Grid item md={12} xs={12}>
 							<Divider />
 						</Grid>
-						<Grid item xs={6} md={6}>
+						<Grid item xs={4} md={4}>
 							<Autocomplete
 								options={context.ele}
 								onChange={(e, a) => {
 									seteditElemento(a !== null ? a.id : '');
+									HandleStock();
 								}}
 								getOptionLabel={(option) => option.codelemento + '-' + option.elemento}
 								renderInput={(params) => <TextField {...params} label="Cargar Elementos" />}
+							/>
+						</Grid>
+						<Grid item xs={4} md={3}>
+							<TextField
+								disabled
+								type="number"
+								fullWidth
+								value={Stock}
+								label="Stock"
+								style={{ whiteSpace: 'pre-wrap' }}
+							/>
+						</Grid>
+						<Grid item xs={4} md={3}>
+							<TextField
+								type="number"
+								fullWidth
+								value={cantidad}
+								onChange={(event) => {
+									setcantidad(event.target.value);
+								}}
+								label="Cantidad Solicitada"
+								style={{ whiteSpace: 'pre-wrap' }}
 							/>
 						</Grid>
 						<Grid item xs={3} md={2}>
@@ -183,7 +210,7 @@ function EditarPrestamo(data) {
 							<Divider />
 						</Grid>
 					</Grid>
-				  <TablaElementos data={editId} elemento={editElementop} />
+					<TablaElementos data={editId} elemento={editElementop} />
 				</form>
 			</Paper>
 		</Container>

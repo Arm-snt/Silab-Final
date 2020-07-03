@@ -37,16 +37,17 @@ const style = {
 	}
 };
 
-function TablaElementos({ elemento }) {
+function TablaElementosCreate({ elemento }) { 
 	let elementoids = [];
-	elemento.forEach(elementos => {
+	elemento.forEach((elementos) => {
 		elementoids.push(elementos.editElemento);
 	});
 	const context = useContext(TodoContext);
 	const elementoscarga = [ ...new Set(elementoids) ];
 	let datosE = [];
 	let nuevosE = [];
-	let cantidad = "";
+	let cantidad = '';
+	let check = false;
 	const [ eliminarVisible, setEliminarVisible ] = useState(false);
 	const [ elementosDelete, setElementosDelete ] = useState([]);
 	const [ page, setPage ] = React.useState(0);
@@ -54,13 +55,18 @@ function TablaElementos({ elemento }) {
 
 	context.ele.map((res) => {
 		elementoscarga.forEach((elementoscarga) => {
-			if (res.id == elementoscarga) {
-				elemento.forEach(elementos => {
-					if(elementos.editElemento==elementoscarga){
+			if (res.id == elementoscarga ) {
+				elemento.forEach((elementos) => {
+					if (elementos.editElemento == elementoscarga && res.stock>=elementos.cantidad) {
 						cantidad = elementos.cantidad;
-					}
+						check=true;
+					} 
 				});
-				nuevosE.push(Object.assign(res,{cantidad:cantidad}));
+				if(check){
+					nuevosE.push(Object.assign(res, { cantidad: cantidad }));
+					cantidad = '';
+					check= false;
+				}
 			}
 		});
 	});
@@ -174,4 +180,4 @@ function TablaElementos({ elemento }) {
 	);
 }
 
-export default TablaElementos;
+export default TablaElementosCreate;

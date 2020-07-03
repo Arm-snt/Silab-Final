@@ -43,6 +43,7 @@ function NuevoPrestamo() {
 	const [ observacion, setobservacion ] = useState('');
 	const [ estado, setestado ] = useState('Activo');
 	const [ cantidad, setcantidad ] = useState('');
+	const [ Stock, setStock ] = useState('');
 	const [ editElemento, seteditElemento ] = useState('');
 	const [ editElementop, seteditElementop ] = useState([]);
 
@@ -66,6 +67,13 @@ function NuevoPrestamo() {
 		editElementop.push({ editElemento, cantidad });
 		seteditElemento('');
 		setcantidad('');
+	}
+	function HandleStock() {
+		context.ele.map((res) => {
+			if (res.id == editElemento) {
+				setStock(res.stock);
+			}
+		});
 	}
 
 	function historyBack() {
@@ -140,14 +148,25 @@ function NuevoPrestamo() {
 						<Grid item md={12} xs={12}>
 							<Divider />
 						</Grid>
-						<Grid item xs={4} md={6}>
+						<Grid item xs={4} md={4}>
 							<Autocomplete
 								options={context.ele}
 								onChange={(e, a) => {
 									seteditElemento(a !== null ? a.id : '');
+									HandleStock();
 								}}
 								getOptionLabel={(option) => option.codelemento + '-' + option.elemento}
 								renderInput={(params) => <TextField {...params} label="Cargar Elementos" />}
+							/>
+						</Grid>
+						<Grid item xs={4} md={3}>
+							<TextField
+								disabled
+								type="number"
+								fullWidth
+								value={Stock}
+								label="Stock"
+								style={{ whiteSpace: 'pre-wrap' }}
 							/>
 						</Grid>
 						<Grid item xs={4} md={3}>

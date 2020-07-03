@@ -62,8 +62,7 @@ const style = {
 function Prestamos(props) {
 	const onChangeIndex = props.onChangeIndex;
 	const context = useContext(TodoContext);
-	let Estudiante = "";
-	let Elemento = "";
+	//console.log(context.todos);
 	const [ eliminarVisible, setEliminarVisible ] = useState(false);
 	const [ prestamoEliminar, setPrestamoEliminar ] = useState(null);
 	const [ page, setPage ] = React.useState(0);
@@ -81,7 +80,7 @@ function Prestamos(props) {
 	function historyBack() {
 		window.history.back();
 	}
-	
+
 	const emptyRows = rowsPerPage - Math.min(rowsPerPage, context.todos.length - page * rowsPerPage);
 
 	return (
@@ -94,9 +93,6 @@ function Prestamos(props) {
 							<TableRow>
 								<TableCell style={style.tableCell} align="center">
 									Estudiante
-								</TableCell>
-								<TableCell style={style.tableCell} align="center">
-									Elemento
 								</TableCell>
 								<TableCell style={style.tableCell} align="center">
 									Registro
@@ -122,28 +118,11 @@ function Prestamos(props) {
 										{/*NOMBRE*/}
 										<TableCell align="center">
 											<Typography style={{ whiteSpace: 'pre-wrap' }}>
-												{context.est.map((res) => {
-														if (res.id == todo.estudiante_id) {
-															Estudiante = res.codigo + " - " +res.nombre 
-														}
-													})}
-												{Estudiante}
+												{todo.codigo + ' - ' + todo.nombre}
 											</Typography>
 										</TableCell>
 										<TableCell align="center">
-											<Typography style={{ whiteSpace: 'pre-wrap' }}>
-												{context.ele.map((res) => {
-														if (res.elemento == todo.elemento) {
-															Elemento = res.codelemento + "-" +res.elemento 
-														}
-													})}
-												{Elemento}
-											</Typography>
-										</TableCell>
-										<TableCell align="center">
-											<Typography style={{ whiteSpace: 'pre-wrap' }}>
-												{todo.registro}
-											</Typography>
+											<Typography style={{ whiteSpace: 'pre-wrap' }}>{todo.registro}</Typography>
 										</TableCell>
 										{/*OBSERVACIÓN*/}
 										<TableCell align="center">
@@ -159,20 +138,23 @@ function Prestamos(props) {
 												<IconButton
 													onClick={(e) => {
 														onChangeIndex(2, todo, e);
-													}}>
+													}}
+												>
 													<Icon path={mdiFileDocumentEdit} size={1} color="red" />
 												</IconButton>
 												<IconButton
 													onClick={(e) => {
 														onChangeIndex(3, todo, e);
-													}}>
+													}}
+												>
 													<Icon path={mdiEyeCheck} size={1} color="red" />
 												</IconButton>
 												<IconButton
 													onClick={() => {
 														setEliminarVisible(true);
 														setPrestamoEliminar(todo);
-													}}>
+													}}
+												>
 													<Icon path={mdiFileCancel} size={1} color="gray" />
 												</IconButton>
 											</Fragment>
@@ -193,11 +175,7 @@ function Prestamos(props) {
 				/>
 			</Container>
 			{eliminarVisible && (
-				<DeleteDialog
-					todo={prestamoEliminar}
-					open={eliminarVisible}
-					setEliminarVisible={setEliminarVisible}
-				/>
+				<DeleteDialog todo={prestamoEliminar} open={eliminarVisible} setEliminarVisible={setEliminarVisible} />
 			)}
 		</Fragment>
 	);

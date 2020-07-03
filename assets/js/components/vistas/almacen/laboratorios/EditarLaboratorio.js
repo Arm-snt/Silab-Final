@@ -62,7 +62,7 @@ function EditarLaboratorio(data) {
 		}
 	});
 
-	console.log(editId);
+	console.log(data);
 	const onEditSubmit = (editId, event) => {
 		event.preventDefault();
 		context.updateTodo({

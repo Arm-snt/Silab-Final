@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect, Fragment } from 'react';
-import {Table,TableHead,TableRow,TableCell,TableBody,TableContainer,TablePagination} from '@material-ui/core';
+import { Table, TableHead, TableRow, TableCell, TableBody, TableContainer, TablePagination } from '@material-ui/core';
 import { Container, Paper, Typography, IconButton, Button } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
 import { TodoContext } from './TodoContext';
@@ -38,17 +38,23 @@ const style = {
 };
 
 function TablaElementos({ data, elemento }) {
-	console.log(data);
+	console.log(data, elemento);
+	let elementoids = [];
+	elemento.forEach((elementos) => {
+		elementoids.push(elementos.editElemento);
+	});
 	const context = useContext(TodoContext);
-	const elementoscarga = [ ...new Set(elemento) ];
+	const elementoscarga = [ ...new Set(elementoids) ];
 	let datosE = [];
 	let nuevosE = [];
+	let cantidad = '';
+	let check = false;
 	const [ eliminarVisible, setEliminarVisible ] = useState(false);
 	const [ elementosDelete, setElementosDelete ] = useState([]);
 	const [ page, setPage ] = React.useState(0);
 	const [ rowsPerPage, setRowsPerPage ] = React.useState(5);
 
-	context.todos.map((res) => {
+	context.elementospre.map((res) => {
 		if (res.prestamo_id == data) {
 			datosE.push(res);
 		}
@@ -57,7 +63,17 @@ function TablaElementos({ data, elemento }) {
 	context.ele.map((res) => {
 		elementoscarga.forEach((elementoscarga) => {
 			if (res.id == elementoscarga) {
-				nuevosE.push(res);
+				elemento.forEach((elementos) => {
+					if (elementos.editElemento == elementoscarga && res.stock >= elementos.cantidad) {
+						cantidad = elementos.cantidad;
+						check = true;
+					}
+				});
+				if (check) {
+					nuevosE.push(Object.assign({ prestamo_id: data, elemento_id: res.id, cantidad: cantidad, stock: res.stock, elemento: res.elemento, codelemento: res.codelemento }));
+					cantidad = '';
+					let check = false;
+				}
 			}
 		});
 	});
@@ -69,10 +85,6 @@ function TablaElementos({ data, elemento }) {
 	function eliminar(elementosDelete) {
 		setEliminarVisible(true);
 	}
-	
-	useEffect(() => {
-		datosE.splice(datosE.indexOf(elementosDelete), 1);
-	}, [datosE])
 
 	const handleChangePage = (event, newPage) => {
 		setPage(newPage);
@@ -86,7 +98,7 @@ function TablaElementos({ data, elemento }) {
 	function historyBack() {
 		window.history.back();
 	}
-
+	console.log(datosE);
 	return (
 		<Fragment>
 			<Container style={style.container} component="main" maxWidth="lg" justify="center">
@@ -97,6 +109,9 @@ function TablaElementos({ data, elemento }) {
 							<TableRow>
 								<TableCell style={style.tableCell} align="center">
 									Elementos
+								</TableCell>
+								<TableCell style={style.tableCell} align="center">
+									Cantidad Solicitada
 								</TableCell>
 								<TableCell style={style.tableCell} align="center">
 									Stock
@@ -117,6 +132,11 @@ function TablaElementos({ data, elemento }) {
 											<TableCell align="center">
 												<Typography style={{ whiteSpace: 'pre-wrap' }}>
 													{todo.codelemento + ' - ' + todo.elemento}
+												</Typography>
+											</TableCell>
+											<TableCell align="center">
+												<Typography style={{ whiteSpace: 'pre-wrap' }}>
+													{todo.cantidad}
 												</Typography>
 											</TableCell>
 											<TableCell align="center">
@@ -154,11 +174,7 @@ function TablaElementos({ data, elemento }) {
 				/>
 			</Container>
 			{eliminarVisible && (
-				<DeleteDialog
-					todo={elementosDelete}
-					open={eliminarVisible}
-					setEliminarVisible={setEliminarVisible}
-				/>
+				<DeleteDialog todo={elementosDelete} open={eliminarVisible} setEliminarVisible={setEliminarVisible} />
 			)}
 		</Fragment>
 	);

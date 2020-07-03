@@ -44,7 +44,7 @@ function NuevoTrabajo() {
 	const context = useContext(TodoContext);
 	const [ addLaboratorio, setAddLaboratorio ] = useState('');
 	const [ addUsuario, setAddUsuario ] = useState('');
-	const [selectedDate, setSelectedDate] = useState(new Date('2014-08-18T21:11:54'));
+	const [selectedDate, setSelectedDate] = useState(new Date());
 	const [ addFecha, setAddFecha ] = useState('');
 	const [ addHora, setAddHora ] = useState('');
 	const [ adddep, setAddDep ] = useState('d');
@@ -65,6 +65,7 @@ function NuevoTrabajo() {
 
 	const handleDateChange = (date) => {
 		setSelectedDate(date);
+		console.log(selectedDate);
 	  };
 
 	const contextdept = 
@@ -129,7 +130,7 @@ function NuevoTrabajo() {
 						</Grid>
 					</Grid>
 					<Grid container spacing={2}>
-						<Grid item md={4} xs={6} direction="row">
+						<Grid item md={4} xs={6}>
 							<MuiPickersUtilsProvider utils={DateFnsUtils}>
 							<KeyboardDatePicker
 								margin="normal"
@@ -143,7 +144,7 @@ function NuevoTrabajo() {
 								}}/>
 							</MuiPickersUtilsProvider>
 						</Grid>
-						<Grid item md={4} xs={6} direction="row">
+						<Grid item md={4} xs={6} >
 							<MuiPickersUtilsProvider utils={DateFnsUtils}>
 							<KeyboardTimePicker
 								margin="normal"
