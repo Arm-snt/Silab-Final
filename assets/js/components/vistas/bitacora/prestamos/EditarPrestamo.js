@@ -36,7 +36,6 @@ const style = {
 };
 
 function EditarPrestamo(data) {
-	console.log(data);
 	const context = useContext(TodoContext);
 	const [ editId, seteditId ] = useState(data['data'].id);
 	const [ editEstudiante_id, seteditEstudiante_id ] = useState(data['data'].estudiante_id);
@@ -64,14 +63,7 @@ function EditarPrestamo(data) {
 		editElementop.push({ editElemento, cantidad });
 		seteditElemento('');
 		setcantidad('');
-	}
-
-	function HandleStock() {
-		context.ele.map((res) => {
-			if (res.id == editElemento) {
-				setStock(res.stock);
-			}
-		});
+		setStock('');
 	}
 
 	function historyBack() {
@@ -163,7 +155,7 @@ function EditarPrestamo(data) {
 								options={context.ele}
 								onChange={(e, a) => {
 									seteditElemento(a !== null ? a.id : '');
-									HandleStock();
+									setStock(a !== null ? a.stock : '');
 								}}
 								getOptionLabel={(option) => option.codelemento + '-' + option.elemento}
 								renderInput={(params) => <TextField {...params} label="Cargar Elementos" />}

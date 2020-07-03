@@ -140,7 +140,8 @@ class PrestamoController extends AbstractController
              
         
         try {
-            if($registro === '' && $observacion === '' && $estado === ''){
+            if($estudiante_id === '' && $registro === '' && $observacion === '' && $estado === ''){
+                $estudiante_id=$estudiante_id_bd;
                 $registro=$registro_bd;
                 $observacion=$observacion_bd;
                 $estado=$estado_bd;
@@ -149,31 +150,30 @@ class PrestamoController extends AbstractController
             $todo = $this->getDoctrine()->getRepository(Prestamo::class, 'default');
             $todo = $this->prestamoRepository->Actualizar($id,$estudiante_id,$registro,$observacion,$estado);
             
+            
             foreach ($elemento as $info => $valor) {
-
+                
                 $idelemento = $valor->editElemento;
                 $cantidad = $valor->cantidad;
                 $informacion = $this->prestamoRepository->BuscarElemento($idelemento);
                 $stock = $informacion['stock'];
                 $nombre = $informacion['elemento'];
                 $nuevacantidad = $stock - $cantidad; 
-
-                $todo = $this->prestamoRepository->InsertarPrestamo($id, $idelemento, $cantidad);
+                
+                $todoPre = $this->prestamoRepository->InsertarPrestamo($id, $idelemento, $cantidad);
                 $informacion = $this->prestamoRepository->UpdateStock($idelemento, $nuevacantidad);
-
+                
             }
-            return $this->json([
-                'message' => ['text'=>['El Prestamo del estudiante '.$nombre_bd,' se ha actualizado' ] , 'level'=>'success']        
-                 ]);            
-            
+
+            $todo = $this->prestamoRepository->Buscar($id);         
 
         } catch (Exception $exception) {
             return $this->json([ 
                 'message' => ['text'=>['No se pudo acceder a la Base de datos mientras se actualizaba el Prestamo!'] , 'level'=>'error']
                 ]);
         }
- 
-        return $this->json([
+        return $this->json([            
+            'todo'    => $todo,
             'message' => ['text'=>['El Prestamo del estudiante '.$nombre_bd,' se ha actualizado' ] , 'level'=>'success']      
         ]);
  
@@ -186,7 +186,35 @@ class PrestamoController extends AbstractController
      */
     public function updatePrestamoEle(Request $request)
     {
-        //actualizar cantidad elemento, y eliminarlo de prestamoelemento;
+        $content = json_decode($request->getContent());
+        
+        $idelemento=$content->elemento_id;
+        $prestamo_id=$content->prestamo_id;
+        $codelemento=$content->codelemento;
+        $elemento=$content->elemento;
+        $cantidad=$content->cantidad;
+        $stock=$content->stock;
+
+        try {
+            $todo = $this->getDoctrine()->getRepository(Prestamo::class, 'default');
+            $informacion = $this->prestamoRepository->BuscarElemento($idelemento);
+            $stock = $informacion['stock'];
+            $nombre = $informacion['elemento'];
+            $nuevacantidad = $stock + $cantidad; 
+            $informacion = $this->prestamoRepository->UpdateStock($idelemento, $nuevacantidad);
+
+            $informacion = $this->prestamoRepository->EliminarPreLe($idelemento, $prestamo_id);
+
+        } catch(Exception $exception){
+            return $this->json([ 
+                'message' => ['text'=>['No se pudo acceder a la Base de datos mientras se actualizaba el Prestamo!'] , 'level'=>'error']
+                ]);
+        }
+
+        return $this->json([
+            'message' => ['text'=>['Se ha devuelto el elemento '.$nombre,' al almacen' ] , 'level'=>'success']      
+        ]);
+
     }
 
     /**

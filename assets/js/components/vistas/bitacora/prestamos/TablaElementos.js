@@ -1,9 +1,10 @@
 import React, { useContext, useState, useEffect, Fragment } from 'react';
 import { Table, TableHead, TableRow, TableCell, TableBody, TableContainer, TablePagination } from '@material-ui/core';
 import { Container, Paper, Typography, IconButton, Button } from '@material-ui/core';
-import { Delete } from '@material-ui/icons';
+import Icon from '@mdi/react';
 import { TodoContext } from './TodoContext';
 import DeleteDialog from './DeleteDialog';
+import { mdiCheckCircle, mdiTrashCan } from '@mdi/js';
 
 const style = {
 	table: {
@@ -38,7 +39,6 @@ const style = {
 };
 
 function TablaElementos({ data, elemento }) {
-	console.log(data, elemento);
 	let elementoids = [];
 	elemento.forEach((elementos) => {
 		elementoids.push(elementos.editElemento);
@@ -51,6 +51,7 @@ function TablaElementos({ data, elemento }) {
 	let check = false;
 	const [ eliminarVisible, setEliminarVisible ] = useState(false);
 	const [ elementosDelete, setElementosDelete ] = useState([]);
+	const [ Color, setColor ] = useState('gray');
 	const [ page, setPage ] = React.useState(0);
 	const [ rowsPerPage, setRowsPerPage ] = React.useState(5);
 
@@ -70,7 +71,16 @@ function TablaElementos({ data, elemento }) {
 					}
 				});
 				if (check) {
-					nuevosE.push(Object.assign({ prestamo_id: data, elemento_id: res.id, cantidad: cantidad, stock: res.stock, elemento: res.elemento, codelemento: res.codelemento }));
+					nuevosE.push(
+						Object.assign({
+							prestamo_id: data,
+							elemento_id: res.id,
+							cantidad: cantidad,
+							stock: res.stock,
+							elemento: res.elemento,
+							codelemento: res.codelemento
+						})
+					);
 					cantidad = '';
 					let check = false;
 				}
@@ -98,7 +108,6 @@ function TablaElementos({ data, elemento }) {
 	function historyBack() {
 		window.history.back();
 	}
-	console.log(datosE);
 	return (
 		<Fragment>
 			<Container style={style.container} component="main" maxWidth="lg" justify="center">
@@ -145,6 +154,18 @@ function TablaElementos({ data, elemento }) {
 											<TableCell align="center">
 												<Fragment>
 													<IconButton
+														color="secondary"
+														aria-label="upload picture"
+														component="span"
+														onClick={() => {
+															setElementosDelete(todo);
+															eliminar();
+															setColor('green');
+														}}
+													>
+														<Icon path={mdiCheckCircle} size={1} color={Color} />
+													</IconButton>
+													<IconButton
 														color="primary"
 														aria-label="upload picture"
 														component="span"
@@ -153,7 +174,7 @@ function TablaElementos({ data, elemento }) {
 															eliminar();
 														}}
 													>
-														<Delete fontSize="inherit" />
+														<Icon path={mdiTrashCan} size={1} color="red" />
 													</IconButton>
 												</Fragment>
 											</TableCell>

@@ -67,13 +67,8 @@ function NuevoPrestamo() {
 		editElementop.push({ editElemento, cantidad });
 		seteditElemento('');
 		setcantidad('');
-	}
-	function HandleStock() {
-		context.ele.map((res) => {
-			if (res.id == editElemento) {
-				setStock(res.stock);
-			}
-		});
+		setStock('');
+		
 	}
 
 	function historyBack() {
@@ -153,7 +148,7 @@ function NuevoPrestamo() {
 								options={context.ele}
 								onChange={(e, a) => {
 									seteditElemento(a !== null ? a.id : '');
-									HandleStock();
+									setStock(a !== null ? a.stock : '');
 								}}
 								getOptionLabel={(option) => option.codelemento + '-' + option.elemento}
 								renderInput={(params) => <TextField {...params} label="Cargar Elementos" />}

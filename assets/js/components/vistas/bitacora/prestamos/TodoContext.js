@@ -101,10 +101,12 @@ class TodoContextProvider extends Component {
 
 	//update
 	updateTodo(data) {
+		console.log(data);
 		axios
 			.put('api/prestamo/update/' + data.id, data)
 			.then((response) => {
 				if (response.data.message.level === 'success') {
+					console.log(response.data);
 					let todos = [ ...this.state.todos ];
 					let todo = todos.find((todo) => {
 						return todo.id === data.id;
@@ -131,9 +133,8 @@ class TodoContextProvider extends Component {
 	}
 
 	updatePrestamoEle(data) {
-		console.log(data);
 		axios
-			.put('api/prestamo/update/' + data.id, data)
+			.put('api/prestamo/updatePrestamoEle/' + data.id, data)
 			.then((response) => {
 				if (response.data.message.level === 'success') {
 					let todos = [ ...this.state.todos ];
@@ -155,7 +156,6 @@ class TodoContextProvider extends Component {
 				console.error(error);
 			});
 	}
-
 
 	//delete
 	deleteTodo(data) {
@@ -193,6 +193,7 @@ class TodoContextProvider extends Component {
 					...this.state,
 					updateTodo: this.updateTodo.bind(this),
 					createPrestamo: this.createPrestamo.bind(this),
+					updatePrestamoEle: this.updatePrestamoEle.bind(this),
 					deleteTodo: this.deleteTodo.bind(this),
 					setMessage: (message) => this.setState({ message: message })
 				}}

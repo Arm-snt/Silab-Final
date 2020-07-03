@@ -12,17 +12,14 @@ function DeleteDialog(props) {
 	const context = useContext(TodoContext);
 
 	let titulo = '¿Desea quitar el elemento del Préstamo?';
-	nombre = props.todo.elemento;
-	let contenido = 'El siguiente elemento será eliminado del Préstamo: ' + nombre + ' ';
-	let nombre = '';
+	let elenombre = props.todo.elemento;
+	let contenido = 'El siguiente elemento será eliminado del Préstamo: ' + elenombre + ' ';
 	let update = {};
-
-	console.log(props.todo);
 
 	if (props.todo.estudiante_id) {
 		titulo = '¿Desea cambiar el estado del Préstamo?';
 		let estado = 'Activo';
-		nombre = props.todo.nombre;
+		let nombre = props.todo.nombre;
 		contenido = 'El estado del Préstamo realizado a  ' + nombre + ' cambiará! ';
 		if (props.todo.estado == estado) {
 			estado = 'Inactivo';
@@ -33,19 +30,18 @@ function DeleteDialog(props) {
 			registro: props.todo.registro,
 			observacion: props.todo.observacion,
 			estado: estado,
-			elemento_id: [],
+			elemento_id: []
 		};
 	} else {
 		update = {
-			id: props.todo.elemento_id,
+			elemento_id: props.todo.elemento_id,
+			prestamo_id: props.todo.prestamo_id,
 			codelemento: props.todo.codelemento,
 			elemento: props.todo.elemento,
-			stock: props.todo.stock,
 			cantidad: props.todo.cantidad,
-			prestamo_id: props.todo.prestamo_id
+			stock: props.todo.stock
 		};
 	}
-
 	const hide = () => {
 		props.setEliminarVisible(false);
 	};
@@ -67,10 +63,10 @@ function DeleteDialog(props) {
 					endIcon={<Cached />}
 					autoFocus
 					onClick={() => {
-						if (update.nombre) {
-							context.updatePrestamoEle(update);
-						} else {
+						if (update.estudiante_id) {
 							context.updateTodo(update);
+						} else {
+							context.updatePrestamoEle(update);
 						}
 						hide();
 					}}

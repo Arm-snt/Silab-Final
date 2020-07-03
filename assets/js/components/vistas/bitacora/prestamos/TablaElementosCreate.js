@@ -149,7 +149,7 @@ function TablaElementosCreate({ elemento }) {
 														aria-label="upload picture"
 														component="span"
 														onClick={() => {
-															setElementosDelete(todo);
+															setElementosDelete(todo); //solo eliminar con un splice
 															eliminar();
 														}}
 													>

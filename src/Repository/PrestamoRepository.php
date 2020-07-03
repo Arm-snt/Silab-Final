@@ -24,8 +24,8 @@ class PrestamoRepository extends ServiceEntityRepository
         try {
             $conn = $this->getEntityManager()->getConnection();
             $stm = $conn->prepare(" SELECT pre.id, pre.estudiante_id, pre.registro, pre.observacion, pre.estado, est.codigo, est.nombre
-            FROM prestamo pre, estudiante est, elemento ele, prestamo_elemento prele
-            WHERE pre.estudiante_id=est.id AND pre.id=prele.prestamo_id AND ele.id=prele.elemento_id GROUP BY pre.id ORDER BY pre.id DESC");
+            FROM prestamo pre, estudiante est
+            WHERE pre.estudiante_id=est.id GROUP BY pre.id ORDER BY pre.id DESC");
             $stm->execute([]);
             $res = $stm->fetchAll();
             return $res;
@@ -108,9 +108,9 @@ class PrestamoRepository extends ServiceEntityRepository
     public function Buscar($id){
         try {
             $conn = $this->getEntityManager()->getConnection();
-            $stm = $conn->prepare(" SELECT pre.estudiante_id, pre.registro, pre.observacion, pre.estado, ele.codelemento, est.codigo, est.nombre, ele.elemento, ele.stock, prele.prestamo_id, prele.elemento_id, prele.cantidad
-            FROM prestamo pre, estudiante est, elemento ele, prestamo_elemento prele
-            WHERE pre.id=:pre AND pre.estudiante_id=est.id AND pre.id=prele.prestamo_id AND ele.id=prele.elemento_id");
+            $stm = $conn->prepare(" SELECT pre.id, pre.estudiante_id, pre.registro, pre.observacion, pre.estado, est.codigo, est.nombre
+            FROM prestamo pre, estudiante est
+            WHERE pre.id=:pre AND pre.estudiante_id=est.id ");
             $pre=$id;
             if($stm->execute(array(':pre'=>$pre)))
             $res = $stm->fetch();
@@ -141,6 +141,15 @@ class PrestamoRepository extends ServiceEntityRepository
             $stm = $conn->prepare(" UPDATE prestamo SET estudiante_id = :estudiante_id, registro=:registro, observacion=:observacion, estado=:estado   WHERE prestamo.id =:id");
             if($stm->execute(array(':id'=>$id, ':estudiante_id' =>$estudiante_id, ':registro'=>$registro, ':observacion'=>$observacion, ':estado'=>$estado)));
         } catch (Exception $e) {
+            return $e;
+        }
+    }
+    public function EliminarPreLe($idelemento, $prestamo_id){
+        try{
+            $conn = $this->getEntityManager()->getConnection();
+            $stm = $conn->prepare(" DELETE FROM prestamo_elemento WHERE prestamo_id =:prestamo_id AND elemento_id= :idelemento");
+            if($stm->execute(array(':idelemento'=>$idelemento,':prestamo_id'=>$prestamo_id)));
+        } catch(Exception $e){
             return $e;
         }
     }
