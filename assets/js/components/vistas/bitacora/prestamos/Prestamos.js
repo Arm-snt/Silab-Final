@@ -1,9 +1,9 @@
 import React, { useContext, useState, Fragment } from 'react';
 import { Table, TableHead, TableRow, TableCell, TableBody, TableContainer, TablePagination } from '@material-ui/core';
-import { Container, Paper, Grid, Link, Typography, IconButton, Button } from '@material-ui/core';
+import { Container, Paper, Grid, Link, Typography, IconButton, TextField, InputAdornment } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import Icon from '@mdi/react';
-import { mdiFileDocumentEdit, mdiEyeCheck, mdiFileCancel } from '@mdi/js';
+import { mdiFileDocumentEdit, mdiEyeCheck, mdiFileCancel, mdiCardSearch } from '@mdi/js';
 import DoneIcon from '@material-ui/icons/Done';
 import CloseIcon from '@material-ui/icons/Close';
 import { TodoContext } from './TodoContext';
@@ -63,6 +63,9 @@ function Prestamos(props) {
 	const onChangeIndex = props.onChangeIndex;
 	const context = useContext(TodoContext);
 	//console.log(context.todos);
+	let Fecha;
+	let filtro = {};
+	const [ termino, setTermino ] = useState('');
 	const [ eliminarVisible, setEliminarVisible ] = useState(false);
 	const [ prestamoEliminar, setPrestamoEliminar ] = useState(null);
 	const [ page, setPage ] = React.useState(0);
@@ -77,6 +80,21 @@ function Prestamos(props) {
 		setPage(0);
 	};
 
+	function busqueda(termino) {
+		return function(filtro) {
+			return (
+				filtro.codigo.toString().includes(termino.toLowerCase()) ||
+				filtro.nombre.toLowerCase().includes(termino.toLowerCase()) ||
+				filtro.registro.toLowerCase().includes(termino.toLowerCase()) ||
+				filtro.observacion.toLowerCase().includes(termino.toLowerCase()) ||
+				filtro.fecha_prestamo.toString().includes(termino.toLowerCase()) ||
+				filtro.hora_prestamo.toString().includes(termino.toLowerCase()) ||
+				filtro.estado.toLowerCase().includes(termino.toLowerCase()) ||
+				!termino
+			);
+		};
+	}
+
 	function historyBack() {
 		window.history.back();
 	}
@@ -85,6 +103,22 @@ function Prestamos(props) {
 
 	return (
 		<Fragment>
+			<TextField
+				fullWidth
+				placeholder="Buscar..."
+				onChange={(event) => {
+					setTermino(event.target.value);
+				}}
+				value={termino}
+				style={style.search}
+				InputProps={{
+					startAdornment: (
+						<InputAdornment position="start">
+							<Icon path={mdiCardSearch} size={1.5} color="red" />
+						</InputAdornment>
+					)
+				}}
+			/>
 			<Container style={style.container} component="main" maxWidth="lg" justify="center">
 				<TableContainer component={Paper}>
 					<Table style={style.table} aria-label="customized table">
@@ -101,6 +135,9 @@ function Prestamos(props) {
 									Observación
 								</TableCell>
 								<TableCell style={style.tableCell} align="center">
+									Fecha
+								</TableCell>
+								<TableCell style={style.tableCell} align="center">
 									Estado
 								</TableCell>
 								<TableCell style={style.tableCell} align="center">
@@ -111,6 +148,7 @@ function Prestamos(props) {
 						{/*BODY*/}
 						<TableBody>
 							{context.todos
+								.filter(busqueda(termino))
 								.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
 								.reverse()
 								.map((todo, index) => (
@@ -128,6 +166,16 @@ function Prestamos(props) {
 										<TableCell align="center">
 											<Typography style={{ whiteSpace: 'pre-wrap' }}>
 												{todo.observacion}
+											</Typography>
+										</TableCell>
+										<TableCell align="center">
+											<Typography style={{ whiteSpace: 'pre-wrap' }}>
+												{context.elementospre.map((res) => {
+													if (res.prestamo_id == todo.id) {
+														Fecha = res.fecha_prestamo + ' // ' + res.hora_prestamo;
+													}
+												})}
+												{Fecha}
 											</Typography>
 										</TableCell>
 										<TableCell align="center">

@@ -30,7 +30,9 @@ function DeleteDialog(props) {
 			registro: props.todo.registro,
 			observacion: props.todo.observacion,
 			estado: estado,
-			elemento_id: []
+			elemento_id: [],
+			fecha_prestamo: props.todo.fecha_prestamo,
+			hora_prestamo: props.todo.hora_prestamo
 		};
 	} else {
 		update = {

@@ -60,6 +60,8 @@ class PrestamoController extends AbstractController
         $observacion=$content['observacion'];
         $estado=$content['estado'];
         $elemento=$content['elemento_id'];
+        $fecha_prestamo=$content['fecha_prestamo'];
+        $hora_prestamo=$content['hora_prestamo'];
         $autorizacion=false;
 
         try {
@@ -78,7 +80,7 @@ class PrestamoController extends AbstractController
                     $nombre = $informacion['elemento'];
                     $nuevacantidad = $stock - $cantidad; 
 
-                    $todo = $this->prestamoRepository->InsertarPrestamo($id, $idelemento, $cantidad);
+                    $todo = $this->prestamoRepository->InsertarPrestamo($id, $idelemento, $cantidad, $fecha_prestamo, $hora_prestamo);
                     $informacion = $this->prestamoRepository->UpdateStock($idelemento, $nuevacantidad);
 
                 }
@@ -108,6 +110,8 @@ class PrestamoController extends AbstractController
         $observacion=$content->observacion;
         $estado=$content->estado;
         $elemento=$content->elemento_id;
+        $fecha_prestamo=$content->fecha_prestamo;
+        $hora_prestamo=$content->hora_prestamo;
         $check=false;
         
         $todo = $this->getDoctrine()->getRepository(Prestamo::class, 'default');

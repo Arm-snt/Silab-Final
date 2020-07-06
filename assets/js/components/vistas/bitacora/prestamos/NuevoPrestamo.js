@@ -1,7 +1,25 @@
 import React, { useContext, useState } from 'react';
-import { Container, Divider, Paper, Grid, TextField, Button } from '@material-ui/core';
+import {
+	Container,
+	Paper,
+	Grid,
+	Breadcrumbs,
+	Link,
+	Typography,
+	TextField,
+	IconButton,
+	Divider,
+	Button,
+	Radio,
+	RadioGroup,
+	FormControlLabel,
+	FormControl,
+	FormLabel
+} from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import { Save, Send, Cancel } from '@material-ui/icons';
+import DateFnsUtils from '@date-io/date-fns';
+import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker } from '@material-ui/pickers';
 import { TodoContext } from './TodoContext';
 import TablaElementosCreate from './TablaElementosCreate';
 
@@ -42,6 +60,7 @@ function NuevoPrestamo() {
 	const [ registro, setregistro ] = useState('');
 	const [ observacion, setobservacion ] = useState('');
 	const [ estado, setestado ] = useState('Activo');
+	const [ fecha, setFecha ] = useState(new Date());
 	const [ cantidad, setcantidad ] = useState('');
 	const [ Stock, setStock ] = useState('');
 	const [ editElemento, seteditElemento ] = useState('');
@@ -54,7 +73,9 @@ function NuevoPrestamo() {
 			registro: registro,
 			observacion: observacion,
 			estado: estado,
-			elemento_id: editElementop
+			elemento_id: editElementop,
+			fecha_prestamo: fecha.getFullYear() + '-' + (fecha.getMonth() + 1) + '-' + fecha.getDate(),
+			hora_prestamo: fecha.getHours() + ':' + fecha.getMinutes() + ':' + fecha.getSeconds()
 		});
 		setestudiante_id('');
 		setregistro('');
@@ -68,8 +89,12 @@ function NuevoPrestamo() {
 		seteditElemento('');
 		setcantidad('');
 		setStock('');
-		
 	}
+
+	const agregarfechayhora = (date) => {
+		setFecha(date);
+		console.log(fecha);
+	};
 
 	function historyBack() {
 		window.history.back();
@@ -101,7 +126,7 @@ function NuevoPrestamo() {
 								label="Registrado Por:"
 							/>
 						</Grid>
-						<Grid item md={6} xs={6}>
+						<Grid item md={4} xs={4}>
 							<TextField
 								type="text"
 								multiline
@@ -113,7 +138,36 @@ function NuevoPrestamo() {
 								label="Observaciones"
 							/>
 						</Grid>
-						<Grid item xs={6} md={2}>
+						<Grid item md={4} xs={4}>
+							<MuiPickersUtilsProvider utils={DateFnsUtils}>
+								<KeyboardDatePicker
+									margin="normal"
+									id="date-picker-dialog"
+									label="Fecha Préstamo"
+									format="dd/MM/yyyy"
+									value={fecha}
+									onChange={agregarfechayhora}
+									KeyboardButtonProps={{
+										'aria-label': 'change date'
+									}}
+								/>
+							</MuiPickersUtilsProvider>
+						</Grid>
+						<Grid item md={4} xs={4}>
+							<MuiPickersUtilsProvider utils={DateFnsUtils}>
+								<KeyboardTimePicker
+									margin="normal"
+									id="time-picker"
+									label="Hora Préstamo"
+									value={fecha}
+									onChange={agregarfechayhora}
+									KeyboardButtonProps={{
+										'aria-label': 'change time'
+									}}
+								/>
+							</MuiPickersUtilsProvider>
+						</Grid>
+						<Grid item xs={3} md={2}>
 							<Button
 								type="submit"
 								variant="contained"
@@ -126,7 +180,7 @@ function NuevoPrestamo() {
 								Guardar
 							</Button>
 						</Grid>
-						<Grid item xs={2} md={2}>
+						<Grid item xs={3} md={2}>
 							<Button
 								variant="contained"
 								fullWidth
