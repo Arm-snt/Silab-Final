@@ -44,6 +44,7 @@ function EditarPrestamo(data) {
 	const [ editEstado, seteditEstado ] = useState(data['data'].estado);
 	const [ cantidad, setcantidad ] = useState('');
 	const [ Stock, setStock ] = useState('');
+	const [ fecha, setFecha ] = useState(new Date());
 	const [ editElemento, seteditElemento ] = useState('');
 	const [ editElementop, seteditElementop ] = useState([]);
 
@@ -55,12 +56,19 @@ function EditarPrestamo(data) {
 			registro: editregistro,
 			observacion: editObservacion,
 			estado: editEstado,
-			elemento_id: editElementop
+			elemento_id: editElementop,
+			fecha_prestamo: fecha.getFullYear() + '-' + (fecha.getMonth() + 1) + '-' + fecha.getDate(),
+			hora_prestamo: fecha.getHours() + ':' + fecha.getMinutes() + ':' + fecha.getSeconds(),
+			fecha_entrega: null,
+			hora_entrega: null
 		});
 	};
 
 	function cargar() {
-		editElementop.push({ editElemento, cantidad });
+		editElementop.push({ 
+			editElemento, 
+			cantidad
+		 });
 		seteditElemento('');
 		setcantidad('');
 		setStock('');

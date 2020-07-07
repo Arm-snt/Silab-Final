@@ -116,6 +116,10 @@ class TodoContextProvider extends Component {
 					todo.observacion = response.data.todo.observacion;
 					todo.estado = response.data.todo.estado;
 					todo.elemento_id = response.data.todo.elemento_id;
+					todo.fecha_prestamo = response.data.todo.fecha_prestamo;
+					todo.hora_prestamo = response.data.todo.hora_prestamo;
+					todo.fecha_entrega = response.data.todo.fecha_entrega;
+					todo.hora_entrega = response.data.todo.hora_entrega;
 
 					this.setState({
 						todos: todos,

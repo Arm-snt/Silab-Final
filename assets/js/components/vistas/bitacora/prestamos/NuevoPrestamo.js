@@ -75,7 +75,9 @@ function NuevoPrestamo() {
 			estado: estado,
 			elemento_id: editElementop,
 			fecha_prestamo: fecha.getFullYear() + '-' + (fecha.getMonth() + 1) + '-' + fecha.getDate(),
-			hora_prestamo: fecha.getHours() + ':' + fecha.getMinutes() + ':' + fecha.getSeconds()
+			hora_prestamo: fecha.getHours() + ':' + fecha.getMinutes() + ':' + fecha.getSeconds(),
+			fecha_entrega: null,
+			hora_entrega: null
 		});
 		setestudiante_id('');
 		setregistro('');

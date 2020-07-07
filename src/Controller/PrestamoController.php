@@ -62,7 +62,8 @@ class PrestamoController extends AbstractController
         $elemento=$content['elemento_id'];
         $fecha_prestamo=$content['fecha_prestamo'];
         $hora_prestamo=$content['hora_prestamo'];
-        $autorizacion=false;
+        $fecha_entrega=$content['fecha_entrega'];
+        $hora_entrega=$content['hora_entrega'];
 
         try {
                 
@@ -80,7 +81,7 @@ class PrestamoController extends AbstractController
                     $nombre = $informacion['elemento'];
                     $nuevacantidad = $stock - $cantidad; 
 
-                    $todo = $this->prestamoRepository->InsertarPrestamo($id, $idelemento, $cantidad, $fecha_prestamo, $hora_prestamo);
+                    $todo = $this->prestamoRepository->InsertarPrestamo($id, $idelemento, $cantidad, $fecha_prestamo, $hora_prestamo, $fecha_entrega, $hora_entrega);
                     $informacion = $this->prestamoRepository->UpdateStock($idelemento, $nuevacantidad);
 
                 }
@@ -103,7 +104,6 @@ class PrestamoController extends AbstractController
     public function update(Request $request)
     {
         $content = json_decode($request->getContent());
-
         $id=$content->id;
         $estudiante_id=$content->estudiante_id;
         $registro=$content->registro;
@@ -112,6 +112,8 @@ class PrestamoController extends AbstractController
         $elemento=$content->elemento_id;
         $fecha_prestamo=$content->fecha_prestamo;
         $hora_prestamo=$content->hora_prestamo;
+        $fecha_entrega=$content->fecha_entrega;
+        $hora_entrega=$content->hora_entrega;
         $check=false;
         
         $todo = $this->getDoctrine()->getRepository(Prestamo::class, 'default');
@@ -163,8 +165,8 @@ class PrestamoController extends AbstractController
                 $stock = $informacion['stock'];
                 $nombre = $informacion['elemento'];
                 $nuevacantidad = $stock - $cantidad; 
-                
-                $todoPre = $this->prestamoRepository->InsertarPrestamo($id, $idelemento, $cantidad);
+
+                $todoPre = $this->prestamoRepository->InsertarPrestamo($id, $idelemento, $cantidad, $fecha_prestamo, $hora_prestamo, $fecha_entrega, $hora_entrega);
                 $informacion = $this->prestamoRepository->UpdateStock($idelemento, $nuevacantidad);
                 
             }
@@ -191,13 +193,16 @@ class PrestamoController extends AbstractController
     public function updatePrestamoEle(Request $request)
     {
         $content = json_decode($request->getContent());
-        
         $idelemento=$content->elemento_id;
         $prestamo_id=$content->prestamo_id;
         $codelemento=$content->codelemento;
         $elemento=$content->elemento;
         $cantidad=$content->cantidad;
         $stock=$content->stock;
+        $fecha_prestamo=$content->fecha_prestamo;
+        $hora_prestamo=$content->hora_prestamo;
+        $fecha_entrega=$content->fecha_entrega;
+        $hora_entrega=$content->hora_entrega;
 
         try {
             $todo = $this->getDoctrine()->getRepository(Prestamo::class, 'default');
@@ -206,8 +211,11 @@ class PrestamoController extends AbstractController
             $nombre = $informacion['elemento'];
             $nuevacantidad = $stock + $cantidad; 
             $informacion = $this->prestamoRepository->UpdateStock($idelemento, $nuevacantidad);
-
-            $informacion = $this->prestamoRepository->EliminarPreLe($idelemento, $prestamo_id);
+            if($content->entregar == "si"){
+                $informacion = $this->prestamoRepository->EntregarPrele($idelemento, $prestamo_id,$fecha_entrega,$hora_entrega);
+            }else{
+                $informacion = $this->prestamoRepository->EliminarPreLe($idelemento, $prestamo_id);
+            }
 
         } catch(Exception $exception){
             return $this->json([ 

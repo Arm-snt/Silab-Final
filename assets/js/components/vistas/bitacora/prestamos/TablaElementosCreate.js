@@ -37,7 +37,7 @@ const style = {
 	}
 };
 
-function TablaElementosCreate({ elemento }) { 
+function TablaElementosCreate({ elemento }) {
 	let elementoids = [];
 	elemento.forEach((elementos) => {
 		elementoids.push(elementos.editElemento);
@@ -55,17 +55,17 @@ function TablaElementosCreate({ elemento }) {
 
 	context.ele.map((res) => {
 		elementoscarga.forEach((elementoscarga) => {
-			if (res.id == elementoscarga ) {
+			if (res.id == elementoscarga) {
 				elemento.forEach((elementos) => {
-					if (elementos.editElemento == elementoscarga && res.stock>=elementos.cantidad) {
+					if (elementos.editElemento == elementoscarga && res.stock >= elementos.cantidad) {
 						cantidad = elementos.cantidad;
-						check=true;
-					} 
+						check = true;
+					}
 				});
-				if(check){
+				if (check) {
 					nuevosE.push(Object.assign(res, { cantidad: cantidad }));
 					cantidad = '';
-					check= false;
+					check = false;
 				}
 			}
 		});
@@ -114,9 +114,6 @@ function TablaElementosCreate({ elemento }) {
 									Cantidad Solicitada
 								</TableCell>
 								<TableCell style={style.tableCell} align="center">
-									Stock
-								</TableCell>
-								<TableCell style={style.tableCell} align="center">
 									Acciones
 								</TableCell>
 							</TableRow>
@@ -138,9 +135,6 @@ function TablaElementosCreate({ elemento }) {
 												<Typography style={{ whiteSpace: 'pre-wrap' }}>
 													{todo.cantidad}
 												</Typography>
-											</TableCell>
-											<TableCell align="center">
-												<Typography style={{ whiteSpace: 'pre-wrap' }}>{todo.stock}</Typography>
 											</TableCell>
 											<TableCell align="center">
 												<Fragment>

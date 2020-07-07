@@ -87,8 +87,8 @@ function Prestamos(props) {
 				filtro.nombre.toLowerCase().includes(termino.toLowerCase()) ||
 				filtro.registro.toLowerCase().includes(termino.toLowerCase()) ||
 				filtro.observacion.toLowerCase().includes(termino.toLowerCase()) ||
-				filtro.fecha_prestamo.toString().includes(termino.toLowerCase()) ||
-				filtro.hora_prestamo.toString().includes(termino.toLowerCase()) ||
+				//filtro.fecha_prestamo.toString().includes(termino.toLowerCase()) ||
+				//filtro.hora_prestamo.toString().includes(termino.toLowerCase()) ||
 				filtro.estado.toLowerCase().includes(termino.toLowerCase()) ||
 				!termino
 			);

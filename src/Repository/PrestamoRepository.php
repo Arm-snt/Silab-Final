@@ -37,7 +37,7 @@ class PrestamoRepository extends ServiceEntityRepository
     public function MostrarPrestatoEle(){
         try {
             $conn = $this->getEntityManager()->getConnection();
-            $stm = $conn->prepare(" SELECT prele.prestamo_id, prele.elemento_id, prele.cantidad, prele.fecha_prestamo, prele.hora_prestamo, ele.stock, ele.elemento, ele.codelemento
+            $stm = $conn->prepare(" SELECT prele.prestamo_id, prele.elemento_id, prele.cantidad, prele.fecha_prestamo, prele.hora_prestamo, prele.fecha_entrega, prele.hora_entrega, ele.stock, ele.elemento, ele.codelemento
             FROM elemento ele, prestamo_elemento prele
             WHERE ele.id=prele.elemento_id");
             $stm->execute([]);
@@ -84,11 +84,21 @@ class PrestamoRepository extends ServiceEntityRepository
         }
     }
 
-    public function InsertarPrestamo($id, $idelemento, $cantidad, $fecha_prestamo, $hora_prestamo){
+    public function InsertarPrestamo($id, $idelemento, $cantidad, $fecha_prestamo, $hora_prestamo, $fecha_entrega, $hora_entrega){
         try {
             $conn = $this->getEntityManager()->getConnection();
-            $stm = $conn->prepare(" INSERT INTO prestamo_elemento (prestamo_id, elemento_id, cantidad, fecha_prestamo, hora_prestamo) VALUES (:pres, :elei, :can, :fec, :hor)");
-            if($stm->execute(array(':pres'=>$id, ':elei'=>$idelemento, ':can'=>$cantidad, ':fec'=>$fecha_prestamo, ':hor'=>$hora_prestamo)));
+            $stm = $conn->prepare(" INSERT INTO prestamo_elemento (prestamo_id, elemento_id, cantidad, fecha_prestamo, hora_prestamo, fecha_entrega, hora_entrega) VALUES (:pres, :elei, :can, :fec, :hor, :fec2, :hor2)");
+            if($stm->execute(array(':pres'=>$id, ':elei'=>$idelemento, ':can'=>$cantidad, ':fec'=>$fecha_prestamo, ':hor'=>$hora_prestamo, ':fec2'=>$fecha_entrega, ':hor2'=>$hora_entrega)));
+        } catch (Exception $e) {
+            return $e;
+        }
+    }
+
+    public function EntregarPrele($idelemento, $prestamo_id,$fecha_entrega,$hora_entrega){
+        try{
+            $conn = $this->getEntityManager()->getConnection();
+            $stm = $conn->prepare(" UPDATE prestamo_elemento SET fecha_entrega = :fecha_entrega, hora_entrega = :hora_entrega WHERE prestamo_id = :prestamo_id AND elemento_id = :idelemento");
+            if($stm->execute(array(':idelemento'=>$idelemento,':prestamo_id' =>$prestamo_id, ':hora_entrega'=>$hora_entrega, ':fecha_entrega'=>$fecha_entrega)));
         } catch (Exception $e) {
             return $e;
         }

@@ -11,9 +11,9 @@ const Transicion = React.forwardRef(function Transition(props, ref) {
 function DeleteDialog(props) {
 	const context = useContext(TodoContext);
 
-	let titulo = '¿Desea quitar el elemento del Préstamo?';
+	let titulo = '¿Desea entregar el elemento del Préstamo?';
 	let elenombre = props.todo.elemento;
-	let contenido = 'El siguiente elemento será eliminado del Préstamo: ' + elenombre + ' ';
+	let contenido = 'El siguiente elemento será devuelto al stock: ' + elenombre + ' ';
 	let update = {};
 
 	if (props.todo.estudiante_id) {
@@ -32,7 +32,9 @@ function DeleteDialog(props) {
 			estado: estado,
 			elemento_id: [],
 			fecha_prestamo: props.todo.fecha_prestamo,
-			hora_prestamo: props.todo.hora_prestamo
+			hora_prestamo: props.todo.hora_prestamo,
+			fecha_entrega: props.todo.fecha_entrega,
+			hora_entrega: props.todo.hora_entrega
 		};
 	} else {
 		update = {
@@ -41,11 +43,16 @@ function DeleteDialog(props) {
 			codelemento: props.todo.codelemento,
 			elemento: props.todo.elemento,
 			cantidad: props.todo.cantidad,
-			stock: props.todo.stock
+			stock: props.todo.stock,
+			fecha_prestamo: props.todo.fecha_prestamo,
+			hora_prestamo: props.todo.hora_prestamo,
+			fecha_entrega: props.todo.fecha_entrega,
+			hora_entrega: props.todo.hora_entrega
 		};
 	}
 	const hide = () => {
 		props.setEliminarVisible(false);
+		props.setEntregar(false);
 	};
 
 	return (
@@ -68,7 +75,11 @@ function DeleteDialog(props) {
 						if (update.estudiante_id) {
 							context.updateTodo(update);
 						} else {
-							context.updatePrestamoEle(update);
+							if (props.entregar === true) {
+								context.updatePrestamoEle(Object.assign(update, { entregar: 'Si' }));
+							} else {
+								context.updatePrestamoEle(Object.assign(update, { entregar: 'No' }));
+							}
 						}
 						hide();
 					}}

@@ -48,8 +48,11 @@ function TablaElementos({ data, elemento }) {
 	let datosE = [];
 	let nuevosE = [];
 	let cantidad = '';
-	let check = false;
+	let texto = 'Por entregar';
+	let check =false;
+	const [ fecha, setFecha ] = useState(new Date());
 	const [ eliminarVisible, setEliminarVisible ] = useState(false);
+	const [ entregar, setEntregar ]= useState(false);
 	const [ elementosDelete, setElementosDelete ] = useState([]);
 	const [ Color, setColor ] = useState('gray');
 	const [ page, setPage ] = React.useState(0);
@@ -78,11 +81,15 @@ function TablaElementos({ data, elemento }) {
 							cantidad: cantidad,
 							stock: res.stock,
 							elemento: res.elemento,
-							codelemento: res.codelemento
+							codelemento: res.codelemento,
+							fecha_prestamo: fecha.getFullYear() + '-' + (fecha.getMonth() + 1) + '-' + fecha.getDate(),
+							hora_prestamo: fecha.getHours() + ':' + fecha.getMinutes() + ':' + fecha.getSeconds(),
+							fecha_entrega: null,
+							hora_entrega: null
 						})
 					);
 					cantidad = '';
-					let check = false;
+					check = false;
 				}
 			}
 		});
@@ -91,7 +98,6 @@ function TablaElementos({ data, elemento }) {
 	for (var index = 0; index < nuevosE.length; index++) {
 		datosE.push(nuevosE[index]);
 	}
-
 	function eliminar(elementosDelete) {
 		setEliminarVisible(true);
 	}
@@ -123,7 +129,10 @@ function TablaElementos({ data, elemento }) {
 									Cantidad Solicitada
 								</TableCell>
 								<TableCell style={style.tableCell} align="center">
-									Stock
+									Fecha Prestamo
+								</TableCell>
+								<TableCell style={style.tableCell} align="center">
+									Fecha Entrega
 								</TableCell>
 								<TableCell style={style.tableCell} align="center">
 									Acciones
@@ -149,7 +158,14 @@ function TablaElementos({ data, elemento }) {
 												</Typography>
 											</TableCell>
 											<TableCell align="center">
-												<Typography style={{ whiteSpace: 'pre-wrap' }}>{todo.stock}</Typography>
+												<Typography style={{ whiteSpace: 'pre-wrap' }}>
+													{todo.fecha_prestamo}
+												</Typography>
+											</TableCell>
+											<TableCell align="center">
+												<Typography style={{ whiteSpace: 'pre-wrap' }}>
+													{todo.fecha_entrega === null ? texto : todo.fecha_entrega}
+												</Typography>
 											</TableCell>
 											<TableCell align="center">
 												<Fragment>
@@ -158,12 +174,14 @@ function TablaElementos({ data, elemento }) {
 														aria-label="upload picture"
 														component="span"
 														onClick={() => {
+															todo.fecha_entrega=fecha.getFullYear() + '-' + (fecha.getMonth() + 1) + '-' + fecha.getDate();
+															todo.hora_entrega=fecha.getHours() + ':' + fecha.getMinutes() + ':' + fecha.getSeconds();
 															setElementosDelete(todo);
 															eliminar();
-															setColor('green');
+															setEntregar(true);
 														}}
 													>
-														<Icon path={mdiCheckCircle} size={1} color={Color} />
+														<Icon path={mdiCheckCircle} size={1} color={todo.fecha_entrega === null ? "gray" : "green" } />
 													</IconButton>
 													<IconButton
 														color="primary"
@@ -195,7 +213,7 @@ function TablaElementos({ data, elemento }) {
 				/>
 			</Container>
 			{eliminarVisible && (
-				<DeleteDialog todo={elementosDelete} open={eliminarVisible} setEliminarVisible={setEliminarVisible} />
+				<DeleteDialog todo={elementosDelete} open={eliminarVisible} entregar={entregar} setEntregar={setEntregar} setEliminarVisible={setEliminarVisible} />
 			)}
 		</Fragment>
 	);
