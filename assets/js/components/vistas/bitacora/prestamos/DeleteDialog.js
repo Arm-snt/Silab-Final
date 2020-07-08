@@ -43,7 +43,6 @@ function DeleteDialog(props) {
 			codelemento: props.todo.codelemento,
 			elemento: props.todo.elemento,
 			cantidad: props.todo.cantidad,
-			stock: props.todo.stock,
 			fecha_prestamo: props.todo.fecha_prestamo,
 			hora_prestamo: props.todo.hora_prestamo,
 			fecha_entrega: props.todo.fecha_entrega,
@@ -56,7 +55,7 @@ function DeleteDialog(props) {
 	};
 
 	return (
-		<Dialog onClose={hide} TransitionComponent={Transicion} fullWidth={true} maxWidth="sm" open={props.open}>
+		<Dialog onClose={hide} TransitionComponent={Transicion} fullWidth={true} maxWidth="sm" open={props.open} >
 			<DialogTitle>{titulo}</DialogTitle>
 			<DialogContent>
 				<DialogContentText>{contenido}</DialogContentText>
@@ -72,13 +71,14 @@ function DeleteDialog(props) {
 					endIcon={<Cached />}
 					autoFocus
 					onClick={() => {
+						console.log(update)
 						if (update.estudiante_id) {
 							context.updateTodo(update);
 						} else {
-							if (props.entregar === true) {
-								context.updatePrestamoEle(Object.assign(update, { entregar: 'Si' }));
-							} else {
-								context.updatePrestamoEle(Object.assign(update, { entregar: 'No' }));
+							if (props.entregar === true ) {
+								context.updatePrestamoEle(Object.assign(update, { entregar: 'si' }));
+							}else{
+								context.updatePrestamoEle(Object.assign(update, { entregar: 'no' }));
 							}
 						}
 						hide();
@@ -94,6 +94,7 @@ function DeleteDialog(props) {
 DeleteDialog.propTypes = {
 	open: PropTypes.bool.isRequired,
 	setEliminarVisible: PropTypes.func.isRequired,
+	setEntregar: PropTypes.func.isRequired,
 	todo: PropTypes.object
 };
 

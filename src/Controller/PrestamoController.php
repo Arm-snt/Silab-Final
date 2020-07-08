@@ -68,7 +68,7 @@ class PrestamoController extends AbstractController
         try {
                 
                 $todo = $this->getDoctrine()->getRepository(Prestamo::class, 'default');
-                $todo = $this->prestamoRepository->Insertar($estudiante_id,$registro,$observacion,$estado);
+                $todo = $this->prestamoRepository->Insertar($estudiante_id,$registro,$observacion,$estado, $fecha_prestamo, $hora_prestamo, $fecha_entrega, $hora_entrega);
                 $prestamo_id = $this->prestamoRepository->BuscarId();
                 $id = $prestamo_id['id'];
                 
@@ -104,6 +104,7 @@ class PrestamoController extends AbstractController
     public function update(Request $request)
     {
         $content = json_decode($request->getContent());
+
         $id=$content->id;
         $estudiante_id=$content->estudiante_id;
         $registro=$content->registro;
@@ -117,20 +118,23 @@ class PrestamoController extends AbstractController
         $check=false;
         
         $todo = $this->getDoctrine()->getRepository(Prestamo::class, 'default');
+        //busca el array de elementos y su cantidad en la tabla prestamo_elemento
         $todo = $this->prestamoRepository->BuscarArray($id);
-        
+        //compara el array de elementos del prestamo_elementos con los registros de elementos en la base de datos
         foreach ($elemento as $info => $valor) {
             $idelemento=$valor->editElemento;
             $cantidad=$valor->cantidad;
             foreach ($todo as $info => $dato) {
                 $idelemento_bd=$dato['elemento_id'];
                 $cantidad_bd=$dato['cantidad'];
+                //si los elementos y cantidades no coinciden, se utiliza el check para marcar el cambio
                 if ($idelemento!=$idelemento_bd && $cantidad!=$cantidad_bd) {
                     $check=true;
                 }
             }           
         }
         
+        //se busca la informacion del prestamo
         $todo = $this->prestamoRepository->Buscar($id);
         $estudiante_id_bd=$todo['estudiante_id'];
         $registro_bd=$todo['registro'];
@@ -138,6 +142,7 @@ class PrestamoController extends AbstractController
         $nombre_bd=$todo['nombre'];
         $estado_bd=$todo['estado'];
 
+        //se compara la información obtenida de la base de datos con los registros obtenidos del formulario para saber si hubo un cambio
         if ($estudiante_id===$estudiante_id_bd && $registro===$registro_bd && $observacion===$observacion_bd && $estado===$estado_bd && $check==false) {
             return $this->json([
                 'message' => ['text'=>['No se realizaron cambios al Préstamo realizado a: '.$nombre_bd] , 'level'=>'warning']
@@ -146,31 +151,28 @@ class PrestamoController extends AbstractController
              
         
         try {
-            if($estudiante_id === '' && $registro === '' && $observacion === '' && $estado === ''){
-                $estudiante_id=$estudiante_id_bd;
-                $registro=$registro_bd;
-                $observacion=$observacion_bd;
-                $estado=$estado_bd;
+            //se pregunta si la informacion 
+            if($estudiante_id!=$estudiante_id_bd || $registro!=$registro_bd || $observacion!=$observacion_bd || $estado!=$estado_bd){
+                $todo = $this->getDoctrine()->getRepository(Prestamo::class, 'default');
+                $todo = $this->prestamoRepository->Actualizar($id,$estudiante_id,$registro,$observacion,$estado);
             }
 
-            $todo = $this->getDoctrine()->getRepository(Prestamo::class, 'default');
-            $todo = $this->prestamoRepository->Actualizar($id,$estudiante_id,$registro,$observacion,$estado);
             
-            
+            //para cada elemento del array de elementos del prestamo se busca el stock
             foreach ($elemento as $info => $valor) {
-                
                 $idelemento = $valor->editElemento;
                 $cantidad = $valor->cantidad;
                 $informacion = $this->prestamoRepository->BuscarElemento($idelemento);
                 $stock = $informacion['stock'];
                 $nombre = $informacion['elemento'];
                 $nuevacantidad = $stock - $cantidad; 
-
+                //se agrega el elemento a prestamo_elemento
                 $todoPre = $this->prestamoRepository->InsertarPrestamo($id, $idelemento, $cantidad, $fecha_prestamo, $hora_prestamo, $fecha_entrega, $hora_entrega);
+                //se actualiza el stock de elemento
                 $informacion = $this->prestamoRepository->UpdateStock($idelemento, $nuevacantidad);
                 
             }
-
+            //se devuelve la informción del prestamo actualizado
             $todo = $this->prestamoRepository->Buscar($id);         
 
         } catch (Exception $exception) {
@@ -190,22 +192,34 @@ class PrestamoController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      */
+    
     public function updatePrestamoEle(Request $request)
     {
         $content = json_decode($request->getContent());
         $idelemento=$content->elemento_id;
         $prestamo_id=$content->prestamo_id;
+        $id=$prestamo_id;
         $codelemento=$content->codelemento;
         $elemento=$content->elemento;
         $cantidad=$content->cantidad;
-        $stock=$content->stock;
         $fecha_prestamo=$content->fecha_prestamo;
         $hora_prestamo=$content->hora_prestamo;
         $fecha_entrega=$content->fecha_entrega;
         $hora_entrega=$content->hora_entrega;
-
+        $contador= 0;
+        
         try {
             $todo = $this->getDoctrine()->getRepository(Prestamo::class, 'default');
+            $todo = $this->prestamoRepository->BuscarArray($id);
+            //para cada elemento del array de elementos del prestamo busco fecha y hora de entrega
+            foreach ($todo as $info => $valor) {
+                $fecha_entrega_bd=$valor['fecha_entrega'];
+                $hora_entrega_bd=$valor['hora_entrega'];
+                if($fecha_entrega_bd == null && $hora_entrega_bd == null){
+                    $contador += 1;
+                }
+            }
+            
             $informacion = $this->prestamoRepository->BuscarElemento($idelemento);
             $stock = $informacion['stock'];
             $nombre = $informacion['elemento'];
@@ -213,13 +227,16 @@ class PrestamoController extends AbstractController
             $informacion = $this->prestamoRepository->UpdateStock($idelemento, $nuevacantidad);
             if($content->entregar == "si"){
                 $informacion = $this->prestamoRepository->EntregarPrele($idelemento, $prestamo_id,$fecha_entrega,$hora_entrega);
-            }else{
+            } else {
                 $informacion = $this->prestamoRepository->EliminarPreLe($idelemento, $prestamo_id);
+            }
+            if($contador==1){
+                $todo = $this->prestamoRepository->ActualizarPrestamo($id,$fecha_entrega,$hora_entrega);
             }
 
         } catch(Exception $exception){
             return $this->json([ 
-                'message' => ['text'=>['No se pudo acceder a la Base de datos mientras se actualizaba el Prestamo!'] , 'level'=>'error']
+                'message' => ['text'=>['No se pudo acceder a la Base de datos mientras se actualizaba el Prestamo!'.$exception] , 'level'=>'error']
                 ]);
         }
 

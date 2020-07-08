@@ -23,7 +23,7 @@ class PrestamoRepository extends ServiceEntityRepository
     public function Mostrar(){
         try {
             $conn = $this->getEntityManager()->getConnection();
-            $stm = $conn->prepare(" SELECT pre.id, pre.estudiante_id, pre.registro, pre.observacion, pre.estado, est.codigo, est.nombre
+            $stm = $conn->prepare(" SELECT pre.id, pre.estudiante_id, pre.registro, pre.observacion, pre.estado, pre.fecha_prestamo, pre.hora_prestamo, pre.fecha_entrega, pre.hora_entrega, est.codigo, est.nombre
             FROM prestamo pre, estudiante est
             WHERE pre.estudiante_id=est.id GROUP BY pre.id ORDER BY pre.id DESC");
             $stm->execute([]);
@@ -37,7 +37,7 @@ class PrestamoRepository extends ServiceEntityRepository
     public function MostrarPrestatoEle(){
         try {
             $conn = $this->getEntityManager()->getConnection();
-            $stm = $conn->prepare(" SELECT prele.prestamo_id, prele.elemento_id, prele.cantidad, prele.fecha_prestamo, prele.hora_prestamo, prele.fecha_entrega, prele.hora_entrega, ele.stock, ele.elemento, ele.codelemento
+            $stm = $conn->prepare(" SELECT prele.prestamo_id, prele.elemento_id, prele.cantidad, prele.fecha_prestamo, prele.hora_prestamo, prele.fecha_entrega, prele.hora_entrega, ele.elemento, ele.codelemento
             FROM elemento ele, prestamo_elemento prele
             WHERE ele.id=prele.elemento_id");
             $stm->execute([]);
@@ -48,11 +48,11 @@ class PrestamoRepository extends ServiceEntityRepository
         }
     }
 
-    public function Insertar($estudiante_id, $registro, $observacion, $estado){
+    public function Insertar($estudiante_id, $registro, $observacion, $estado, $fecha_prestamo, $hora_prestamo, $fecha_entrega, $hora_entrega){
         try {
             $conn = $this->getEntityManager()->getConnection();
-            $stm = $conn->prepare(" INSERT INTO prestamo (estudiante_id, registro, observacion, estado) VALUES (:pre, :reg, :obs, :est);");
-            if($stm->execute(array(':pre'=>$estudiante_id, ':reg'=>$registro, ':obs'=>$observacion, ':est'=>$estado)));
+            $stm = $conn->prepare(" INSERT INTO prestamo (estudiante_id, registro, observacion, estado, fecha_prestamo, hora_prestamo, fecha_entrega, hora_entrega) VALUES (:pre, :reg, :obs, :est, :fec, :hor, :fec2, :hor2);");
+            if($stm->execute(array(':pre'=>$estudiante_id, ':reg'=>$registro, ':obs'=>$observacion, ':est'=>$estado, ':fec'=>$fecha_prestamo, ':hor'=>$hora_prestamo, ':fec2'=>$fecha_entrega, ':hor2'=>$hora_entrega)));
         } catch (Exception $e) {
             return $e;
         }
@@ -118,7 +118,7 @@ class PrestamoRepository extends ServiceEntityRepository
     public function Buscar($id){
         try {
             $conn = $this->getEntityManager()->getConnection();
-            $stm = $conn->prepare(" SELECT pre.id, pre.estudiante_id, pre.registro, pre.observacion, pre.estado, est.codigo, est.nombre
+            $stm = $conn->prepare(" SELECT pre.id, pre.estudiante_id, pre.registro, pre.observacion, pre.estado, est.codigo, est.nombre, pre.fecha_prestamo, pre.hora_prestamo, pre.fecha_entrega, pre.hora_entrega            
             FROM prestamo pre, estudiante est
             WHERE pre.id=:pre AND pre.estudiante_id=est.id ");
             $pre=$id;
@@ -133,7 +133,7 @@ class PrestamoRepository extends ServiceEntityRepository
     public function BuscarArray($id){
         try {
             $conn = $this->getEntityManager()->getConnection();
-            $stm = $conn->prepare(" SELECT prele.elemento_id, prele.cantidad
+            $stm = $conn->prepare(" SELECT prele.elemento_id, prele.cantidad, prele.fecha_prestamo, prele.hora_prestamo, prele.fecha_entrega, prele.hora_entrega
             FROM prestamo_elemento prele
             WHERE prele.prestamo_id=:prele");
             $prele=$id;
@@ -154,6 +154,17 @@ class PrestamoRepository extends ServiceEntityRepository
             return $e;
         }
     }
+
+    public function ActualizarPrestamo($id,$fecha_entrega,$hora_entrega){
+        try {
+            $conn = $this->getEntityManager()->getConnection();
+            $stm = $conn->prepare(" UPDATE prestamo SET fecha_entrega=:fecha_entrega, hora_entrega=:hora_entrega, estado='Inactivo' WHERE prestamo.id =:id");
+            if($stm->execute(array(':id'=>$id, ':fecha_entrega' =>$fecha_entrega, ':hora_entrega'=>$hora_entrega)));
+        } catch (Exception $e) {
+            return $e;
+        }
+    }
+
     public function EliminarPreLe($idelemento, $prestamo_id){
         try{
             $conn = $this->getEntityManager()->getConnection();

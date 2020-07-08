@@ -101,6 +101,9 @@ function TablaElementos({ data, elemento }) {
 	function eliminar(elementosDelete) {
 		setEliminarVisible(true);
 	}
+	function entrega(){
+		setEntregar(true);
+	}
 
 	const handleChangePage = (event, newPage) => {
 		setPage(newPage);
@@ -174,11 +177,13 @@ function TablaElementos({ data, elemento }) {
 														aria-label="upload picture"
 														component="span"
 														onClick={() => {
-															todo.fecha_entrega=fecha.getFullYear() + '-' + (fecha.getMonth() + 1) + '-' + fecha.getDate();
-															todo.hora_entrega=fecha.getHours() + ':' + fecha.getMinutes() + ':' + fecha.getSeconds();
-															setElementosDelete(todo);
-															eliminar();
-															setEntregar(true);
+															if(todo.fecha_entrega==null && todo.hora_entrega==null){
+																todo.fecha_entrega=fecha.getFullYear() + '-' + (fecha.getMonth() + 1) + '-' + fecha.getDate();
+																todo.hora_entrega=fecha.getHours() + ':' + fecha.getMinutes() + ':' + fecha.getSeconds();
+																setElementosDelete(todo);
+																eliminar();
+																entrega();
+															}
 														}}
 													>
 														<Icon path={mdiCheckCircle} size={1} color={todo.fecha_entrega === null ? "gray" : "green" } />

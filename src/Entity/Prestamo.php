@@ -44,6 +44,26 @@ class Prestamo
      */
     private $estado;
 
+    /**
+     * @ORM\Column(type="date")
+     */
+    private $fecha_prestamo;
+
+    /**
+     * @ORM\Column(type="time")
+     */
+    private $hora_prestamo;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $fecha_entrega;
+
+    /**
+     * @ORM\Column(type="time", nullable=true)
+     */
+    private $hora_entrega;
+
     public function __construct()
     {
         $this->elemento = new ArrayCollection();
@@ -124,6 +144,54 @@ class Prestamo
     public function setEstado(string $estado): self
     {
         $this->estado = $estado;
+
+        return $this;
+    }
+
+    public function getFechaPrestamo(): ?\DateTimeInterface
+    {
+        return $this->fecha_prestamo;
+    }
+
+    public function setFechaPrestamo(\DateTimeInterface $fecha_prestamo): self
+    {
+        $this->fecha_prestamo = $fecha_prestamo;
+
+        return $this;
+    }
+
+    public function getHoraPrestamo(): ?\DateTimeInterface
+    {
+        return $this->hora_prestamo;
+    }
+
+    public function setHoraPrestamo(\DateTimeInterface $hora_prestamo): self
+    {
+        $this->hora_prestamo = $hora_prestamo;
+
+        return $this;
+    }
+
+    public function getFechaEntrega(): ?\DateTimeInterface
+    {
+        return $this->fecha_entrega;
+    }
+
+    public function setFechaEntrega(?\DateTimeInterface $fecha_entrega): self
+    {
+        $this->fecha_entrega = $fecha_entrega;
+
+        return $this;
+    }
+
+    public function getHoraEntrega(): ?\DateTimeInterface
+    {
+        return $this->hora_entrega;
+    }
+
+    public function setHoraEntrega(?\DateTimeInterface $hora_entrega): self
+    {
+        $this->hora_entrega = $hora_entrega;
 
         return $this;
     }

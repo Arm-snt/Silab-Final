@@ -154,6 +154,7 @@ function EditarPrestamo(data) {
 							</Button>
 						</Grid>
 					</Grid>
+					{editEstado=='Activo'? 
 					<Grid container spacing={2} style={style.grid}>
 						<Grid item md={12} xs={12}>
 							<Divider />
@@ -209,7 +210,11 @@ function EditarPrestamo(data) {
 						<Grid item md={12} xs={12}>
 							<Divider />
 						</Grid>
-					</Grid>
+					</Grid> 
+					: 
+					<Grid item md={12} xs={12}>
+						<Divider />
+					</Grid>}
 					<TablaElementos data={editId} elemento={editElementop} />
 				</form>
 			</Paper>
