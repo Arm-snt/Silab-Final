@@ -78,45 +78,36 @@ export default function SimpleTabs(onchangeTab) {
 	return (
 		<Fragment>
 			<Container className={classes.container} component="main" maxWidth="lg" justify="center">
-				<Paper className={classes.paper}>
-					<div className={classes.root}>
-						<Tabs value={value} onChange={handleChange} indicatorColor="primary" textColor="primary">
-							<Tab label="Préstamos" {...a11yProps(0)} />
-							<Tab label="Nuevo Préstamo" {...a11yProps(1)} />
-							<Tab label="Editar Préstamo" {...a11yProps(2)} disabled />
-							<Tab label="Detalle Préstamo" {...a11yProps(3)} disabled />
-						</Tabs>
-						<SwipeableViews
-							axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-							index={value}
-							onChangeIndex={onChangeIndex}
-						>
-							<TabPrestamo value={value} index={0}>
-								<TodoContextProvider>
-									<Prestamos onChangeIndex={onChangeIndex} />
-									<EstSnackBar />
-								</TodoContextProvider>
-							</TabPrestamo>
-							<TabPrestamo value={value} index={1}>
-								<TodoContextProvider>
-									<NuevoPrestamo />
-									<EstSnackBar />
-								</TodoContextProvider>
-							</TabPrestamo>
-							<TabPrestamo value={value} index={2}>
-								<TodoContextProvider>
-									<EditarPrestamo data={data} />
-									<EstSnackBar />
-								</TodoContextProvider>
-							</TabPrestamo>
-							<TabPrestamo value={value} index={3}>
-								<TodoContextProvider>
-									<DetallesPrestamo data={data} />
-								</TodoContextProvider>
-							</TabPrestamo>
-						</SwipeableViews>
-					</div>
-				</Paper>
+				<TodoContextProvider>
+					<EstSnackBar />
+					<Paper className={classes.paper}>
+						<div className={classes.root}>
+							<Tabs value={value} onChange={handleChange} indicatorColor="primary" textColor="primary">
+								<Tab label="Préstamos" {...a11yProps(0)} />
+								<Tab label="Nuevo Préstamo" {...a11yProps(1)} />
+								<Tab label="Editar Préstamo" {...a11yProps(2)} disabled />
+								<Tab label="Detalle Préstamo" {...a11yProps(3)} disabled />
+							</Tabs>
+							<SwipeableViews
+								axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+								index={value}
+								onChangeIndex={onChangeIndex}>
+								<TabPrestamo value={value} index={0}>									
+										<Prestamos onChangeIndex={onChangeIndex} />
+								</TabPrestamo>
+								<TabPrestamo value={value} index={1}>
+										<NuevoPrestamo />
+								</TabPrestamo>
+								<TabPrestamo value={value} index={2}>
+										<EditarPrestamo data={data} />
+								</TabPrestamo>
+								<TabPrestamo value={value} index={3}>
+										<DetallesPrestamo data={data} />									
+								</TabPrestamo>
+							</SwipeableViews>
+						</div>
+					</Paper>
+				</TodoContextProvider>
 			</Container>
 		</Fragment>
 	);

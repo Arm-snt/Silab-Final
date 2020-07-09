@@ -34,6 +34,7 @@ const style = {
 };
 
 function DetallesLaboratorio(data) {
+	console.log(data);
 	const context = useContext(TodoContext);
 	let user = [];
 	const [ editId, seteditId ] = useState(data['data'].id);

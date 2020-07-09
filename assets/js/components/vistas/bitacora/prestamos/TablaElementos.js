@@ -52,8 +52,8 @@ function TablaElementos({ data, elemento }) {
 	let check =false;
 	const [ fecha, setFecha ] = useState(new Date());
 	const [ eliminarVisible, setEliminarVisible ] = useState(false);
-	const [ entregar, setEntregar ]= useState(false);
 	const [ elementosDelete, setElementosDelete ] = useState([]);
+	const [ entregar, setEntregar ]= useState(false);
 	const [ Color, setColor ] = useState('gray');
 	const [ page, setPage ] = React.useState(0);
 	const [ rowsPerPage, setRowsPerPage ] = React.useState(5);
@@ -177,13 +177,9 @@ function TablaElementos({ data, elemento }) {
 														aria-label="upload picture"
 														component="span"
 														onClick={() => {
-															if(todo.fecha_entrega==null && todo.hora_entrega==null){
-																todo.fecha_entrega=fecha.getFullYear() + '-' + (fecha.getMonth() + 1) + '-' + fecha.getDate();
-																todo.hora_entrega=fecha.getHours() + ':' + fecha.getMinutes() + ':' + fecha.getSeconds();
 																setElementosDelete(todo);
 																eliminar();
-																entrega();
-															}
+																entrega();															
 														}}
 													>
 														<Icon path={mdiCheckCircle} size={1} color={todo.fecha_entrega === null ? "gray" : "green" } />

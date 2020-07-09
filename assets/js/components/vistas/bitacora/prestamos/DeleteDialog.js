@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import { DialogTitle, Dialog, DialogContent, DialogContentText, DialogActions, Button, Slide } from '@material-ui/core';
 import { Cached, Cancel } from '@material-ui/icons';
@@ -10,6 +10,7 @@ const Transicion = React.forwardRef(function Transition(props, ref) {
 
 function DeleteDialog(props) {
 	const context = useContext(TodoContext);
+	const [ fecha, setFecha ] = useState(new Date());
 
 	let titulo = '¿Desea entregar el elemento del Préstamo?';
 	let elenombre = props.todo.elemento;
@@ -45,13 +46,15 @@ function DeleteDialog(props) {
 			cantidad: props.todo.cantidad,
 			fecha_prestamo: props.todo.fecha_prestamo,
 			hora_prestamo: props.todo.hora_prestamo,
-			fecha_entrega: props.todo.fecha_entrega,
-			hora_entrega: props.todo.hora_entrega
+			fecha_entrega: fecha.getFullYear() + '-' + (fecha.getMonth() + 1) + '-' + fecha.getDate(),
+			hora_entrega: fecha.getHours() + ':' + fecha.getMinutes() + ':' + fecha.getSeconds(),
 		};
 	}
 	const hide = () => {
 		props.setEliminarVisible(false);
 		props.setEntregar(false);
+		update={};
+
 	};
 
 	return (

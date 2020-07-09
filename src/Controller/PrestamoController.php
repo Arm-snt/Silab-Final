@@ -91,7 +91,7 @@ class PrestamoController extends AbstractController
                 
         } catch (Exception $exception) {
             return $this->json([ 
-                'message' => ['text'=>['El Prestamo no se ha podido registrar!'.$exception] , 'level'=>'error']
+                'message' => ['text'=>['El Prestamo no se ha podido registrar!'] , 'level'=>'error']
                 ]);
         }  
     }
@@ -173,7 +173,7 @@ class PrestamoController extends AbstractController
                 
             }
             //se devuelve la informción del prestamo actualizado
-            $todo = $this->prestamoRepository->Buscar($id);         
+            $todo = $this->prestamoRepository->Buscar($id);   // mostrar todos los datos...       cambiar consulta
 
         } catch (Exception $exception) {
             return $this->json([ 
@@ -188,7 +188,7 @@ class PrestamoController extends AbstractController
     }
 
         /**
-     * @Route("/updatePrestamoEle/{id}", name="api_prestamo_updatePrestamoEle", methods={"PUT"})
+     * @Route("/updatePrestamoEle/{prestamo_id}", name="api_prestamo_updatePrestamoEle", methods={"PUT"})
      * @param Request $request
      * @return JsonResponse
      */
@@ -234,6 +234,8 @@ class PrestamoController extends AbstractController
                 $todo = $this->prestamoRepository->ActualizarPrestamo($id,$fecha_entrega,$hora_entrega);
             }
 
+            $todo = $this->prestamoRepository->MostrarPrestatoEle();
+
         } catch(Exception $exception){
             return $this->json([ 
                 'message' => ['text'=>['No se pudo acceder a la Base de datos mientras se actualizaba el Prestamo!'.$exception] , 'level'=>'error']
@@ -241,6 +243,7 @@ class PrestamoController extends AbstractController
         }
 
         return $this->json([
+            'todo'=>$todo,
             'message' => ['text'=>['Se ha devuelto el elemento '.$nombre,' al almacen' ] , 'level'=>'success']      
         ]);
 

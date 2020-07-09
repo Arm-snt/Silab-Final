@@ -115,7 +115,6 @@ class TodoContextProvider extends Component {
 					todo.registro = response.data.todo.registro;
 					todo.observacion = response.data.todo.observacion;
 					todo.estado = response.data.todo.estado;
-					todo.elemento_id = response.data.todo.elemento_id;
 					todo.fecha_prestamo = response.data.todo.fecha_prestamo;
 					todo.hora_prestamo = response.data.todo.hora_prestamo;
 					todo.fecha_entrega = response.data.todo.fecha_entrega;
@@ -138,16 +137,24 @@ class TodoContextProvider extends Component {
 
 	updatePrestamoEle(data) {
 		axios
-			.put('api/prestamo/updatePrestamoEle/' + data.id, data)
-			.then((response) => {
-				if (response.data.message.level === 'success') {
-					let todos = [ ...this.state.todos ];
-					let todo = todos.find((todo) => {
-						return todo.id === data.id;
-					});
+		.put('api/prestamo/updatePrestamoEle/' + data.prestamo_id, data)
+		.then((response) => {
+			if (response.data.message.level === 'success') {
+				console.log(response.data)
+				let elementospre = [ ...this.state.elementospre ];
+				let todo = elementospre.find((todo) => {
+					return todo.prestamo_id === data.prestamo_id;
+				});
+				todo.prestamo_id = response.data.todo.prestamo_id;
+				todo.elemento_id = response.data.todo.elemento_id;
+				todo.cantidad = response.data.todo.cantidad;
+				todo.fecha_prestamo = response.data.todo.fecha_prestamo;
+				todo.hora_prestamo = response.data.todo.hora_prestamo;
+				todo.fecha_entrega = response.data.todo.fecha_entrega;
+				todo.hora_entrega = response.data.todo.hora_entrega;
 
 					this.setState({
-						todos: todos,
+						elementospre: elementospre,
 						message: response.data.message
 					});
 				} else {

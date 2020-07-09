@@ -1,6 +1,8 @@
 import React, { useContext, useState } from 'react';
 import { Container, Paper, Divider, Grid, TextField, Button } from '@material-ui/core';
 import { TodoContext } from './TodoContext';
+import DateFnsUtils from '@date-io/date-fns';
+import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker } from '@material-ui/pickers';
 import { Reply } from '@material-ui/icons';
 import TablaElementos from './TablaElementos';
 
@@ -35,24 +37,19 @@ const style = {
 
 function DetallesPrestamo(data) {
 	const context = useContext(TodoContext);
-	let user = [];
 	const [ editId, seteditId ] = useState(data['data'].id);
-	const [ editCodigo, seteditCodigo ] = useState(data['data'].codlaboratorio);
-	const [ editNombre, seteditNombre ] = useState(data['data'].nombre);
-	const [ editUbicacion, seteditUbicacion ] = useState(data['data'].ubicacion);
+	const [ codigo, setCodigo ] = useState(data['data'].codigo);
+	const [ nombre, setNombre ] = useState(data['data'].nombre);
+	const [ editregistro, seteditregistro ] = useState(data['data'].registro);
 	const [ editObservacion, seteditObservacion ] = useState(data['data'].observacion);
-	const [ editUsuario, seteditUsuario ] = useState(data['data'].usuario_id);
+	const [ editEstado, seteditEstado ] = useState(data['data'].estado);
+	const [ fecha, setFecha ] = useState(data['data'].fecha_prestamo);
+	const [ hora, setHora ] = useState(data['data'].hora_prestamo);
 	const [ editElementop, seteditElementop ] = useState([]);
 
 	function historyBack() {
 		window.history.back();
 	}
-
-	context.usu.map((res) => {
-		if (res.id == editUsuario) {
-			user=res;
-		}
-	});
 
 	return (
 		<Container style={style.container} component="main" maxWidth="lg" justify="center">
@@ -66,27 +63,18 @@ function DetallesPrestamo(data) {
 							<TextField
 								type="text"
 								disabled
-								value={editCodigo}
+								value={codigo + '-' + nombre}
 								fullWidth={true}
-								label="Código Laboratorio"
+								label="Estudiante"
 							/>
 						</Grid>
 						<Grid item md={6} xs={6}>
 							<TextField
 								type="text"
 								disabled
-								value={editNombre}
+								value={editregistro}
 								fullWidth={true}
-								label="Nombre Laboratorio"
-							/>
-						</Grid>
-						<Grid item md={6} xs={6}>
-							<TextField
-								type="text"
-								disabled
-								value={editUbicacion}
-								fullWidth={true}
-								label="Ubicación Laboratorio"
+								label="Registrado Por"
 							/>
 						</Grid>
 						<Grid item md={6} xs={6}>
@@ -95,17 +83,17 @@ function DetallesPrestamo(data) {
 								disabled
 								value={editObservacion}
 								fullWidth={true}
-								label="Observación"
+								label="Observaciones"
 							/>
 						</Grid>
 						<Grid item md={6} xs={6}>
-							<TextField
-								type="text"
-								disabled
-								value={user.codusuario + ' - ' + user.nombre}
-								fullWidth={true}
-								label="Laboratorista"
-							/>
+							<TextField type="text" disabled value={editEstado} fullWidth={true} label="Estado" />
+						</Grid>
+						<Grid item md={6} xs={6}>
+							<TextField type="text" disabled value={fecha} fullWidth={true} label="Fecha del Préstamo" />
+						</Grid>
+						<Grid item md={6} xs={6}>
+							<TextField type="text" disabled value={hora} fullWidth={true} label="Hora del Préstamo" />
 						</Grid>
 						<Grid item xs={3} md={2}>
 							<Button
