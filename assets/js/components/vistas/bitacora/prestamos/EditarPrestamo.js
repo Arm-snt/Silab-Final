@@ -64,14 +64,22 @@ function EditarPrestamo(data) {
 		});
 	};
 
+
+
 	function cargar() {
-		editElementop.push({ 
-			editElemento, 
-			cantidad
-		 });
-		seteditElemento('');
-		setcantidad('');
-		setStock('');
+
+		context.elementospre.map((res) => {		
+			existe:	if (res.prestamo_id == editId && res.elemento_id != editElemento) {				
+					editElementop.push({ 
+						editElemento, 
+						cantidad
+					 });
+					seteditElemento('');
+					setcantidad('');
+					setStock('');
+					break existe;
+				}
+		});
 	}
 
 	function historyBack() {
@@ -115,16 +123,6 @@ function EditarPrestamo(data) {
 								}}
 								fullWidth={true}
 								label="Observaciones"
-							/>
-						</Grid>
-						<Grid item md={6} xs={6}>
-							<Autocomplete
-								options={estado}
-								onChange={(e, a) => {
-									seteditEstado(a !== null ? a.state : '');
-								}}
-								getOptionLabel={(option) => option.state}
-								renderInput={(params) => <TextField {...params} label="Estado" />}
 							/>
 						</Grid>
 						<Grid item xs={6} md={2}>

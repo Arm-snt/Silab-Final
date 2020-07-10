@@ -57,13 +57,22 @@ function TablaElementos({ data, elemento }) {
 	const [ Color, setColor ] = useState('gray');
 	const [ page, setPage ] = React.useState(0);
 	const [ rowsPerPage, setRowsPerPage ] = React.useState(5);
-
+	
 	context.elementospre.map((res) => {
 		if (res.prestamo_id == data) {
 			datosE.push(res);
 		}
 	});
 
+	context.elementospre.map((res) => {
+		elementoscarga.forEach(unidad => {			
+			if (res.prestamo_id == data && res.elemento_id==unidad) {				
+				elementoscarga.splice(elementoscarga.indexOf(unidad),1);
+			}
+		});
+	});
+
+	
 	context.ele.map((res) => {
 		elementoscarga.forEach((elementoscarga) => {
 			if (res.id == elementoscarga) {
@@ -87,14 +96,15 @@ function TablaElementos({ data, elemento }) {
 							fecha_entrega: null,
 							hora_entrega: null
 						})
-					);
+						);
 					cantidad = '';
 					check = false;
 				}
 			}
 		});
 	});
-
+	
+	console.log(elementoscarga);
 	for (var index = 0; index < nuevosE.length; index++) {
 		datosE.push(nuevosE[index]);
 	}
@@ -180,8 +190,7 @@ function TablaElementos({ data, elemento }) {
 																setElementosDelete(todo);
 																eliminar();
 																entrega();															
-														}}
-													>
+														}}>
 														<Icon path={mdiCheckCircle} size={1} color={todo.fecha_entrega === null ? "gray" : "green" } />
 													</IconButton>
 													<IconButton
@@ -191,8 +200,7 @@ function TablaElementos({ data, elemento }) {
 														onClick={() => {
 															setElementosDelete(todo);
 															eliminar();
-														}}
-													>
+														}}>
 														<Icon path={mdiTrashCan} size={1} color="red" />
 													</IconButton>
 												</Fragment>

@@ -48,6 +48,21 @@ class PrestamoRepository extends ServiceEntityRepository
         }
     }
 
+    public function TraerElemento($id){
+        try {
+            $conn = $this->getEntityManager()->getConnection();
+            $stm = $conn->prepare(" SELECT prele.prestamo_id, prele.elemento_id, prele.cantidad, prele.fecha_prestamo, prele.hora_prestamo, prele.fecha_entrega, prele.hora_entrega
+            FROM prestamo_elemento prele
+            WHERE prele.prestamo_id=:prele");
+            $prele=$id;
+            if($stm->execute(array(':prele'=>$prele)))
+            $res = $stm->fetch();
+            return $res;
+        } catch (Exception $e) {
+            return $e;
+        }
+    }
+
     public function Insertar($estudiante_id, $registro, $observacion, $estado, $fecha_prestamo, $hora_prestamo, $fecha_entrega, $hora_entrega){
         try {
             $conn = $this->getEntityManager()->getConnection();

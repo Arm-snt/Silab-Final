@@ -177,7 +177,7 @@ class PrestamoController extends AbstractController
 
         } catch (Exception $exception) {
             return $this->json([ 
-                'message' => ['text'=>['No se pudo acceder a la Base de datos mientras se actualizaba el Prestamo!'] , 'level'=>'error']
+                'message' => ['text'=>['No se pudo acceder a la Base de datos mientras se actualizaba el Prestamo!'.$exception] , 'level'=>'error']
                 ]);
         }
         return $this->json([            
@@ -234,7 +234,7 @@ class PrestamoController extends AbstractController
                 $todo = $this->prestamoRepository->ActualizarPrestamo($id,$fecha_entrega,$hora_entrega);
             }
 
-            $todo = $this->prestamoRepository->MostrarPrestatoEle();
+            $elementospres = $this->prestamoRepository->TraerElemento($id);
 
         } catch(Exception $exception){
             return $this->json([ 
@@ -243,7 +243,7 @@ class PrestamoController extends AbstractController
         }
 
         return $this->json([
-            'todo'=>$todo,
+            'elementospres'=>$elementospres,
             'message' => ['text'=>['Se ha devuelto el elemento '.$nombre,' al almacen' ] , 'level'=>'success']      
         ]);
 
