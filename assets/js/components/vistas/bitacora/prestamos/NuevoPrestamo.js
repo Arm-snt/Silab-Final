@@ -22,6 +22,7 @@ import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker } from '@material-ui/pickers';
 import { TodoContext } from './TodoContext';
 import TablaElementosCreate from './TablaElementosCreate';
+import { mdiTrumpet } from '@mdi/js';
 
 const style = {
 	container: {
@@ -56,6 +57,7 @@ const style = {
 function NuevoPrestamo() {
 	const context = useContext(TodoContext);
 	//console.log(data);
+	let a = true;
 	const [ estudiante_id, setestudiante_id ] = useState('');
 	const [ registro, setregistro ] = useState('');
 	const [ observacion, setobservacion ] = useState('');
@@ -64,7 +66,7 @@ function NuevoPrestamo() {
 	const [ cantidad, setcantidad ] = useState('');
 	const [ Stock, setStock ] = useState('');
 	const [ editElemento, seteditElemento ] = useState('');
-	const [ editElementop, seteditElementop ] = useState([]);
+	const [ editElementop, seteditElementop ] = useState([{editElemento:null,cantidad:null}]);
 
 	const onCreateSubmit = (event) => {
 		event.preventDefault();
@@ -85,17 +87,29 @@ function NuevoPrestamo() {
 		seteditElemento('');
 		seteditElementop([]);
 	};
-
+	
 	function cargar() {
-		editElementop.push({ editElemento, cantidad });
-		seteditElemento('');
-		setcantidad('');
-		setStock('');
+		editElementop.forEach(elemento => {
+			if (elemento.editElemento == editElemento) {
+				a=false;
+				return a;
+			}
+			if(elemento.editElemento==null){
+				editElementop.splice(editElementop.indexOf(elemento),1)
+			}
+		});
+		if(a){
+			editElementop.push({editElemento,cantidad});
+			seteditElemento('');
+			setcantidad('');
+			setStock('');
+		}
+		console.log(editElementop);
+
 	}
 
 	const agregarfechayhora = (date) => {
 		setFecha(date);
-		console.log(fecha);
 	};
 
 	function historyBack() {

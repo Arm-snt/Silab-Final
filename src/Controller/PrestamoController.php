@@ -173,7 +173,8 @@ class PrestamoController extends AbstractController
                 
             }
             //se devuelve la informción del prestamo actualizado
-            $todo = $this->prestamoRepository->Buscar($id);   // mostrar todos los datos...       cambiar consulta
+            $todo = $this->prestamoRepository->Buscar($id);// mostrar todos los datos...       cambiar consulta
+           // $elementospres = $this->prestamoRepository->TraerElemento($id, $idelemento);
 
         } catch (Exception $exception) {
             return $this->json([ 
@@ -234,7 +235,7 @@ class PrestamoController extends AbstractController
                 $todo = $this->prestamoRepository->ActualizarPrestamo($id,$fecha_entrega,$hora_entrega);
             }
 
-            $elementospres = $this->prestamoRepository->TraerElemento($id);
+            $elementospres = $this->prestamoRepository->TraerElemento($id,$idelemento);
 
         } catch(Exception $exception){
             return $this->json([ 

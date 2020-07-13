@@ -63,15 +63,6 @@ function TablaElementos({ data, elemento }) {
 			datosE.push(res);
 		}
 	});
-
-	context.elementospre.map((res) => {
-		elementoscarga.forEach(unidad => {			
-			if (res.prestamo_id == data && res.elemento_id==unidad) {				
-				elementoscarga.splice(elementoscarga.indexOf(unidad),1);
-			}
-		});
-	});
-
 	
 	context.ele.map((res) => {
 		elementoscarga.forEach((elementoscarga) => {

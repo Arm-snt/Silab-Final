@@ -62,12 +62,13 @@ const style = {
 function Prestamos(props) {
 	const onChangeIndex = props.onChangeIndex;
 	const context = useContext(TodoContext);
-	//console.log(context.todos);
+	console.log(context.todos);
 	let Fecha;
 	let filtro = {};
 	const [ termino, setTermino ] = useState('');
 	const [ eliminarVisible, setEliminarVisible ] = useState(false);
 	const [ prestamoEliminar, setPrestamoEliminar ] = useState(null);
+	const [ entregar, setEntregar ]= useState(false);
 	const [ page, setPage ] = React.useState(0);
 	const [ rowsPerPage, setRowsPerPage ] = React.useState(5);
 
@@ -79,20 +80,19 @@ function Prestamos(props) {
 		setRowsPerPage(parseInt(event.target.value, 10));
 		setPage(0);
 	};
+	
 
-	function busqueda(termino) {
+	function busqueda(termino){		
 		return function(filtro) {
-			return (
-				filtro.codigo.toString().includes(termino.toLowerCase()) ||
+			return (				
+				filtro.codigo.toLowerCase().includes(termino.toLowerCase()) ||
 				filtro.nombre.toLowerCase().includes(termino.toLowerCase()) ||
 				filtro.registro.toLowerCase().includes(termino.toLowerCase()) ||
 				filtro.observacion.toLowerCase().includes(termino.toLowerCase()) ||
 				filtro.fecha_prestamo.toString().includes(termino.toLowerCase()) ||
-				filtro.hora_prestamo.toString().includes(termino.toLowerCase()) ||
+				filtro.hora_prestamo.toLowerCase().includes(termino.toLowerCase()) ||
 				filtro.estado.toLowerCase().includes(termino.toLowerCase()) ||
-				!termino
-			);
-		};
+				!termino)}											
 	}
 
 	function historyBack() {
@@ -107,8 +107,7 @@ function Prestamos(props) {
 				fullWidth
 				placeholder="Buscar..."
 				onChange={(event) => {
-					setTermino(event.target.value);
-				}}
+					setTermino(event.target.value)}}
 				value={termino}
 				style={style.search}
 				InputProps={{
@@ -117,8 +116,7 @@ function Prestamos(props) {
 							<Icon path={mdiCardSearch} size={1.5} color="red" />
 						</InputAdornment>
 					)
-				}}
-			/>
+				}}/>
 			<Container style={style.container} component="main" maxWidth="lg" justify="center">
 				<TableContainer component={Paper}>
 					<Table style={style.table} aria-label="customized table">
@@ -196,6 +194,7 @@ function Prestamos(props) {
 													onClick={() => {
 														setEliminarVisible(true);
 														setPrestamoEliminar(todo);
+														setEntregar(true);
 													}}
 												>
 													<Icon path={mdiFileCancel} size={1} color="gray" />
@@ -218,7 +217,7 @@ function Prestamos(props) {
 				/>
 			</Container>
 			{eliminarVisible && (
-				<DeleteDialog todo={prestamoEliminar} open={eliminarVisible} setEliminarVisible={setEliminarVisible} />
+				<DeleteDialog todo={prestamoEliminar} open={eliminarVisible} setEliminarVisible={setEliminarVisible} entregar={entregar} setEntregar={setEntregar}/>
 			)}
 		</Fragment>
 	);

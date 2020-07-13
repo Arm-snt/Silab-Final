@@ -107,6 +107,7 @@ class TodoContextProvider extends Component {
 			.then((response) => {
 				if (response.data.message.level === 'success') {
 					console.log(response.data);
+
 					let todos = [ ...this.state.todos ];
 					let todo = todos.find((todo) => {
 						return todo.id === data.id;
@@ -137,20 +138,22 @@ class TodoContextProvider extends Component {
 
 	updatePrestamoEle(data) {
 		axios
-		.put('api/prestamo/updatePrestamoEle/' + data.prestamo_id, data)
-		.then((response) => {
-			if (response.data.message.level === 'success') {
-				let elementospre = [ ...this.state.elementospre ];
-				let elementospres = elementospre.find((elementospres) => {
-					return elementospres.prestamo_id === data.prestamo_id;});
-				elementospres.prestamo_id = response.data.elementospres.prestamo_id;
-				elementospres.elemento_id = response.data.elementospres.elemento_id;
-				elementospres.cantidad = response.data.elementospres.cantidad;
-				elementospres.fecha_prestamo = response.data.elementospres.fecha_prestamo;
-				elementospres.hora_prestamo = response.data.elementospres.hora_prestamo;
-				elementospres.fecha_entrega = response.data.elementospres.fecha_entrega;
-				elementospres.hora_entrega = response.data.elementospres.hora_entrega;
-				
+			.put('api/prestamo/updatePrestamoEle/' + data.prestamo_id, data)
+			.then((response) => {
+				if (response.data.message.level === 'success') {
+					console.log(response.data.elementospres);
+					let elementospre = [ ...this.state.elementospre ];
+					let elementospres = elementospre.find((elementospres) => {
+						return elementospres.prestamo_id === data.prestamo_id;
+					});
+					elementospres.prestamo_id = response.data.elementospres.prestamo_id;
+					elementospres.elemento_id = response.data.elementospres.elemento_id;
+					elementospres.cantidad = response.data.elementospres.cantidad;
+					elementospres.fecha_prestamo = response.data.elementospres.fecha_prestamo;
+					elementospres.hora_prestamo = response.data.elementospres.hora_prestamo;
+					elementospres.fecha_entrega = response.data.elementospres.fecha_entrega;
+					elementospres.hora_entrega = response.data.elementospres.hora_entrega;
+
 					this.setState({
 						elementospre: elementospre,
 						message: response.data.message

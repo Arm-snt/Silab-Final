@@ -47,6 +47,8 @@ function EditarPrestamo(data) {
 	const [ fecha, setFecha ] = useState(new Date());
 	const [ editElemento, seteditElemento ] = useState('');
 	const [ editElementop, seteditElementop ] = useState([]);
+	let datosE = [];
+	let contador = 0;
 
 	const onEditSubmit = (editId, event) => {
 		event.preventDefault();
@@ -64,22 +66,29 @@ function EditarPrestamo(data) {
 		});
 	};
 
-
+	context.elementospre.map((res) => {
+		if (res.prestamo_id == editId) {
+			datosE.push(res);
+		}
+	});
 
 	function cargar() {
-
-		context.elementospre.map((res) => {		
-			existe:	if (res.prestamo_id == editId && res.elemento_id != editElemento) {				
-					editElementop.push({ 
-						editElemento, 
-						cantidad
-					 });
-					seteditElemento('');
-					setcantidad('');
-					setStock('');
-					break existe;
-				}
+		let a = true;
+		datosE.map((res) => {
+			if (res.prestamo_id == editId && res.elemento_id == editElemento) {
+				a = false;
+				return a;
+			}
 		});
+		if (a) {
+			editElementop.push({
+				editElemento,
+				cantidad
+			});
+			seteditElemento('');
+			setcantidad('');
+			setStock('');
+		}
 	}
 
 	function historyBack() {
@@ -152,67 +161,68 @@ function EditarPrestamo(data) {
 							</Button>
 						</Grid>
 					</Grid>
-					{editEstado=='Activo'? 
-					<Grid container spacing={2} style={style.grid}>
+					{editEstado == 'Activo' ? (
+						<Grid container spacing={2} style={style.grid}>
+							<Grid item md={12} xs={12}>
+								<Divider />
+							</Grid>
+							<Grid item xs={4} md={4}>
+								<Autocomplete
+									options={context.ele}
+									onChange={(e, a) => {
+										seteditElemento(a !== null ? a.id : '');
+										setStock(a !== null ? a.stock : '');
+									}}
+									getOptionLabel={(option) => option.codelemento + '-' + option.elemento}
+									renderInput={(params) => <TextField {...params} label="Cargar Elementos" />}
+								/>
+							</Grid>
+							<Grid item xs={4} md={3}>
+								<TextField
+									disabled
+									type="number"
+									fullWidth
+									value={Stock}
+									label="Stock"
+									style={{ whiteSpace: 'pre-wrap' }}
+								/>
+							</Grid>
+							<Grid item xs={4} md={3}>
+								<TextField
+									type="number"
+									fullWidth
+									value={cantidad}
+									onChange={(event) => {
+										setcantidad(event.target.value);
+									}}
+									label="Cantidad Solicitada"
+									style={{ whiteSpace: 'pre-wrap' }}
+								/>
+							</Grid>
+							<Grid item xs={3} md={2}>
+								<Button
+									variant="contained"
+									fullWidth
+									size="small"
+									color="primary"
+									style={style.submit}
+									endIcon={<Send />}
+									onClick={() => {
+										cargar();
+									}}
+								>
+									Cargar
+								</Button>
+							</Grid>
+							<Grid item md={12} xs={12}>
+								<Divider />
+							</Grid>
+						</Grid>
+					) : (
 						<Grid item md={12} xs={12}>
 							<Divider />
 						</Grid>
-						<Grid item xs={4} md={4}>
-							<Autocomplete
-								options={context.ele}
-								onChange={(e, a) => {
-									seteditElemento(a !== null ? a.id : '');
-									setStock(a !== null ? a.stock : '');
-								}}
-								getOptionLabel={(option) => option.codelemento + '-' + option.elemento}
-								renderInput={(params) => <TextField {...params} label="Cargar Elementos" />}
-							/>
-						</Grid>
-						<Grid item xs={4} md={3}>
-							<TextField
-								disabled
-								type="number"
-								fullWidth
-								value={Stock}
-								label="Stock"
-								style={{ whiteSpace: 'pre-wrap' }}
-							/>
-						</Grid>
-						<Grid item xs={4} md={3}>
-							<TextField
-								type="number"
-								fullWidth
-								value={cantidad}
-								onChange={(event) => {
-									setcantidad(event.target.value);
-								}}
-								label="Cantidad Solicitada"
-								style={{ whiteSpace: 'pre-wrap' }}
-							/>
-						</Grid>
-						<Grid item xs={3} md={2}>
-							<Button
-								variant="contained"
-								fullWidth
-								size="small"
-								color="primary"
-								style={style.submit}
-								endIcon={<Send />}
-								onClick={() => {
-									cargar();
-								}}
-							>
-								Cargar
-							</Button>
-						</Grid>
-						<Grid item md={12} xs={12}>
-							<Divider />
-						</Grid>
-					</Grid> 
-					: 
-					<Grid item md={12} xs={12}>
-						<Divider />
-					</Grid>}
+					)}
 					<TablaElementos data={editId} elemento={editElementop} />
 				</form>
 			</Paper>
