@@ -81,11 +81,6 @@ function NuevoPrestamo() {
 			fecha_entrega: null,
 			hora_entrega: null
 		});
-		setestudiante_id('');
-		setregistro('');
-		setobservacion('');
-		seteditElemento('');
-		seteditElementop([]);
 	};
 	
 	function cargar() {
@@ -114,6 +109,11 @@ function NuevoPrestamo() {
 
 	function historyBack() {
 		window.history.back();
+		setestudiante_id('');
+		setregistro('');
+		setobservacion('');
+		seteditElemento('');
+		seteditElementop([]);
 	}
 
 	return (

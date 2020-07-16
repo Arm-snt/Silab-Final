@@ -85,15 +85,17 @@ class PrestamoController extends AbstractController
                     $informacion = $this->prestamoRepository->UpdateStock($idelemento, $nuevacantidad);
 
                 }
-                return $this->json([
-                    'message' => ['text'=>['El prestamo se realizó a : '.$estudiante_id,] , 'level'=>'success']      
-                     ]);
+                $todo = $this->prestamoRepository->Buscar($id);
                 
-        } catch (Exception $exception) {
-            return $this->json([ 
-                'message' => ['text'=>['El Prestamo no se ha podido registrar!'] , 'level'=>'error']
-                ]);
-        }  
+            } catch (Exception $exception) {
+                return $this->json([ 
+                    'message' => ['text'=>['El Prestamo no se ha podido registrar!'] , 'level'=>'error']
+                    ]);
+                }  
+            return $this->json([
+                'todo'=>$todo,
+                'message' => ['text'=>['El prestamo se realizó a : '.$estudiante_id,] , 'level'=>'success']      
+            ]);
     }
 
     /**
@@ -104,7 +106,6 @@ class PrestamoController extends AbstractController
     public function update(Request $request)
     {
         $content = json_decode($request->getContent());
-
         $id=$content->id;
         $estudiante_id=$content->estudiante_id;
         $registro=$content->registro;
@@ -115,11 +116,12 @@ class PrestamoController extends AbstractController
         $hora_prestamo=$content->hora_prestamo;
         $fecha_entrega=$content->fecha_entrega;
         $hora_entrega=$content->hora_entrega;
+        $elementospres= [];
         $check=false;
         
         $todo = $this->getDoctrine()->getRepository(Prestamo::class, 'default');
         //busca el array de elementos y su cantidad en la tabla prestamo_elemento
-        $todo = $this->prestamoRepository->BuscarArray($id);
+        $todo = $this->prestamoRepository->BuscarArray($id); 
         //compara el array de elementos del prestamo_elementos con los registros de elementos en la base de datos
         foreach ($elemento as $info => $valor) {
             $idelemento=$valor->editElemento;
@@ -170,19 +172,21 @@ class PrestamoController extends AbstractController
                 $todoPre = $this->prestamoRepository->InsertarPrestamo($id, $idelemento, $cantidad, $fecha_prestamo, $hora_prestamo, $fecha_entrega, $hora_entrega);
                 //se actualiza el stock de elemento
                 $informacion = $this->prestamoRepository->UpdateStock($idelemento, $nuevacantidad);
-                
+                $elemento_array = $this->prestamoRepository->TraerElemento($id,$idelemento);// mostrar todos los datos...       cambiar consulta
+                array_push($elementospres, $elemento_array);
             }
             //se devuelve la informción del prestamo actualizado
-            $todo = $this->prestamoRepository->Buscar($id);// mostrar todos los datos...       cambiar consulta
-           // $elementospres = $this->prestamoRepository->TraerElemento($id, $idelemento);
-
+            $todo = $this->prestamoRepository->Buscar($id);
+            // $elementospres = $this->prestamoRepository->TraerElemento($id, $idelemento);
+            
         } catch (Exception $exception) {
             return $this->json([ 
                 'message' => ['text'=>['No se pudo acceder a la Base de datos mientras se actualizaba el Prestamo!'.$exception] , 'level'=>'error']
                 ]);
-        }
-        return $this->json([            
+            }
+            return $this->json([            
             'todo'    => $todo,
+            'elementospres'=>$elementospres,
             'message' => ['text'=>['El Prestamo del estudiante '.$nombre_bd,' se ha actualizado' ] , 'level'=>'success']      
         ]);
  
@@ -236,6 +240,8 @@ class PrestamoController extends AbstractController
             }
 
             $elementospres = $this->prestamoRepository->TraerElemento($id,$idelemento);
+            //se devuelve la informción del prestamo actualizado
+            $todo = $this->prestamoRepository->Buscar($id);
 
         } catch(Exception $exception){
             return $this->json([ 
@@ -244,6 +250,7 @@ class PrestamoController extends AbstractController
         }
 
         return $this->json([
+            'todo'=>$todo,
             'elementospres'=>$elementospres,
             'message' => ['text'=>['Se ha devuelto el elemento '.$nombre,' al almacen' ] , 'level'=>'success']      
         ]);

@@ -50,7 +50,8 @@ const useStyles = makeStyles((theme) => ({
 		backgroundColor: theme.palette.background.paper
 	},
 	container: {
-		paddingTop: '20px'
+		paddingTop: '20px',
+		maxWidth: '1400px'
 	},
 	paper: {
 		marginTop: 8,

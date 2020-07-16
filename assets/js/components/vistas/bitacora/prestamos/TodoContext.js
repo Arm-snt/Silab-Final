@@ -76,16 +76,17 @@ class TodoContextProvider extends Component {
 	}
 
 	createPrestamo(event, data) {
-		console.log(data);
 		event.preventDefault();
 		axios
 			.post('api/prestamo/create', data)
 			.then((response) => {
 				if (response.data.message.level === 'success') {
-					let data = [ ...this.state.todos ];
-					data.push(response.data.todo);
+					let todos = [ ...this.state.todos ];
+					console.log(todos);
+					console.log(response.data.todo);
+					todos.push(response.data.todo);
 					this.setState({
-						todos: data,
+						todos: todos,
 						message: response.data.message
 					});
 				} else {
@@ -101,13 +102,10 @@ class TodoContextProvider extends Component {
 
 	//update
 	updateTodo(data) {
-		console.log(data);
 		axios
 			.put('api/prestamo/update/' + data.id, data)
 			.then((response) => {
 				if (response.data.message.level === 'success') {
-					console.log(response.data);
-
 					let todos = [ ...this.state.todos ];
 					let todo = todos.find((todo) => {
 						return todo.id === data.id;
@@ -120,9 +118,15 @@ class TodoContextProvider extends Component {
 					todo.hora_prestamo = response.data.todo.hora_prestamo;
 					todo.fecha_entrega = response.data.todo.fecha_entrega;
 					todo.hora_entrega = response.data.todo.hora_entrega;
+					
+					let elementospre = [ ...this.state.elementospre ];
+					response.data.elementospres.forEach(elemento_array => {
+						elementospre.push(elemento_array);						
+					});
 
 					this.setState({
 						todos: todos,
+						elementospre: elementospre,
 						message: response.data.message
 					});
 				} else {
@@ -141,10 +145,22 @@ class TodoContextProvider extends Component {
 			.put('api/prestamo/updatePrestamoEle/' + data.prestamo_id, data)
 			.then((response) => {
 				if (response.data.message.level === 'success') {
-					console.log(response.data.elementospres);
+					let todos = [ ...this.state.todos ];
+					let todo = todos.find((todo) => {
+						return todo.id === data.prestamo_id;
+					});
+					todo.estudiante_id = response.data.todo.estudiante_id;
+					todo.registro = response.data.todo.registro;
+					todo.observacion = response.data.todo.observacion;
+					todo.estado = response.data.todo.estado;
+					todo.fecha_prestamo = response.data.todo.fecha_prestamo;
+					todo.hora_prestamo = response.data.todo.hora_prestamo;
+					todo.fecha_entrega = response.data.todo.fecha_entrega;
+					todo.hora_entrega = response.data.todo.hora_entrega;
+
 					let elementospre = [ ...this.state.elementospre ];
 					let elementospres = elementospre.find((elementospres) => {
-						return elementospres.prestamo_id === data.prestamo_id;
+						return elementospres.prestamo_id === data.prestamo_id && elementospres.elemento_id === data.elemento_id;
 					});
 					elementospres.prestamo_id = response.data.elementospres.prestamo_id;
 					elementospres.elemento_id = response.data.elementospres.elemento_id;
@@ -153,8 +169,9 @@ class TodoContextProvider extends Component {
 					elementospres.hora_prestamo = response.data.elementospres.hora_prestamo;
 					elementospres.fecha_entrega = response.data.elementospres.fecha_entrega;
 					elementospres.hora_entrega = response.data.elementospres.hora_entrega;
-
+					
 					this.setState({
+						todos: todos,
 						elementospre: elementospre,
 						message: response.data.message
 					});

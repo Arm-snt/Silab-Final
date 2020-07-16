@@ -56,13 +56,15 @@ const style = {
 	},
 	tableCell: {
 		color: '#ffffff'
+	},
+	estado:{
+		color: '#28B463'
 	}
 };
 
 function Prestamos(props) {
 	const onChangeIndex = props.onChangeIndex;
 	const context = useContext(TodoContext);
-	console.log(context.todos);
 	let Fecha;
 	let filtro = {};
 	const [ termino, setTermino ] = useState('');
@@ -127,10 +129,10 @@ function Prestamos(props) {
 									Estudiante
 								</TableCell>
 								<TableCell style={style.tableCell} align="center">
-									Registro
+									Observación
 								</TableCell>
 								<TableCell style={style.tableCell} align="center">
-									Observación
+									Registro
 								</TableCell>
 								<TableCell style={style.tableCell} align="center">
 									Fecha
@@ -152,13 +154,10 @@ function Prestamos(props) {
 								.map((todo, index) => (
 									<TableRow key={'todo ' + index}>
 										{/*NOMBRE*/}
-										<TableCell align="center">
+										<TableCell align="left">
 											<Typography style={{ whiteSpace: 'pre-wrap' }}>
 												{todo.codigo + ' - ' + todo.nombre}
 											</Typography>
-										</TableCell>
-										<TableCell align="center">
-											<Typography style={{ whiteSpace: 'pre-wrap' }}>{todo.registro}</Typography>
 										</TableCell>
 										{/*OBSERVACIÓN*/}
 										<TableCell align="center">
@@ -167,12 +166,15 @@ function Prestamos(props) {
 											</Typography>
 										</TableCell>
 										<TableCell align="center">
+											<Typography style={{ whiteSpace: 'pre-wrap' }}>{todo.registro}</Typography>
+										</TableCell>
+										<TableCell align="center">
 											<Typography style={{ whiteSpace: 'pre-wrap' }}>
 												{todo.fecha_prestamo + ' // ' + todo.hora_prestamo}
 											</Typography>
 										</TableCell>
 										<TableCell align="center">
-											<Typography style={{ whiteSpace: 'pre-wrap' }}>{todo.estado}</Typography>
+											<Typography style={todo.estado==='Activo' ? style.estado:null}>{todo.estado}</Typography>
 										</TableCell>
 										<TableCell align="center">
 											<Fragment>

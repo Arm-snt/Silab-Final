@@ -48,7 +48,6 @@ function EditarPrestamo(data) {
 	const [ editElemento, seteditElemento ] = useState('');
 	const [ editElementop, seteditElementop ] = useState([]);
 	let datosE = [];
-	let contador = 0;
 
 	const onEditSubmit = (editId, event) => {
 		event.preventDefault();
@@ -64,6 +63,7 @@ function EditarPrestamo(data) {
 			fecha_entrega: null,
 			hora_entrega: null
 		});
+		seteditElementop([]);
 	};
 
 	context.elementospre.map((res) => {

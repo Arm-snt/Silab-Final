@@ -49,21 +49,22 @@ function TablaElementos({ data, elemento }) {
 	let nuevosE = [];
 	let cantidad = '';
 	let texto = 'Por entregar';
-	let check =false;
+	let check = false;
 	const [ fecha, setFecha ] = useState(new Date());
 	const [ eliminarVisible, setEliminarVisible ] = useState(false);
 	const [ elementosDelete, setElementosDelete ] = useState([]);
-	const [ entregar, setEntregar ]= useState(false);
+	const [ entregar, setEntregar ] = useState(false);
 	const [ Color, setColor ] = useState('gray');
 	const [ page, setPage ] = React.useState(0);
 	const [ rowsPerPage, setRowsPerPage ] = React.useState(5);
-	
+
 	context.elementospre.map((res) => {
 		if (res.prestamo_id == data) {
 			datosE.push(res);
-		}
+		}		
 	});
-	
+	console.log(datosE)
+
 	context.ele.map((res) => {
 		elementoscarga.forEach((elementoscarga) => {
 			if (res.id == elementoscarga) {
@@ -87,22 +88,24 @@ function TablaElementos({ data, elemento }) {
 							fecha_entrega: null,
 							hora_entrega: null
 						})
-						);
+					);
 					cantidad = '';
 					check = false;
 				}
 			}
 		});
 	});
-	
+
 	console.log(elementoscarga);
 	for (var index = 0; index < nuevosE.length; index++) {
 		datosE.push(nuevosE[index]);
 	}
+
 	function eliminar(elementosDelete) {
 		setEliminarVisible(true);
 	}
-	function entrega(){
+
+	function entrega() {
 		setEntregar(true);
 	}
 
@@ -178,11 +181,16 @@ function TablaElementos({ data, elemento }) {
 														aria-label="upload picture"
 														component="span"
 														onClick={() => {
-																setElementosDelete(todo);
-																eliminar();
-																entrega();															
-														}}>
-														<Icon path={mdiCheckCircle} size={1} color={todo.fecha_entrega === null ? "gray" : "green" } />
+															setElementosDelete(todo);
+															eliminar();
+															entrega();
+														}}
+													>
+														<Icon
+															path={mdiCheckCircle}
+															size={1}
+															color={todo.fecha_entrega === null ? 'gray' : 'green'}
+														/>
 													</IconButton>
 													<IconButton
 														color="primary"
@@ -191,7 +199,8 @@ function TablaElementos({ data, elemento }) {
 														onClick={() => {
 															setElementosDelete(todo);
 															eliminar();
-														}}>
+														}}
+													>
 														<Icon path={mdiTrashCan} size={1} color="red" />
 													</IconButton>
 												</Fragment>
@@ -213,7 +222,13 @@ function TablaElementos({ data, elemento }) {
 				/>
 			</Container>
 			{eliminarVisible && (
-				<DeleteDialog todo={elementosDelete} open={eliminarVisible} entregar={entregar} setEntregar={setEntregar} setEliminarVisible={setEliminarVisible} />
+				<DeleteDialog
+					todo={elementosDelete}
+					open={eliminarVisible}
+					entregar={entregar}
+					setEntregar={setEntregar}
+					setEliminarVisible={setEliminarVisible}
+				/>
 			)}
 		</Fragment>
 	);

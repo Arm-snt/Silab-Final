@@ -25,7 +25,7 @@ class PrestamoRepository extends ServiceEntityRepository
             $conn = $this->getEntityManager()->getConnection();
             $stm = $conn->prepare(" SELECT pre.id, pre.estudiante_id, pre.registro, pre.observacion, pre.estado, pre.fecha_prestamo, pre.hora_prestamo, pre.fecha_entrega, pre.hora_entrega, est.codigo, est.nombre
             FROM prestamo pre, estudiante est
-            WHERE pre.estudiante_id=est.id GROUP BY pre.id ORDER BY pre.id DESC");
+            WHERE pre.estudiante_id=est.id GROUP BY pre.id ORDER BY pre.fecha_prestamo DESC");
             $stm->execute([]);
             $res = $stm->fetchAll();
             return $res;
@@ -51,9 +51,9 @@ class PrestamoRepository extends ServiceEntityRepository
     public function TraerElemento($id,$idelemento){
         try {
             $conn = $this->getEntityManager()->getConnection();
-            $stm = $conn->prepare(" SELECT prele.prestamo_id, prele.elemento_id, prele.cantidad, prele.fecha_prestamo, prele.hora_prestamo, prele.fecha_entrega, prele.hora_entrega
-            FROM prestamo_elemento prele
-            WHERE prele.prestamo_id=:prele AND prele.elemento_id=:idelemento");
+            $stm = $conn->prepare(" SELECT prele.prestamo_id, prele.elemento_id, ele.codelemento, ele.elemento, prele.cantidad, prele.fecha_prestamo, prele.hora_prestamo, prele.fecha_entrega, prele.hora_entrega
+            FROM prestamo_elemento prele, elemento ele
+            WHERE prele.prestamo_id=:prele AND prele.elemento_id=:idelemento AND ele.id=:idelemento");
             if($stm->execute(array(':prele'=>$id,':idelemento'=>$idelemento)))
             $res = $stm->fetch();
             return $res;
