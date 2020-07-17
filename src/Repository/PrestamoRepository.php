@@ -143,6 +143,19 @@ class PrestamoRepository extends ServiceEntityRepository
             return $e;
         }
     }
+    public function BuscarEstudiante($estudiante_id){
+        try {
+            $conn = $this->getEntityManager()->getConnection();
+            $stm = $conn->prepare(" SELECT nombre, codigo
+            FROM estudiante
+            WHERE id=:estudiante_id");
+            if($stm->execute(array(':estudiante_id'=>$estudiante_id)))
+            $res = $stm->fetch();
+            return $res;
+        } catch (Exception $e) {
+            return $e;
+        }
+    }
 
     public function BuscarArray($id){
         try {

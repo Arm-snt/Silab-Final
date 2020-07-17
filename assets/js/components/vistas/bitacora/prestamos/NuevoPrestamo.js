@@ -58,6 +58,7 @@ function NuevoPrestamo() {
 	const context = useContext(TodoContext);
 	//console.log(data);
 	let a = true;
+	let estudiantes = [];
 	const [ estudiante_id, setestudiante_id ] = useState('');
 	const [ registro, setregistro ] = useState('');
 	const [ observacion, setobservacion ] = useState('');
@@ -99,7 +100,6 @@ function NuevoPrestamo() {
 			setcantidad('');
 			setStock('');
 		}
-		console.log(editElementop);
 
 	}
 
@@ -116,6 +116,23 @@ function NuevoPrestamo() {
 		seteditElementop([]);
 	}
 
+	//compara la informacion de los estudiantes con la de prestamos 
+	//si el estudiante no existe en la base de datos prestamo o si existe que la fecha de entrega de su prestamo ya este asignada
+	let yaentrego= false;
+	let noexiste = false;
+	context.est.map((estudiante)=>{
+		context.todos.map((prestamos)=>{
+			if(estudiante.id==prestamos.estudiante_id && prestamos.fecha_entrega!=null){
+				return yaentrego = true;
+			}
+		})
+		if(yaentrego){
+			estudiantes.push(estudiante);
+			yaentrego = false;
+		}
+
+	})
+
 	return (
 		<Container style={style.container} component="main" maxWidth="lg" justify="center">
 			<Paper style={style.paper}>
@@ -123,7 +140,7 @@ function NuevoPrestamo() {
 					<Grid container spacing={2}>
 						<Grid item md={6} xs={6}>
 							<Autocomplete
-								options={context.est}
+								options={estudiantes}
 								onChange={(e, a) => {
 									setestudiante_id(a !== null ? a.id : '');
 								}}

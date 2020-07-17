@@ -82,11 +82,14 @@ class TodoContextProvider extends Component {
 			.then((response) => {
 				if (response.data.message.level === 'success') {
 					let todos = [ ...this.state.todos ];
-					console.log(todos);
-					console.log(response.data.todo);
 					todos.push(response.data.todo);
+					todos.sort(function(a,b){
+						if(a.fecha_entrega>b.fecha_entrega){
+							return 1;
+						}});
 					this.setState({
 						todos: todos,
+						elementospre: response.data.elementospres,
 						message: response.data.message
 					});
 				} else {
@@ -118,15 +121,10 @@ class TodoContextProvider extends Component {
 					todo.hora_prestamo = response.data.todo.hora_prestamo;
 					todo.fecha_entrega = response.data.todo.fecha_entrega;
 					todo.hora_entrega = response.data.todo.hora_entrega;
-					
-					let elementospre = [ ...this.state.elementospre ];
-					response.data.elementospres.forEach(elemento_array => {
-						elementospre.push(elemento_array);						
-					});
 
 					this.setState({
 						todos: todos,
-						elementospre: elementospre,
+						elementospre: response.data.elementospres,
 						message: response.data.message
 					});
 				} else {
@@ -169,6 +167,7 @@ class TodoContextProvider extends Component {
 					elementospres.hora_prestamo = response.data.elementospres.hora_prestamo;
 					elementospres.fecha_entrega = response.data.elementospres.fecha_entrega;
 					elementospres.hora_entrega = response.data.elementospres.hora_entrega;
+					
 					
 					this.setState({
 						todos: todos,

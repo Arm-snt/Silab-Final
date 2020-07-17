@@ -54,7 +54,7 @@ class PrestamoController extends AbstractController
     public function create(Request $request)
     {
         $content = json_decode($request->getContent(), true);
-
+        $nelementos=0;
         $estudiante_id=$content['estudiante_id'];
         $registro=$content['registro'];
         $observacion=$content['observacion'];
@@ -80,12 +80,14 @@ class PrestamoController extends AbstractController
                     $stock = $informacion['stock'];
                     $nombre = $informacion['elemento'];
                     $nuevacantidad = $stock - $cantidad; 
-
+                    $nelementos+=1;
                     $todo = $this->prestamoRepository->InsertarPrestamo($id, $idelemento, $cantidad, $fecha_prestamo, $hora_prestamo, $fecha_entrega, $hora_entrega);
                     $informacion = $this->prestamoRepository->UpdateStock($idelemento, $nuevacantidad);
 
                 }
+                $infoestudiante = $this->prestamoRepository->BuscarEstudiante($estudiante_id); 
                 $todo = $this->prestamoRepository->Buscar($id);
+                $elementospres = $this->prestamoRepository->MostrarPrestatoEle();
                 
             } catch (Exception $exception) {
                 return $this->json([ 
@@ -94,7 +96,8 @@ class PrestamoController extends AbstractController
                 }  
             return $this->json([
                 'todo'=>$todo,
-                'message' => ['text'=>['El prestamo se realizó a : '.$estudiante_id,] , 'level'=>'success']      
+                'elementospres'=>$elementospres,
+                'message' => ['text'=>['Se realizo con exito el prestamo de '.$nelementos,' elementos al estudiante : '.$infoestudiante['nombre'],] , 'level'=>'success']      
             ]);
     }
 
@@ -172,12 +175,11 @@ class PrestamoController extends AbstractController
                 $todoPre = $this->prestamoRepository->InsertarPrestamo($id, $idelemento, $cantidad, $fecha_prestamo, $hora_prestamo, $fecha_entrega, $hora_entrega);
                 //se actualiza el stock de elemento
                 $informacion = $this->prestamoRepository->UpdateStock($idelemento, $nuevacantidad);
-                $elemento_array = $this->prestamoRepository->TraerElemento($id,$idelemento);// mostrar todos los datos...       cambiar consulta
-                array_push($elementospres, $elemento_array);
             }
             //se devuelve la informción del prestamo actualizado
             $todo = $this->prestamoRepository->Buscar($id);
             // $elementospres = $this->prestamoRepository->TraerElemento($id, $idelemento);
+            $elementospres = $this->prestamoRepository->MostrarPrestatoEle();
             
         } catch (Exception $exception) {
             return $this->json([ 
@@ -187,7 +189,7 @@ class PrestamoController extends AbstractController
             return $this->json([            
             'todo'    => $todo,
             'elementospres'=>$elementospres,
-            'message' => ['text'=>['El Prestamo del estudiante '.$nombre_bd,' se ha actualizado' ] , 'level'=>'success']      
+            'message' => ['text'=>['La información del prestamo del estudiante '.$nombre_bd,' se ha actualizado' ] , 'level'=>'success']      
         ]);
  
     }
@@ -252,7 +254,7 @@ class PrestamoController extends AbstractController
         return $this->json([
             'todo'=>$todo,
             'elementospres'=>$elementospres,
-            'message' => ['text'=>['Se ha devuelto el elemento '.$nombre,' al almacen' ] , 'level'=>'success']      
+            'message' => ['text'=>['Se ha entregado el elemento '.$nombre,' del prestamo al almacen' ] , 'level'=>'success']      
         ]);
 
     }
