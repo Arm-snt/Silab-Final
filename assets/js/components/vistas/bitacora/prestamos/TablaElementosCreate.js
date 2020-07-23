@@ -38,6 +38,7 @@ const style = {
 };
 
 function TablaElementosCreate({ elemento }) {
+	console.log(elemento);
 	let elementoids = [];
 	elemento.forEach((elementos) => {
 		elementoids.push(elementos.editElemento);

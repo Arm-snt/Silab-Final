@@ -47,6 +47,8 @@ function EditarPrestamo(data) {
 	const [ fecha, setFecha ] = useState(new Date());
 	const [ editElemento, seteditElemento ] = useState('');
 	const [ editElementop, seteditElementop ] = useState([]);
+	const [error, seterror ] = useState(false);
+	const [textoAyuda, settextoAyuda ]= useState("")
 	let datosE = [];
 
 	const onEditSubmit = (editId, event) => {
@@ -77,17 +79,31 @@ function EditarPrestamo(data) {
 		datosE.map((res) => {
 			if (res.prestamo_id == editId && res.elemento_id == editElemento) {
 				a = false;
-				return a;
+				return ( a,
+						context.setMessage({
+						level:'error',
+						text: ['El elemento que intenta cargar ya se encuentra en el Prestamo']
+					}))
 			}
 		});
 		if (a) {
-			editElementop.push({
-				editElemento,
-				cantidad
-			});
-			seteditElemento('');
-			setcantidad('');
-			setStock('');
+			if(Stock>cantidad){			
+				editElementop.push({
+					editElemento,
+					cantidad
+				});
+				seteditElemento('');
+				setcantidad('');
+				setStock('');
+			}else{
+				context.setMessage({
+					level:'error',
+					text: ['La cantidad solicitada del elemento supera el stock disponible!']
+				});
+				seteditElemento('');
+				setcantidad('');
+				setStock('');
+			}
 		}
 	}
 
@@ -114,11 +130,20 @@ function EditarPrestamo(data) {
 						</Grid>
 						<Grid item md={6} xs={6}>
 							<TextField
+								error={error}
 								type="text"
 								value={editregistro}
 								onChange={(event) => {
 									seteditregistro(event.target.value);
+									if(editregistro.length<8){
+										seterror(true);
+										settextoAyuda("Minimo 8 caractteres");
+									}else{
+										seterror(false);
+										settextoAyuda("");
+									}
 								}}
+								helperText={textoAyuda}
 								fullWidth={true}
 								label="Registrado Por:"
 							/>

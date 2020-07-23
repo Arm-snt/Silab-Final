@@ -88,17 +88,31 @@ function NuevoPrestamo() {
 		editElementop.forEach(elemento => {
 			if (elemento.editElemento == editElemento) {
 				a=false;
-				return a;
+				return (a,
+				context.setMessage({
+					level:'error',
+					text: ['El elemento que intenta cargar ya se encuentra en el Prestamo']
+				}));
 			}
 			if(elemento.editElemento==null){
 				editElementop.splice(editElementop.indexOf(elemento),1)
 			}
 		});
 		if(a){
-			editElementop.push({editElemento,cantidad});
-			seteditElemento('');
-			setcantidad('');
-			setStock('');
+			if(Stock>cantidad){
+				editElementop.push({editElemento,cantidad});
+				seteditElemento('');
+				setcantidad('');
+				setStock('');
+			} else {
+				context.setMessage({
+					level:'error',
+					text: ['La cantidad solicitada del elemento supera el stock disponible!']
+				});
+				seteditElemento('');
+				setcantidad('');
+				setStock('');
+			}
 		}
 
 	}

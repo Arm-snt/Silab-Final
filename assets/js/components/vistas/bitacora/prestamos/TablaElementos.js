@@ -63,7 +63,6 @@ function TablaElementos({ data, elemento }) {
 			datosE.push(res);
 		}		
 	});
-	console.log(datosE)
 
 	context.ele.map((res) => {
 		elementoscarga.forEach((elementoscarga) => {
@@ -96,7 +95,6 @@ function TablaElementos({ data, elemento }) {
 		});
 	});
 
-	console.log(elementoscarga);
 	for (var index = 0; index < nuevosE.length; index++) {
 		datosE.push(nuevosE[index]);
 	}

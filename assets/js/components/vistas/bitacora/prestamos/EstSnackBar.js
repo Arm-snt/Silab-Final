@@ -35,7 +35,7 @@ function EstSnackBar() {
 		autoHideDuration={5000} 
 		anchorOrigin={{
 			vertical: "top",
-			horizontal: "right"
+			horizontal: "center"
 		  }}
 		style={style.snack}>
 			{context.message.text && (
