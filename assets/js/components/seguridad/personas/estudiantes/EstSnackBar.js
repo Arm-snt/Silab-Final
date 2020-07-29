@@ -33,6 +33,10 @@ function EstSnackBar() {
 		open={context.message.text !== undefined} 
 		onClose={handleClose} 
 		autoHideDuration={5000} 
+		anchorOrigin={{
+			vertical: "top",
+			horizontal: "right"
+		  }}
 		style={style.snack}>
 			{context.message.text && (
 				<SnackbarContent

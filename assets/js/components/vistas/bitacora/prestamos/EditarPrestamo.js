@@ -47,8 +47,8 @@ function EditarPrestamo(data) {
 	const [ fecha, setFecha ] = useState(new Date());
 	const [ editElemento, seteditElemento ] = useState('');
 	const [ editElementop, seteditElementop ] = useState([]);
-	const [error, seterror ] = useState(false);
-	const [textoAyuda, settextoAyuda ]= useState("")
+	const [error, seterror ] = useState({registro:false,cantidad:false,observacion:false});
+	const [textoAyuda, settextoAyuda ]= useState({registro:'',cantidad:'',observacion:''})
 	let datosE = [];
 
 	const onEditSubmit = (editId, event) => {
@@ -130,20 +130,25 @@ function EditarPrestamo(data) {
 						</Grid>
 						<Grid item md={6} xs={6}>
 							<TextField
-								error={error}
+								error={error.registro}
 								type="text"
 								value={editregistro}
 								onChange={(event) => {
 									seteditregistro(event.target.value);
-									if(editregistro.length<8){
-										seterror(true);
-										settextoAyuda("Minimo 8 caractteres");
+									console.log(error)
+									if(editregistro.length<25 && editObservacion.match(/^\w+([\.-]?\w+)*@ufpso.edu.co+$/)){
+										error.registro=true;
+										textoAyuda.registro='Utilice un correo institucional';
+										seterror(error);
+										settextoAyuda(textoAyuda);
 									}else{
-										seterror(false);
-										settextoAyuda("");
+										error.registro=false;
+										textoAyuda.registro='';
+										seterror(error);
+										settextoAyuda(textoAyuda);
 									}
 								}}
-								helperText={textoAyuda}
+								helperText={textoAyuda.registro}
 								fullWidth={true}
 								label="Registrado Por:"
 							/>
@@ -151,10 +156,23 @@ function EditarPrestamo(data) {
 						<Grid item md={6} xs={6}>
 							<TextField
 								type="text"
+								error={error.observacion}
 								value={editObservacion}
 								onChange={(event) => {
 									seteditObservacion(event.target.value);
+									if(editObservacion.length<14){
+										error.observacion=true;
+										textoAyuda.observacion='Minimo 8 caracteres';
+										seterror(error);
+										settextoAyuda(textoAyuda);
+									}else{
+										error.observacion=true;
+										textoAyuda.observacion='';
+										seterror(error);
+										settextoAyuda(textoAyuda);
+									}
 								}}
+								helperText={textoAyuda.observacion}
 								fullWidth={true}
 								label="Observaciones"
 							/>
@@ -216,10 +234,23 @@ function EditarPrestamo(data) {
 								<TextField
 									type="number"
 									fullWidth
+									error={error.cantidad}
 									value={cantidad}
 									onChange={(event) => {
 										setcantidad(event.target.value);
+										if(cantidad.length>1){
+											error.cantidad=true;
+											textoAyuda.cantidad='La cantidad debe ser de 2 digitos';
+											seterror(error);
+											settextoAyuda(textoAyuda);
+										}else{
+											error.cantidad=true;
+											textoAyuda.cantidad='';
+											seterror(error);
+											settextoAyuda(textoAyuda);
+										}										
 									}}
+									helperText={textoAyuda.cantidad}
 									label="Cantidad Solicitada"
 									style={{ whiteSpace: 'pre-wrap' }}
 								/>

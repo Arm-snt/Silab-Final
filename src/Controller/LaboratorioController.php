@@ -74,6 +74,7 @@ class LaboratorioController extends AbstractController
     public function update(Request $request)
     {
         $content = json_decode($request->getContent());
+
         $id=$content->id;
         $codlaboratorio=$content->codlaboratorio;
         $usuario_id=$content->usuario_id;
@@ -81,6 +82,7 @@ class LaboratorioController extends AbstractController
         $ubicacion=$content->ubicacion;
         $observacion=$content->observacion;
         $estado=$content->estado;
+        $elementospres= [];
         
         $todo = $this->getDoctrine()->getRepository(Laboratorio::class, 'default');
         $todo = $this->laboratorioRepository->Buscar($id);
@@ -108,6 +110,8 @@ class LaboratorioController extends AbstractController
             }
             $todo = $this->getDoctrine()->getRepository(Laboratorio::class, 'default');
             $todo = $this->laboratorioRepository->Actualizar($id, $codlaboratorio, $usuario_id, $nombre, $ubicacion, $observacion, $estado);
+            //$elementospres = $this->laboratorioRepository->MostrarPrestatoEle();
+            $elementospres = $this->laboratorioRepository->TraerLaboratorio($id, $usuario_id);
             $todo = $this->laboratorioRepository->Buscar($id);
 
         } catch (Exception $exception) {
@@ -117,6 +121,7 @@ class LaboratorioController extends AbstractController
         }
         return $this->json([
             'todo'    => $todo,
+            'elementospres'    => $elementospres,
             'message' => ['text'=>['El laboratorio se ha actualizado' ] , 'level'=>'success']      
         ]);
  

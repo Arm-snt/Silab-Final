@@ -14,7 +14,8 @@ import {
 	RadioGroup,
 	FormControlLabel,
 	FormControl,
-	FormLabel
+	FormLabel,
+	InputAdornment
 } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import { Save, Send, Cancel } from '@material-ui/icons';
@@ -67,13 +68,21 @@ function NuevoPrestamo() {
 	const [ cantidad, setcantidad ] = useState('');
 	const [ Stock, setStock ] = useState('');
 	const [ editElemento, seteditElemento ] = useState('');
-	const [ editElementop, seteditElementop ] = useState([{editElemento:null,cantidad:null}]);
+	const [ editElementop, seteditElementop ] = useState([ { editElemento: null, cantidad: null } ]);
+	const [ error, seterror ] = useState({ registro: false, cantidad: false, observacion: false });
+	const [ textoAyuda, settextoAyuda ] = useState({ registro: '', cantidad: '', observacion: '' });
 
 	const onCreateSubmit = (event) => {
 		event.preventDefault();
+		if(estudiante_id=='' || registro=='' || observacion==''){
+			return context.setMessage({
+				level: 'error',
+				text: [ 'Debe llenar los campos del Prestamo' ]
+			});
+		}
 		context.createPrestamo(event, {
 			estudiante_id: estudiante_id,
-			registro: registro,
+			registro: registro + '@ufpso.edu.co',
 			observacion: observacion,
 			estado: estado,
 			elemento_id: editElementop,
@@ -83,38 +92,54 @@ function NuevoPrestamo() {
 			hora_entrega: null
 		});
 	};
-	
+
 	function cargar() {
-		editElementop.forEach(elemento => {
-			if (elemento.editElemento == editElemento) {
-				a=false;
-				return (a,
-				context.setMessage({
-					level:'error',
-					text: ['El elemento que intenta cargar ya se encuentra en el Prestamo']
-				}));
-			}
-			if(elemento.editElemento==null){
-				editElementop.splice(editElementop.indexOf(elemento),1)
-			}
-		});
-		if(a){
-			if(Stock>cantidad){
-				editElementop.push({editElemento,cantidad});
-				seteditElemento('');
-				setcantidad('');
-				setStock('');
-			} else {
-				context.setMessage({
-					level:'error',
-					text: ['La cantidad solicitada del elemento supera el stock disponible!']
-				});
-				seteditElemento('');
-				setcantidad('');
-				setStock('');
+		if(editElemento==''){
+			return context.setMessage({
+				level: 'error',
+				text: [ 'Debe seleccionar un elemento para cargar al Prestamo' ]
+			});
+		} else if (cantidad == '') {
+			return context.setMessage({
+				level: 'error',
+				text: [ 'Debe agregar una cantidad al elemento del Prestamo' ]
+			});
+		} else {
+			editElementop.forEach((elemento) => {
+				if (elemento.editElemento == editElemento) {
+					a = false;
+					return (
+						a,
+						context.setMessage({
+							level: 'error',
+							text: [ 'El elemento que intenta cargar ya se encuentra en el Prestamo' ]
+						}),
+						seteditElemento(''),
+						setcantidad(''),
+						setStock('')
+					);
+				}
+				if (elemento.editElemento == null) {
+					editElementop.splice(editElementop.indexOf(elemento), 1);
+				}
+			});
+			if (a) {
+				if (Stock > cantidad) {
+					editElementop.push({ editElemento, cantidad });
+					seteditElemento('');
+					setcantidad('');
+					setStock('');
+				} else {
+					context.setMessage({
+						level: 'error',
+						text: [ 'La cantidad solicitada del elemento supera el stock disponible!' ]
+					});
+					seteditElemento('');
+					setcantidad('');
+					setStock('');
+				}
 			}
 		}
-
 	}
 
 	const agregarfechayhora = (date) => {
@@ -130,22 +155,21 @@ function NuevoPrestamo() {
 		seteditElementop([]);
 	}
 
-	//compara la informacion de los estudiantes con la de prestamos 
+	//compara la informacion de los estudiantes con la de prestamos
 	//si el estudiante no existe en la base de datos prestamo o si existe que la fecha de entrega de su prestamo ya este asignada
-	let yaentrego= false;
+	let yaentrego = false;
 	let noexiste = false;
-	context.est.map((estudiante)=>{
-		context.todos.map((prestamos)=>{
-			if(estudiante.id==prestamos.estudiante_id && prestamos.fecha_entrega!=null){
-				return yaentrego = true;
+	context.est.map((estudiante) => {
+		context.todos.map((prestamos) => {
+			if (estudiante.id == prestamos.estudiante_id && prestamos.fecha_entrega != null) {
+				return (yaentrego = true);
 			}
-		})
-		if(yaentrego){
+		});
+		if (yaentrego) {
 			estudiantes.push(estudiante);
 			yaentrego = false;
 		}
-
-	})
+	});
 
 	return (
 		<Container style={style.container} component="main" maxWidth="lg" justify="center">
@@ -154,6 +178,7 @@ function NuevoPrestamo() {
 					<Grid container spacing={2}>
 						<Grid item md={6} xs={6}>
 							<Autocomplete
+								required={true}
 								options={estudiantes}
 								onChange={(e, a) => {
 									setestudiante_id(a !== null ? a.id : '');
@@ -164,23 +189,52 @@ function NuevoPrestamo() {
 						</Grid>
 						<Grid item md={6} xs={6}>
 							<TextField
+								error={error.registro}
 								type="text"
 								value={registro}
 								onChange={(event) => {
 									setregistro(event.target.value);
+									if (registro.length > 15 || !/^[A-Za-z\s]+$/.test(registro)) {
+										error.registro = true;
+										textoAyuda.registro = 'Utilice un correo institucional';
+										seterror(error);
+										settextoAyuda(textoAyuda);
+									} else {
+										error.registro = false;
+										textoAyuda.registro = '';
+										seterror(error);
+										settextoAyuda(textoAyuda);
+									}
 								}}
+								helperText={textoAyuda.registro}
 								fullWidth={true}
 								label="Registrado Por:"
+								InputProps={{
+									endAdornment: <InputAdornment position="end">@ufpso.edu.co</InputAdornment>
+								}}
 							/>
 						</Grid>
 						<Grid item md={4} xs={4}>
 							<TextField
 								type="text"
 								multiline
+								error={error.observacion}
 								value={observacion}
 								onChange={(event) => {
 									setobservacion(event.target.value);
+									if (observacion.length < 14) {
+										error.observacion = true;
+										textoAyuda.observacion = 'Minimo 8 caracteres';
+										seterror(error);
+										settextoAyuda(textoAyuda);
+									} else {
+										error.observacion = true;
+										textoAyuda.observacion = '';
+										seterror(error);
+										settextoAyuda(textoAyuda);
+									}
 								}}
+								helperText={textoAyuda.observacion}
 								fullWidth={true}
 								label="Observaciones"
 							/>
@@ -269,10 +323,23 @@ function NuevoPrestamo() {
 							<TextField
 								type="number"
 								fullWidth
+								error={error.cantidad}
 								value={cantidad}
 								onChange={(event) => {
 									setcantidad(event.target.value);
+									if (cantidad.length > 1) {
+										error.cantidad = true;
+										textoAyuda.cantidad = 'La cantidad debe ser de 2 digitos';
+										seterror(error);
+										settextoAyuda(textoAyuda);
+									} else {
+										error.cantidad = false;
+										textoAyuda.cantidad = '';
+										seterror(error);
+										settextoAyuda(textoAyuda);
+									}
 								}}
+								helperText={textoAyuda.cantidad}
 								label="Cantidad Solicitada"
 								style={{ whiteSpace: 'pre-wrap' }}
 							/>

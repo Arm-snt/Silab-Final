@@ -80,45 +80,37 @@ export default function SimpleTabs(onchangeTab) {
 	return (
 		<Fragment>
 			<Container className={classes.container} component="main" maxWidth="lg" justify="center">
-				<Paper className={classes.paper}>
-					<div className={classes.root}>
-						<Tabs value={value} onChange={handleChange} indicatorColor="primary" textColor="primary">
-							<Tab label="Usuarios" {...a11yProps(0)} />
-							<Tab label="Nuevo Usuario" {...a11yProps(1)} />
-							<Tab label="Editar Usuario" {...a11yProps(2)} disabled />
-							<Tab label="Detalles Usuario" {...a11yProps(3)} disabled />
-						</Tabs>
-						<SwipeableViews
-							axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-							index={value}
-							onChangeIndex={onChangeIndex}>
-							<TabUsuario value={value} index={0}>
-								<TodoContextProvider>
-									<Usuarios onChangeIndex={onChangeIndex}/>
-									<EstSnackBar />
-								</TodoContextProvider>
-							</TabUsuario>
-							<TabUsuario value={value} index={1}>
-								<TodoContextProvider>
+				<TodoContextProvider>
+					<EstSnackBar />
+					<Paper className={classes.paper}>
+						<div className={classes.root}>
+							<Tabs value={value} onChange={handleChange} indicatorColor="primary" textColor="primary">
+								<Tab label="Usuarios" {...a11yProps(0)} />
+								<Tab label="Nuevo Usuario" {...a11yProps(1)} />
+								<Tab label="Editar Usuario" {...a11yProps(2)} disabled />
+								<Tab label="Detalles Usuario" {...a11yProps(3)} disabled />
+							</Tabs>
+							<SwipeableViews
+								axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+								index={value}
+								onChangeIndex={onChangeIndex}
+							>
+								<TabUsuario value={value} index={0}>
+									<Usuarios onChangeIndex={onChangeIndex} />
+								</TabUsuario>
+								<TabUsuario value={value} index={1}>
 									<NuevoUsuario />
-									<EstSnackBar />
-								</TodoContextProvider>
-							</TabUsuario>
-							<TabUsuario value={value} index={2}>
-              					<TodoContextProvider>
-									<EditarUsuario data={data}/>
-									<EstSnackBar />
-                				</TodoContextProvider>
-							</TabUsuario>
-							<TabUsuario value={value} index={3}>
-								<TodoContextProvider>
-									<DetallesUsuario data={data}/>
-									<EstSnackBar />
-								</TodoContextProvider>
-							</TabUsuario>
-						</SwipeableViews>
-					</div>
-				</Paper>
+								</TabUsuario>
+								<TabUsuario value={value} index={2}>
+									<EditarUsuario data={data} />
+								</TabUsuario>
+								<TabUsuario value={value} index={3}>
+									<DetallesUsuario data={data} />
+								</TabUsuario>
+							</SwipeableViews>
+						</div>
+					</Paper>
+				</TodoContextProvider>
 			</Container>
 		</Fragment>
 	);

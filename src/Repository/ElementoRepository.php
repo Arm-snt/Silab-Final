@@ -19,6 +19,19 @@ class ElementoRepository extends ServiceEntityRepository
         parent::__construct($registry, Elemento::class);
     }
 
+    public function Mostrar(){
+        try {
+            $conn = $this->getEntityManager()->getConnection();
+            $stm = $conn->prepare("SELECT ele.id, ele.laboratorio_id, ele.codelemento, ele.elemento, ele.stock, ele.horauso, ele.categoria, ele.estado
+            FROM elemento ele");
+            $stm->execute([]);
+            $res = $stm->fetchAll();
+            return $res;
+        } catch (Exception $e) {
+            return $e;
+        }
+    }
+
    
     public function Buscar($id){
         try {
@@ -28,6 +41,50 @@ class ElementoRepository extends ServiceEntityRepository
             WHERE ele.id=:ele");
             $ele=$id;
             if($stm->execute(array(':ele'=>$ele)))
+            $res = $stm->fetch();
+            return $res;
+        } catch (Exception $e) {
+            return $e;
+        }
+    }
+
+     
+    public function InfoLab($id){
+        try {
+            $conn = $this->getEntityManager()->getConnection();
+            $stm = $conn->prepare(" SELECT lab.codlaboratorio, lab.nombre, lab.ubicacion, lab.observacion, lab.usuario_id, lab.estado
+            FROM elemento ele, laboratorio lab
+            WHERE ele.id=:ele AND lab.id=ele.laboratorio_id");
+            $ele=$id;
+            if($stm->execute(array(':ele'=>$ele)))
+            $res = $stm->fetch();
+            return $res;
+        } catch (Exception $e) {
+            return $e;
+        }
+    }
+
+    public function MostrarPrestatoEle(){
+        try {
+            $conn = $this->getEntityManager()->getConnection();
+            $stm = $conn->prepare("SELECT lab.id, ele.id, ele.laboratorio_id, ele.codelemento, ele.elemento, ele.stock, ele.horauso, ele.categoria, ele.estado
+            FROM laboratorio lab, elemento ele
+            WHERE ele.laboratorio_id=lab.id");
+            $stm->execute([]);
+            $res = $stm->fetchAll();
+            return $res;
+        } catch (Exception $e) {
+            return $e;
+        }
+    }
+
+    public function TraerElemento($id, $laboratorio_id){
+        try {
+            $conn = $this->getEntityManager()->getConnection();
+            $stm = $conn->prepare(" SELECT lab.id, ele.id, ele.laboratorio_id, ele.codelemento, ele.elemento, ele.stock, ele.horauso, ele.categoria, ele.estado
+            FROM elemento ele, laboratorio lab
+            WHERE ele.id=:id AND ele.laboratorio_id=:lab AND lab.id=:lab");
+            if($stm->execute(array(':id'=>$id, ':lab'=>$laboratorio_id)))
             $res = $stm->fetch();
             return $res;
         } catch (Exception $e) {

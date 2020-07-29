@@ -10,13 +10,13 @@ const Transicion = React.forwardRef(function Transition(props, ref) {
 
 function DeleteDialog(props) {
 	const context = useContext(TodoContext);
-	
+
 	let titulo = '¿Desea cambiar el elemento de laboratorio?';
 	let contenido = 'Esto permitira reasignar el elemento a otro laboratorio: ';
-	let nombre = "";
-	let update = {}
+	let nombre = '';
+	let update = {};
 
-	if(props.todo.codlaboratorio){
+	if (props.todo.codlaboratorio) {
 		titulo = '¿Dese cambiar el estado del laboratorio?';
 		let estado = 'Activo';
 		contenido = 'Esto permitira inhabilitar o habilitar el acceso al laboratorio: ';
@@ -31,10 +31,8 @@ function DeleteDialog(props) {
 			ubicacion: props.todo.ubicacion,
 			observacion: props.todo.observacion,
 			usuario_id: props.todo.usuario_id,
-			estado: estado,
-
+			estado: estado
 		};
-
 	} else {
 		nombre = props.todo.elemento;
 		update = {
@@ -46,7 +44,7 @@ function DeleteDialog(props) {
 			horauso: props.todo.horauso,
 			categoria: props.todo.categoria,
 			estado: props.todo.estado
-		}
+		};
 	}
 
 	const hide = () => {
@@ -68,15 +66,16 @@ function DeleteDialog(props) {
 					color="primary"
 					size="small"
 					endIcon={<Cached />}
-			  		autoFocus
-					onClick={() => {	
-						if(update.codelemento){
+					autoFocus
+					onClick={() => {
+						if (update.codelemento) {
 							context.updateElemento(update);
 						} else {
 							context.updateTodo(update);
 						}
 						hide();
-					}}>
+					}}
+				>
 					cambiar
 				</Button>
 			</DialogActions>

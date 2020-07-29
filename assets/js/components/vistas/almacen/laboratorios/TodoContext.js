@@ -69,6 +69,7 @@ class TodoContextProvider extends Component {
 				if (response.data.message.level === 'success') {
 					let data = [ ...this.state.todos ];
 					data.push(response.data.todo);
+
 					this.setState({
 						todos: data,
 						message: response.data.message
@@ -117,7 +118,7 @@ class TodoContextProvider extends Component {
 	}
 
 	updateElemento(data) {
-		console.log(data)
+		console.log(data);
 		if (data.id.constructor === Array) {
 			data.id.forEach((elemento) => {
 				let informacion = {
@@ -135,9 +136,18 @@ class TodoContextProvider extends Component {
 					.then((response) => {
 						if (response.data.message.level === 'success') {
 							let ele = [ ...this.state.ele ];
-							let eles = ele.find((eles) => {
-								return eles.id === elemento;
+							let elementospres = ele.find((elementospres) => {
+								return elementospres.id === elemento;
 							});
+							console.log(elementospres.laboratorio_id, response.data.elementospres.laboratorio_id);
+							elementospres.laboratorio_id = response.data.elementospres.laboratorio_id;
+							elementospres.codelemento = response.data.elementospres.codelemento;
+							elementospres.elemento = response.data.elementospres.elemento;
+							elementospres.stock = response.data.elementospres.stock;
+							elementospres.horauso = response.data.elementospres.horauso;
+							elementospres.categoria = response.data.elementospres.categoria;
+							elementospres.estado = response.data.elementospres.estado;
+
 							this.setState({
 								ele: ele,
 								message: response.data.message
@@ -152,15 +162,27 @@ class TodoContextProvider extends Component {
 						console.error(error);
 					});
 			});
-		} else {			
+		} else {
 			axios
 				.put('api/elemento/update/' + data.id, data)
 				.then((response) => {
 					if (response.data.message.level === 'success') {
+						console.log(data.id, data);
 						let ele = [ ...this.state.ele ];
-						let eles = ele.find((eles) => {
-							return eles.id === data.id;
+						let elementospres = ele.find((elementospres) => {
+							return elementospres.id === data.id;
 						});
+
+						console.log(elementospres);
+						console.log(elementospres.laboratorio_id, response.data.elementospres.laboratorio_id);
+						elementospres.laboratorio_id = response.data.elementospres.laboratorio_id;
+						elementospres.codelemento = response.data.elementospres.codelemento;
+						elementospres.elemento = response.data.elementospres.elemento;
+						elementospres.stock = response.data.elementospres.stock;
+						elementospres.horauso = response.data.elementospres.horauso;
+						elementospres.categoria = response.data.elementospres.categoria;
+						elementospres.estado = response.data.elementospres.estado;
+
 						this.setState({
 							ele: ele,
 							message: response.data.message

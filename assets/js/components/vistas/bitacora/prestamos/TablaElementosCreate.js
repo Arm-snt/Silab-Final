@@ -38,13 +38,13 @@ const style = {
 };
 
 function TablaElementosCreate({ elemento }) {
-	console.log(elemento);
 	let elementoids = [];
 	elemento.forEach((elementos) => {
 		elementoids.push(elementos.editElemento);
 	});
 	const context = useContext(TodoContext);
 	const elementoscarga = [ ...new Set(elementoids) ];
+	const [ array, setarray ] = useState([]); 
 	let datosE = [];
 	let nuevosE = [];
 	let cantidad = '';
@@ -75,20 +75,9 @@ function TablaElementosCreate({ elemento }) {
 	for (var index = 0; index < nuevosE.length; index++) {
 		datosE.push(nuevosE[index]);
 	}
-
-	function eliminar(elementosDelete) {
-		setEliminarVisible(true);
-	}
-
-	useEffect(
-		() => {
-			datosE.splice(datosE.indexOf(elementosDelete), 1);
-		},
-		[ datosE ]
-	);
-
+	
 	const handleChangePage = (event, newPage) => {
-		setPage(newPage);
+	setPage(newPage);
 	};
 
 	const handleChangeRowsPerPage = (event) => {
@@ -144,8 +133,11 @@ function TablaElementosCreate({ elemento }) {
 														aria-label="upload picture"
 														component="span"
 														onClick={() => {
-															setElementosDelete(todo); //solo eliminar con un splice
-															eliminar();
+															return (															
+																datosE.splice(datosE.indexOf(todo),1),
+																datosE,
+																console.log(datosE)
+																);
 														}}
 													>
 														<Delete fontSize="inherit" />

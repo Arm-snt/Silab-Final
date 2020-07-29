@@ -43,7 +43,7 @@ function DetallesUsuario(data) {
 	const [ editarPassword, setEditarPassword ] = useState(data['data'].password);
 	const [ editarTelefono, setEditarTelefono ] = useState(data['data'].telefono);
 	const [ editarTipousuario, setEditarTipousuario ] = useState(data['data'].tipousuario);
-  const [ editarEstado, setEditarEstado ] = useState(data['data'].estado);
+	const [ editarEstado, setEditarEstado ] = useState(data['data'].estado);
 	const [ arrayLaboratorios, setArrayLaboratorios ] = useState([]);
 
 	function historyBack() {

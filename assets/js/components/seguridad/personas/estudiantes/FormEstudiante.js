@@ -37,7 +37,7 @@ function FormEstudiante() {
   const [addTipodoc, setTipodoc] = useState('')
   const [addDocumento, setDocumento] = useState('')
   const [addTelefono, setTelefono] = useState('')
-  const [addEstado, setEstado] = useState('')
+  const [addEstado, setEstado] = useState('Activo')
 
 
   const onCreateSubmit = (event) => {
@@ -60,7 +60,6 @@ function FormEstudiante() {
     setTipodoc('')
     setDocumento('')
     setTelefono('')
-    setEstado('')
 
   }
 
@@ -73,7 +72,6 @@ function FormEstudiante() {
     { state: 'Ingeniería Mecánica' },
     { state: 'Ingeniería de Sistemas' },
   ]
-  const estado = [{ state: "Activo" }, { state: "Inactivo" }];
   const tipos = [{ state: "CC" }, { state: "TI" }];
 
 
@@ -170,21 +168,6 @@ function FormEstudiante() {
                 fullWidth={true}
               />
             </Grid>
-            <Grid item xs={6} md={4}>
-              <Autocomplete
-                id="combo-box-demo"
-                name="estado"
-                options={estado}
-                onChange={(e, a) => {
-                  setEstado(a !== null ? a.state : '')
-                }}
-                getOptionLabel={(option) => option.state}
-                renderInput={(params) => (
-                  <TextField {...params} label="Seleccione un estado" />
-                )}
-              />
-            </Grid>
-
             <Grid item xs={3} md={2}>
               <Button
                 type="submit"

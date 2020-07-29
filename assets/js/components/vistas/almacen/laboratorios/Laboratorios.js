@@ -1,8 +1,8 @@
 import React, { useContext, useState, Fragment } from 'react';
 import { Table, TableHead, TableRow, TableCell, TableBody, TableContainer, TablePagination } from '@material-ui/core';
-import { Container, Paper,Typography, IconButton } from '@material-ui/core';
+import { Container, Paper, Grid, Link, Typography, IconButton, TextField, InputAdornment } from '@material-ui/core';
 import Icon from '@mdi/react';
-import { mdiFileDocumentEdit, mdiEyeCheck, mdiFileCancel } from '@mdi/js';
+import { mdiFileDocumentEdit, mdiEyeCheck, mdiFileCancel, mdiCardSearch } from '@mdi/js';
 import { TodoContext } from './TodoContext';
 import DeleteDialog from './DeleteDialog';
 
@@ -48,13 +48,18 @@ const style = {
 	},
 	tableCell: {
 		color: '#ffffff'
+	},
+	estado: {
+		color: '#28B463'
 	}
 };
 
 function Laboratorios(props) {
 	const onChangeIndex = props.onChangeIndex;
 	const context = useContext(TodoContext);
-	let Laboratorista = "";
+	let Laboratorista = '';
+	let filtro = {};
+	const [ termino, setTermino ] = useState('');
 	const [ eliminarVisible, setEliminarVisible ] = useState(false);
 	const [ laboratorioEliminar, setLaboratorioEliminar ] = useState(null);
 	const [ page, setPage ] = React.useState(0);
@@ -69,6 +74,19 @@ function Laboratorios(props) {
 		setPage(0);
 	};
 
+	function busqueda(termino) {
+		return function(filtro) {
+			return (
+				filtro.codlaboratorio.toLowerCase().includes(termino.toLowerCase()) ||
+				filtro.nombre.toLowerCase().includes(termino.toLowerCase()) ||
+				filtro.ubicacion.toLowerCase().includes(termino.toLowerCase()) ||
+				filtro.observacion.toLowerCase().includes(termino.toLowerCase()) ||
+				filtro.estado.toLowerCase().includes(termino.toLowerCase()) ||
+				!termino
+			);
+		};
+	}
+
 	function historyBack() {
 		window.history.back();
 	}
@@ -76,6 +94,22 @@ function Laboratorios(props) {
 
 	return (
 		<Fragment>
+			<TextField
+				fullWidth
+				placeholder="Buscar..."
+				onChange={(event) => {
+					setTermino(event.target.value);
+				}}
+				value={termino}
+				style={style.search}
+				InputProps={{
+					startAdornment: (
+						<InputAdornment position="start">
+							<Icon path={mdiCardSearch} size={1.5} color="red" />
+						</InputAdornment>
+					)
+				}}
+			/>
 			<Container style={style.container} component="main" maxWidth="lg" justify="center">
 				<TableContainer component={Paper}>
 					<Table style={style.table} aria-label="customized table">
@@ -84,9 +118,6 @@ function Laboratorios(props) {
 							<TableRow>
 								<TableCell style={style.tableCell} align="center">
 									Laboratorio
-								</TableCell>
-								<TableCell style={style.tableCell} align="center">
-									Código
 								</TableCell>
 								<TableCell style={style.tableCell} align="center">
 									Ubicación
@@ -108,18 +139,14 @@ function Laboratorios(props) {
 						{/*BODY*/}
 						<TableBody>
 							{context.todos
+								.filter(busqueda(termino))
 								.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
 								.reverse()
-								.map((todo, index) => (									
+								.map((todo, index) => (
 									<TableRow key={'todo ' + index}>
-										{/*NOMBRE*/}
-										<TableCell align="center">
-											<Typography style={{ whiteSpace: 'pre-wrap' }}>{todo.nombre}</Typography>
-										</TableCell>
-
 										<TableCell align="center">
 											<Typography style={{ whiteSpace: 'pre-wrap' }}>
-												{todo.codlaboratorio}
+												{todo.codlaboratorio + ' - ' + todo.nombre}
 											</Typography>
 										</TableCell>
 										{/*UBICACIÓN*/}
@@ -135,15 +162,15 @@ function Laboratorios(props) {
 										<TableCell align="center">
 											<Typography style={{ whiteSpace: 'pre-wrap' }}>
 												{context.usu.map((res) => {
-														if (res.id == todo.usuario_id) {
-															Laboratorista = res.codusuario + "-" +res.nombre 
-														}
-													})}
+													if (res.id == todo.usuario_id) {
+														Laboratorista = res.codusuario + '-' + res.usuario;
+													}
+												})}
 												{Laboratorista}
 											</Typography>
 										</TableCell>
 										<TableCell align="center">
-											<Typography style={{ whiteSpace: 'pre-wrap' }}>
+											<Typography style={todo.estado === 'Activo' ? style.estado : null}>
 												{todo.estado}
 											</Typography>
 										</TableCell>
@@ -152,20 +179,23 @@ function Laboratorios(props) {
 												<IconButton
 													onClick={(e) => {
 														onChangeIndex(2, todo, e);
-													}}>
+													}}
+												>
 													<Icon path={mdiFileDocumentEdit} size={1} color="red" />
 												</IconButton>
 												<IconButton
 													onClick={(e) => {
 														onChangeIndex(3, todo, e);
-													}}>
+													}}
+												>
 													<Icon path={mdiEyeCheck} size={1} color="red" />
 												</IconButton>
 												<IconButton
 													onClick={() => {
 														setEliminarVisible(true);
 														setLaboratorioEliminar(todo);
-													}}>
+													}}
+												>
 													<Icon path={mdiFileCancel} size={1} color="gray" />
 												</IconButton>
 											</Fragment>

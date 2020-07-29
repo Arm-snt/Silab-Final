@@ -79,7 +79,6 @@ function EditarEstudiante(data) {
     { state: 'Ingeniería de Sistemas' },
   ]
 
-  const estado = [{ state: "Activo" }, { state: "Inactivo" }];
   const tipos = [{ state: "CC" }, { state: "TI" }];
 
   return (
@@ -173,20 +172,6 @@ function EditarEstudiante(data) {
                 }}
                 label="Teléfono"
                 fullWidth={true}
-              />
-            </Grid>
-            <Grid item xs={6} md={4}>
-              <Autocomplete
-                id="combo-box-demo"
-                name="estado"
-                options={estado}
-                onChange={(e, a) => {
-                  seteditEstado(a !== null ? a.state : '')
-                }}
-                getOptionLabel={(option) => option.state}
-                renderInput={(params) => (
-                  <TextField {...params} label="Seleccione un estado" />
-                )}
               />
             </Grid>
             <Grid item xs={3} md={2}>

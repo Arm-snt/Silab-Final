@@ -11,7 +11,7 @@ const Transicion = React.forwardRef(function Transition(props, ref) {
 function DeleteDialog(props) {
 	const context = useContext(TodoContext);
 	const [ fecha, setFecha ] = useState(new Date());
-
+	console.log(props.todo)
 	let titulo = '¿Desea entregar el elemento del Préstamo?';
 	let elenombre = props.todo.elemento;
 	let contenido = 'El siguiente elemento será devuelto al stock: ' + elenombre + ' ';

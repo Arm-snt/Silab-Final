@@ -78,46 +78,37 @@ export default function SimpleTabs(onchangeTab) {
 	return (
 		<Fragment>
 			<Container className={classes.container} component="main" maxWidth="lg" justify="center">
-				<Paper className={classes.paper}>
-					<div className={classes.root}>
-						<Tabs value={value} onChange={handleChange} indicatorColor="primary" textColor="primary">
-							<Tab label="Estudiantes" {...a11yProps(0)} />
-							<Tab label="Nuevo Estudiante" {...a11yProps(1)} />
-							<Tab label="Editar Estudiante" {...a11yProps(2)} disabled/>
-							<Tab label="Detalles Estudiante" {...a11yProps(3)} disabled />
-						</Tabs>
-						<SwipeableViews
-							axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-							index={value}
-							onChangeIndex={onChangeIndex}
-						>
-							<TabEstudiante value={value} index={0}>
-							<TodoContextProvider>
-									<Estudiantes onChangeIndex={onChangeIndex}/>
-									<EstSnackBar />
-								</TodoContextProvider>
-							</TabEstudiante>
-							<TabEstudiante value={value} index={1}>
-							<TodoContextProvider>
-									<FormEstudiante/>
-									<EstSnackBar />
-								</TodoContextProvider>
-							</TabEstudiante>
-							<TabEstudiante value={value} index={2}>
-							<TodoContextProvider>
+				<TodoContextProvider>
+					<EstSnackBar />
+					<Paper className={classes.paper}>
+						<div className={classes.root}>
+							<Tabs value={value} onChange={handleChange} indicatorColor="primary" textColor="primary">
+								<Tab label="Estudiantes" {...a11yProps(0)} />
+								<Tab label="Nuevo Estudiante" {...a11yProps(1)} />
+								<Tab label="Editar Estudiante" {...a11yProps(2)} disabled />
+								<Tab label="Detalles Estudiante" {...a11yProps(3)} disabled />
+							</Tabs>
+							<SwipeableViews
+								axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+								index={value}
+								onChangeIndex={onChangeIndex}
+							>
+								<TabEstudiante value={value} index={0}>
+									<Estudiantes onChangeIndex={onChangeIndex} />
+								</TabEstudiante>
+								<TabEstudiante value={value} index={1}>
+									<FormEstudiante />
+								</TabEstudiante>
+								<TabEstudiante value={value} index={2}>
 									<EditarEstudiante data={data} />
-									<EstSnackBar />
-							</TodoContextProvider>
-							</TabEstudiante>
-							<TabEstudiante value={value} index={3}>
-							<TodoContextProvider>
+								</TabEstudiante>
+								<TabEstudiante value={value} index={3}>
 									<DetallesEstudiante data={data} />
-									<EstSnackBar />
-							</TodoContextProvider>
-							</TabEstudiante>
-						</SwipeableViews>
-					</div>
-				</Paper>
+								</TabEstudiante>
+							</SwipeableViews>
+						</div>
+					</Paper>
+				</TodoContextProvider>
 			</Container>
 		</Fragment>
 	);

@@ -1,8 +1,8 @@
 import React, { useContext, useState, Fragment } from 'react';
 import { Table, TableHead, TableRow, TableCell, TableBody, TableContainer, TablePagination } from '@material-ui/core';
-import { Container, Paper, Typography, TextField, IconButton } from '@material-ui/core';
+import { Container, Paper, Typography, TextField, IconButton, InputAdornment } from '@material-ui/core';
 import Icon from '@mdi/react';
-import { mdiFileDocumentEdit, mdiEyeCheck, mdiFileCancel } from '@mdi/js';
+import { mdiFileDocumentEdit, mdiEyeCheck, mdiFileCancel, mdiCardSearch } from '@mdi/js';
 import { Autocomplete } from '@material-ui/lab';
 import { CancelRounded } from '@material-ui/icons';
 import DoneIcon from '@material-ui/icons/Done';
@@ -66,8 +66,10 @@ const style = {
 
 function Elementos(props) {
 	const onChangeIndex = props.onChangeIndex;
-	let laboratorio = "";
+	let laboratorio = '';
 	const context = useContext(TodoContext);
+	let filtro = {};
+	const [ termino, setTermino ] = useState('');
 	const [ eliminarVisible, setEliminarVisible ] = useState(false);
 	const [ todoEliminar, setTodoEliminar ] = useState(null);
 	const [ page, setPage ] = React.useState(0);
@@ -86,23 +88,48 @@ function Elementos(props) {
 		window.history.back();
 	}
 
-	const estado = [ { state: 'Activo' }, { state: 'Inactivo' } ];
-	const categoria = [ { state: 'A' }, { state: 'B' }, { state: 'C' } ];
+	function busqueda(termino) {
+		return function(filtro) {
+			return (
+				filtro.codelemento.toString().includes(termino.toLowerCase()) ||
+				filtro.laboratorio_id.toString().includes(termino.toLowerCase()) ||
+				filtro.elemento.toLowerCase().includes(termino.toLowerCase()) ||
+				filtro.stock.toString().includes(termino.toLowerCase()) ||
+				filtro.horauso.toString().includes(termino.toLowerCase()) ||
+				filtro.categoria.toLowerCase().includes(termino.toLowerCase()) ||
+				filtro.estado.toLowerCase().includes(termino.toLowerCase()) ||
+				!termino
+			);
+		};
+	}
 
 	const emptyRows = rowsPerPage - Math.min(rowsPerPage, context.todos.length - page * rowsPerPage);
 
 	return (
 		<Fragment>
+			<TextField
+				fullWidth
+				placeholder="Buscar..."
+				onChange={(event) => {
+					setTermino(event.target.value);
+				}}
+				value={termino}
+				style={style.search}
+				InputProps={{
+					startAdornment: (
+						<InputAdornment position="start">
+							<Icon path={mdiCardSearch} size={1.5} color="red" />
+						</InputAdornment>
+					)
+				}}
+			/>
 			<Container style={style.container} component="main" maxWidth="lg" justify="center">
 				<TableContainer component={Paper} style={style.space}>
 					<Table style={style.table} aria-label="customized table">
 						<TableHead style={style.tableHead}>
 							<TableRow>
 								<TableCell style={style.tableCell} align="center">
-									Código
-								</TableCell>
-								<TableCell style={style.tableCell} align="center">
-									Nombre
+									Elemento
 								</TableCell>
 								<TableCell style={style.tableCell} align="center">
 									Laboratorio
@@ -126,24 +153,21 @@ function Elementos(props) {
 						</TableHead>
 						<TableBody>
 							{context.todos
+								.filter(busqueda(termino))
 								.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
 								.reverse()
 								.map((todo, index) => (
 									<TableRow key={'todo ' + index}>
 										{/*codigo elemento*/}
 										<TableCell align="center">
-											<Typography>{todo.codelemento}</Typography>
-										</TableCell>
-										{/*nombre elemento*/}
-										<TableCell align="center">
-											<Typography>{todo.elemento}</Typography>
+											<Typography>{todo.codelemento + ' - ' + todo.elemento}</Typography>
 										</TableCell>
 										{/*nombre labaratorio*/}
 										<TableCell align="center">
 											<Typography style={{ whiteSpace: 'pre-wrap' }}>
 												{context.lab.map((res) => {
 													if (res.id == todo.laboratorio_id) {
-														laboratorio = res.codlaboratorio + "-" +res.nombre 
+														laboratorio = res.codlaboratorio + '-' + res.nombre;
 													}
 												})}
 												{laboratorio}
@@ -171,19 +195,19 @@ function Elementos(props) {
 												<IconButton
 													onClick={(e) => {
 														onChangeIndex(2, todo, e);
-													}}>
+													}}
+												>
 													<Icon path={mdiFileDocumentEdit} size={1} color="red" />
 												</IconButton>
-												<IconButton
-													onClick={() => {
-													}}>
+												<IconButton onClick={() => {}}>
 													<Icon path={mdiEyeCheck} size={1} color="red" />
 												</IconButton>
 												<IconButton
 													onClick={() => {
 														setEliminarVisible(true);
 														setTodoEliminar(todo);
-													}}>
+													}}
+												>
 													<Icon path={mdiFileCancel} size={1} color="gray" />
 												</IconButton>
 											</Fragment>

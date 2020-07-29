@@ -56,7 +56,7 @@ class ElementoController extends AbstractController
 
         return $this->json([ 
             'todo' => $todo->toArray(),
-            'message' => ['text'=>['El Elemento: '.$content->elemento, ', se ha registrado!'] , 'level'=>'success']
+            'message' => ['text'=>['El Elemento: '.$content->elemento,' se ha registrado!'] , 'level'=>'success']
             ]);
 
     }
@@ -67,12 +67,9 @@ class ElementoController extends AbstractController
 
     public function read()
     {
-        $todos = $this->elementoRepository->findAll();
-        $arrayOfTodos = [];
-        foreach ($todos as $todo){
-            $arrayOfTodos[]=$todo->toArray();
-        }
-        return $this->json($arrayOfTodos);
+        $todos = $this->getDoctrine()->getRepository(Elemento::class, 'default');
+        $todos = $this->elementoRepository->Mostrar();
+        return $this->json($todos);
     }
 
     /**
@@ -83,7 +80,8 @@ class ElementoController extends AbstractController
 
     public function update(Request $request)
     {
-        $content = json_decode($request->getContent());
+        $content = json_decode($request->getContent());      
+        
         $id=$content->id;
         $laboratorio_id=$content->laboratorio_id;
         $codelemento=$content->codelemento;
@@ -92,6 +90,7 @@ class ElementoController extends AbstractController
         $horauso=$content->horauso;
         $categoria=$content->categoria;
         $estado=$content->estado;
+        $elementospres= [];
         
         $todo = $this->getDoctrine()->getRepository(Elemento::class, 'default');
         $todo = $this->elementoRepository->Buscar($id);
@@ -121,7 +120,13 @@ class ElementoController extends AbstractController
                 
                 $todo = $this->getDoctrine()->getRepository(Elemento::class, 'default');
                 $todo = $this->elementoRepository->Actualizar($id, $laboratorio_id, $codelemento, $elemento, $stock, $horauso, $categoria, $estado);
-                $todo = $this->elementoRepository->Buscar($id);
+                // mostrar todos los datos
+                $todo = $this->elementoRepository->InfoLab($id);
+                $elementospres = $this->elementoRepository->TraerElemento($id, $laboratorio_id);
+                //$elementospres = $this->elementoRepository->MostrarPrestatoEle();
+                //$elemento_array = $this->elementoRepository->TraerElemento($id,$laboratorio_id);
+                //array_push($elementospres, $elemento_array);
+                
 
         } catch (Exception $exception) {
             return $this->json([ 
@@ -129,7 +134,8 @@ class ElementoController extends AbstractController
                 ]);
         }
         return $this->json([
-            'todo'    => $todo,
+            'todo' => $todo,            
+            'elementospres' => $elementospres,
             'message' => ['text'=>['El elemento se ha actualizado' ] , 'level'=>'success']      
         ]);
  

@@ -79,46 +79,37 @@ export default function SimpleTabs(onchangeTab) {
 	return (
 		<Fragment>
 			<Container className={classes.container} component="main" maxWidth="lg" justify="center">
-				<Paper className={classes.paper}>
-					<div className={classes.root}>
-						<Tabs value={value} onChange={handleChange} indicatorColor="primary" textColor="primary">
-							<Tab label="Elementos" {...a11yProps(0)} />
-							<Tab label="Nuevo Elemento" {...a11yProps(1)} />
-							<Tab label="Editar Elemento" {...a11yProps(2)} disabled />
-							<Tab label="Detalles Elemento" {...a11yProps(3)} disabled />
-						</Tabs>
-						<SwipeableViews
-							axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-							index={value}
-							onChangeIndex={onChangeIndex}
-						>
-							<TabElemento value={value} index={0}>
-								<TodoContextProvider>
+				<TodoContextProvider>
+					<EstSnackBar />
+					<Paper className={classes.paper}>
+						<div className={classes.root}>
+							<Tabs value={value} onChange={handleChange} indicatorColor="primary" textColor="primary">
+								<Tab label="Elementos" {...a11yProps(0)} />
+								<Tab label="Nuevo Elemento" {...a11yProps(1)} />
+								<Tab label="Editar Elemento" {...a11yProps(2)} disabled />
+								<Tab label="Detalles Elemento" {...a11yProps(3)} disabled />
+							</Tabs>
+							<SwipeableViews
+								axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+								index={value}
+								onChangeIndex={onChangeIndex}
+							>
+								<TabElemento value={value} index={0}>
 									<Elementos onChangeIndex={onChangeIndex} />
-									<EstSnackBar />
-								</TodoContextProvider>
-							</TabElemento>
-							<TabElemento value={value} index={1}>
-								<TodoContextProvider>
+								</TabElemento>
+								<TabElemento value={value} index={1}>
 									<NuevoElemento />
-									<EstSnackBar />
-								</TodoContextProvider>
-							</TabElemento>
-							<TabElemento value={value} index={2}>
-								<TodoContextProvider>
+								</TabElemento>
+								<TabElemento value={value} index={2}>
 									<EditarElemento data={data} />
-									<EstSnackBar />
-								</TodoContextProvider>
-							</TabElemento>
-							<TabElemento value={value} index={3}>
-								<TodoContextProvider>
+								</TabElemento>
+								<TabElemento value={value} index={3}>
 									<DetallesElemento />
-									<EstSnackBar />
-								</TodoContextProvider>
-							</TabElemento>
-						</SwipeableViews>
-					</div>
-				</Paper>
+								</TabElemento>
+							</SwipeableViews>
+						</div>
+					</Paper>
+				</TodoContextProvider>
 			</Container>
 		</Fragment>
 	);

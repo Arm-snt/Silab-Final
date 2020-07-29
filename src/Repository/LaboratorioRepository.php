@@ -23,10 +23,51 @@ class LaboratorioRepository extends ServiceEntityRepository
         try {
             $conn = $this->getEntityManager()->getConnection();
             $stm = $conn->prepare("SELECT lab.id, lab.codlaboratorio, lab.nombre, lab.ubicacion, lab.usuario_id, lab.observacion, lab.estado
-            FROM laboratorio lab
-            GROUP BY lab.id");
+            FROM laboratorio lab");
             $stm->execute([]);
             $res = $stm->fetchAll();
+            return $res;
+        } catch (Exception $e) {
+            return $e;
+        }
+    }
+
+    public function MostrarPrestatoEle(){
+        try {
+            $conn = $this->getEntityManager()->getConnection();
+            $stm = $conn->prepare("SELECT lab.id, ele.id, ele.laboratorio_id, ele.codelemento, ele.elemento, ele.stock, ele.horauso, ele.categoria, ele.estado
+            FROM laboratorio lab, elemento ele
+            WHERE ele.laboratorio_id=lab.id");
+            $stm->execute([]);
+            $res = $stm->fetchAll();
+            return $res;
+        } catch (Exception $e) {
+            return $e;
+        }
+    }
+
+    public function TraerElemento($id,$laboratorio_id){
+        try {
+            $conn = $this->getEntityManager()->getConnection();
+            $stm = $conn->prepare(" SELECT lab.id, ele.id, ele.laboratorio_id, ele.codelemento, ele.elemento, ele.stock, ele.horauso, ele.categoria, ele.estado
+            FROM laboratorio lab, elemento ele
+            WHERE ele.laboratorio_id=:lab AND lab.id=:laboratorio_id AND ele.laboratorio_id=:laboratorio_id");
+            if($stm->execute(array(':lab'=>$id,':laboratorio_id'=>$laboratorio_id)))
+            $res = $stm->fetch();
+            return $res;
+        } catch (Exception $e) {
+            return $e;
+        }
+    }
+
+    public function TraerLaboratorio($id,$usuario_id){
+        try {
+            $conn = $this->getEntityManager()->getConnection();
+            $stm = $conn->prepare(" SELECT lab.id, lab.codlaboratorio, lab.nombre, lab.ubicacion, lab.observacion, lab.usuario_id, lab.estado
+            FROM laboratorio lab, usuario usu
+            WHERE lab.id=:lab AND lab.usuario_id=:usuario_id AND usu.id=:usuario_id");
+            if($stm->execute(array(':lab'=>$id,':usuario_id'=>$usuario_id)))
+            $res = $stm->fetch();
             return $res;
         } catch (Exception $e) {
             return $e;
@@ -50,6 +91,21 @@ class LaboratorioRepository extends ServiceEntityRepository
             $stm = $conn->prepare(" SELECT lab.codlaboratorio, lab.nombre, lab.ubicacion, lab.observacion, lab.usuario_id, lab.estado
             FROM laboratorio lab
             WHERE lab.id=:lab");
+            $lab=$id;
+            if($stm->execute(array(':lab'=>$lab)))
+            $res = $stm->fetch();
+            return $res;
+        } catch (Exception $e) {
+            return $e;
+        }
+    }
+
+    public function InfoLab($id){
+        try {
+            $conn = $this->getEntityManager()->getConnection();
+            $stm = $conn->prepare(" SELECT lab.codlaboratorio, lab.nombre, lab.ubicacion, lab.observacion, lab.usuario_id, lab.estado
+            FROM elemento ele, laboratorio lab
+            WHERE lab.id=:lab AND lab.id=ele.laboratorio_id");
             $lab=$id;
             if($stm->execute(array(':lab'=>$lab)))
             $res = $stm->fetch();

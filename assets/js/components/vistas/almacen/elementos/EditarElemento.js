@@ -60,7 +60,6 @@ function EditarElemento(data) {
 	};
 
 	
-	const estado = [{ state: "Activo" }, { state: "Inactivo" }];
 	const categoria = [{ state: "A" }, { state: "B" }, { state: "C" }];
 
 	function historyBack() {
@@ -134,16 +133,6 @@ function EditarElemento(data) {
 								}}
 								getOptionLabel={(option) => option.state}
 								renderInput={(params) => <TextField {...params} label="Categoria" />}
-							/>
-						</Grid>
-						<Grid item md={6} xs={6}>
-							<Autocomplete
-								options={estado}
-								onChange={(e, a) => {
-									seteditarEstado(a !== null ? a.state : '');
-								}}
-								getOptionLabel={(option) => option.state}
-								renderInput={(params) => <TextField {...params} label="Estado" />}
 							/>
 						</Grid>
 						<Grid item xs={6} md={2}>

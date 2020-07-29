@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect, Fragment } from 'react';
-import {Table,TableHead,TableRow,TableCell,TableBody,TableContainer,TablePagination} from '@material-ui/core';
+import { Table, TableHead, TableRow, TableCell, TableBody, TableContainer, TablePagination } from '@material-ui/core';
 import { Container, Paper, Typography, IconButton, Button } from '@material-ui/core';
 import { Delete } from '@material-ui/icons';
 import { TodoContext } from './TodoContext';
@@ -38,6 +38,7 @@ const style = {
 };
 
 function TablaElementos({ data, elemento }) {
+	console.log(data, elemento);
 	const context = useContext(TodoContext);
 	const elementoscarga = [ ...new Set(elemento) ];
 	let datosE = [];
@@ -50,8 +51,9 @@ function TablaElementos({ data, elemento }) {
 	context.ele.map((res) => {
 		if (res.laboratorio_id == data) {
 			datosE.push(res);
-		}
+		}		
 	});
+	console.log(datosE)
 
 	context.ele.map((res) => {
 		elementoscarga.forEach((elementoscarga) => {
@@ -61,6 +63,7 @@ function TablaElementos({ data, elemento }) {
 		});
 	});
 
+	console.log(elementoscarga);
 	for (var index = 0; index < nuevosE.length; index++) {
 		datosE.push(nuevosE[index]);
 	}
@@ -69,10 +72,6 @@ function TablaElementos({ data, elemento }) {
 		setEliminarVisible(true);
 	}
 	
-	useEffect(() => {
-		datosE.splice(datosE.indexOf(elementosDelete), 1);
-	}, [datosE])
-
 	const handleChangePage = (event, newPage) => {
 		setPage(newPage);
 	};
@@ -153,11 +152,7 @@ function TablaElementos({ data, elemento }) {
 				/>
 			</Container>
 			{eliminarVisible && (
-				<DeleteDialog
-					todo={elementosDelete}
-					open={eliminarVisible}
-					setEliminarVisible={setEliminarVisible}
-				/>
+				<DeleteDialog todo={elementosDelete} open={eliminarVisible} setEliminarVisible={setEliminarVisible} />
 			)}
 		</Fragment>
 	);

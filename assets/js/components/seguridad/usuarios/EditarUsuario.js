@@ -184,17 +184,6 @@ function EditarUsuario(data) {
 								renderInput={(params) => <TextField {...params} label="Tipo de usuario" />}
 							/>
 						</Grid>
-						<Grid item md={4} xs={6}>
-							<TextField
-								type="text"
-								value={editarEstado}
-								onChange={(event) => {
-									setEditarEstado(event.target.value);
-								}}
-								fullWidth
-								label="Estado"
-							/>
-						</Grid>
 						<Grid item xs={3} md={2}>
 							<Button
 								type="submit"
@@ -222,39 +211,45 @@ function EditarUsuario(data) {
 							</Button>
 						</Grid>
 					</Grid>
-					<Grid container spacing={2} style={style.grid}>
+					{editarTipousuario == 'Laboratorista' && editarEstado == 'Activo' ? (
+						<Grid container spacing={2} style={style.grid}>
+							<Grid item md={12} xs={12}>
+								<Divider />
+							</Grid>
+							<Grid item xs={6} md={6}>
+								<Autocomplete
+									options={laboratorios}
+									onChange={(e, a) => {
+										setEditarLaboratorio(a !== null ? a.id : '');
+									}}
+									getOptionLabel={(option) => option.codlaboratorio + '-' + option.nombre}
+									renderInput={(params) => <TextField {...params} label="Asignar Laboratorio" />}
+								/>
+							</Grid>
+							<Grid item xs={3} md={2}>
+								<Button
+									variant="contained"
+									fullWidth
+									size="small"
+									color="primary"
+									style={style.submit}
+									endIcon={<Send />}
+									onClick={() => {
+										cargar();
+									}}
+								>
+									Cargar
+								</Button>
+							</Grid>
+							<Grid item md={12} xs={12}>
+								<Divider />
+							</Grid>
+						</Grid>
+					) : (
 						<Grid item md={12} xs={12}>
 							<Divider />
 						</Grid>
-						<Grid item xs={6} md={6}>
-							<Autocomplete
-								options={laboratorios}
-								onChange={(e, a) => {
-									setEditarLaboratorio(a !== null ? a.id : '');
-								}}
-								getOptionLabel={(option) => option.codlaboratorio + '-' + option.nombre}
-								renderInput={(params) => <TextField {...params} label="Asignar Laboratorio" />}
-							/>
-						</Grid>
-						<Grid item xs={3} md={2}>
-							<Button
-								variant="contained"
-								fullWidth
-								size="small"
-								color="primary"
-								style={style.submit}
-								endIcon={<Send />}
-								onClick={() => {
-									cargar();
-								}}
-							>
-								Cargar
-							</Button>
-						</Grid>
-						<Grid item md={12} xs={12}>
-							<Divider />
-						</Grid>
-					</Grid>
+					)}
 					<TablaLaboratorios data={editarId} laboratorio={arrayLaboratorios} />
 				</form>
 			</Paper>

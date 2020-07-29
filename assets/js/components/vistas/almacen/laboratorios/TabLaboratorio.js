@@ -79,44 +79,37 @@ export default function SimpleTabs(onchangeTab) {
 	return (
 		<Fragment>
 			<Container className={classes.container} component="main" maxWidth="lg" justify="center">
-				<Paper className={classes.paper}>
-					<div className={classes.root}>
-						<Tabs value={value} onChange={handleChange} indicatorColor="primary" textColor="primary">
-							<Tab label="Laboratorios" {...a11yProps(0)} />
-							<Tab label="Nuevo Laboratorio" {...a11yProps(1)} />
-							<Tab label="Editar Laboratorio" {...a11yProps(2)} disabled />
-							<Tab label="Detalles Laboratorio" {...a11yProps(3)} disabled />
-						</Tabs>
-						<SwipeableViews
-							axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-							index={value}
-							onChangeIndex={onChangeIndex}>
-							<TabLaboratorio value={value} index={0}>
-								<TodoContextProvider>
+				<TodoContextProvider>
+					<EstSnackBar />
+					<Paper className={classes.paper}>
+						<div className={classes.root}>
+							<Tabs value={value} onChange={handleChange} indicatorColor="primary" textColor="primary">
+								<Tab label="Laboratorios" {...a11yProps(0)} />
+								<Tab label="Nuevo Laboratorio" {...a11yProps(1)} />
+								<Tab label="Editar Laboratorio" {...a11yProps(2)} disabled />
+								<Tab label="Detalles Laboratorio" {...a11yProps(3)} disabled />
+							</Tabs>
+							<SwipeableViews
+								axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+								index={value}
+								onChangeIndex={onChangeIndex}
+							>
+								<TabLaboratorio value={value} index={0}>
 									<Laboratorios onChangeIndex={onChangeIndex} />
-									<EstSnackBar />
-								</TodoContextProvider>
-							</TabLaboratorio>
-							<TabLaboratorio value={value} index={1}>
-								<TodoContextProvider>
+								</TabLaboratorio>
+								<TabLaboratorio value={value} index={1}>
 									<NuevoLaboratorio />
-									<EstSnackBar />
-								</TodoContextProvider>
-							</TabLaboratorio>
-							<TabLaboratorio value={value} index={2}>
-								<TodoContextProvider>
+								</TabLaboratorio>
+								<TabLaboratorio value={value} index={2}>
 									<EditarLaboratorio data={data} />
-									<EstSnackBar />
-								</TodoContextProvider>
-							</TabLaboratorio>
-							<TabLaboratorio value={value} index={3}>
-								<TodoContextProvider>
+								</TabLaboratorio>
+								<TabLaboratorio value={value} index={3}>
 									<DetallesLaboratorio data={data} />
-								</TodoContextProvider>
-							</TabLaboratorio>
-						</SwipeableViews>
-					</div>
-				</Paper>
+								</TabLaboratorio>
+							</SwipeableViews>
+						</div>
+					</Paper>
+				</TodoContextProvider>
 			</Container>
 		</Fragment>
 	);

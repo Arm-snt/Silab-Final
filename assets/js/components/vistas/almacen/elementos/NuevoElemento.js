@@ -38,7 +38,7 @@ function NuevoElemento (){
   const [Stock,setStock]=useState("");
   const [HoraUso,setHoraUso]=useState("");
   const [Categoria,setCategoria]=useState("");
-  const [Estado,setEstado]=useState("");
+  const [Estado,setEstado]=useState("Activo");
 
   const onCreateSubmit = (event) =>{
     event.preventDefault();
@@ -55,14 +55,12 @@ function NuevoElemento (){
     setStock("");
     setHoraUso("");
     setCategoria("");
-    setEstado("");
   }
 
   function historyBack() {
     window.history.back();
   }
 
-  const estado = [{ state: "Activo" }, { state: "Inactivo" }];
   const categoria = [{ state: "A" }, { state: "B" }, { state: "C" }];
 
   /*const detalles1 = [
@@ -130,23 +128,6 @@ function NuevoElemento (){
                     setHoraUso(event.target.value);
                 }}/>
               </Grid>
-              <Grid item xs={6} md={4}>
-                <Autocomplete
-                  id="combo-box-demo"
-                  name="estado"
-                  options={estado}
-                  onChange={(e, a) => {
-                    setEstado(a !== null ? a.state : "");
-                }}
-                  getOptionLabel={option => option.state}
-                  renderInput={params => (
-                    <TextField
-                      {...params}
-                      label="Seleccione un estado"/>
-                  )}
-                />
-              </Grid>
-
               <Grid item xs={6} md={4}>
                 <Autocomplete
                   id="combo-box-demo"

@@ -74,6 +74,7 @@ class TodoContextProvider extends Component {
 			.put('api/elemento/update/' + data.id, data)
 			.then((response) => {
 				if (response.data.message.level === 'success') {
+					console.log(data.id, data);
 					let todos = [ ...this.state.todos ];
 					let todo = todos.find((todo) => {
 						return todo.id === data.id;
