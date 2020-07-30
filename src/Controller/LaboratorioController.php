@@ -54,6 +54,7 @@ class LaboratorioController extends AbstractController
             
             $todo = $this->getDoctrine()->getRepository(Laboratorio::class, 'default');
             $todo = $this->laboratorioRepository->Insertar($codlaboratorio, $usuario_id, $nombre, $ubicacion, $observacion, $estado);
+            $todo = $this->laboratorioRepository->Mostrar();
                 
         } catch (Exception $exception) {
             return $this->json([ 
@@ -61,6 +62,7 @@ class LaboratorioController extends AbstractController
                 ]);
         }  
             return $this->json([
+                'todo'=>$todo,
                 'message' => ['text'=>['El laboratorio de '.$nombre, 'se ha registrado!' ] , 'level'=>'success']      
                  ]);
     }

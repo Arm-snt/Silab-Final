@@ -77,7 +77,7 @@ function Laboratorios(props) {
 	function busqueda(termino) {
 		return function(filtro) {
 			return (
-				filtro.codlaboratorio.toLowerCase().includes(termino.toLowerCase()) ||
+				filtro.codlaboratorio.toString().includes(termino.toLowerCase()) || 
 				filtro.nombre.toLowerCase().includes(termino.toLowerCase()) ||
 				filtro.ubicacion.toLowerCase().includes(termino.toLowerCase()) ||
 				filtro.observacion.toLowerCase().includes(termino.toLowerCase()) ||

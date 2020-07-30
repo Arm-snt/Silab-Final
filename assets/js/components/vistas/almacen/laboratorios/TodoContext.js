@@ -67,11 +67,11 @@ class TodoContextProvider extends Component {
 			.post('api/laboratorio/create', todo)
 			.then((response) => {
 				if (response.data.message.level === 'success') {
-					let data = [ ...this.state.todos ];
-					data.push(response.data.todo);
+					let todos = [ ...this.state.todos ];
+					todos.push(response.data.todo);
 
 					this.setState({
-						todos: data,
+						todos: todos,
 						message: response.data.message
 					});
 				} else {

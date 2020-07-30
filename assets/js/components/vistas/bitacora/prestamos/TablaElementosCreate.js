@@ -37,7 +37,8 @@ const style = {
 	}
 };
 
-function TablaElementosCreate({ elemento }) {
+function TablaElementosCreate({ elemento, eliminar }) {
+	console.log(elemento);
 	let elementoids = [];
 	elemento.forEach((elementos) => {
 		elementoids.push(elementos.editElemento);
@@ -45,7 +46,6 @@ function TablaElementosCreate({ elemento }) {
 	const context = useContext(TodoContext);
 	const elementoscarga = [ ...new Set(elementoids) ];
 	const [ array, setarray ] = useState([]); 
-	let datosE = [];
 	let nuevosE = [];
 	let cantidad = '';
 	let check = false;
@@ -58,7 +58,7 @@ function TablaElementosCreate({ elemento }) {
 		elementoscarga.forEach((elementoscarga) => {
 			if (res.id == elementoscarga) {
 				elemento.forEach((elementos) => {
-					if (elementos.editElemento == elementoscarga && res.stock >= elementos.cantidad) {
+					if (elementos.editElemento == elementoscarga) {
 						cantidad = elementos.cantidad;
 						check = true;
 					}
@@ -71,10 +71,6 @@ function TablaElementosCreate({ elemento }) {
 			}
 		});
 	});
-
-	for (var index = 0; index < nuevosE.length; index++) {
-		datosE.push(nuevosE[index]);
-	}
 	
 	const handleChangePage = (event, newPage) => {
 	setPage(newPage);
@@ -110,7 +106,7 @@ function TablaElementosCreate({ elemento }) {
 						</TableHead>
 						{/*BODY*/}
 						<TableBody>
-							{datosE
+							{nuevosE
 								.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
 								.reverse()
 								.map((todo, index) => {
@@ -133,11 +129,7 @@ function TablaElementosCreate({ elemento }) {
 														aria-label="upload picture"
 														component="span"
 														onClick={() => {
-															return (															
-																datosE.splice(datosE.indexOf(todo),1),
-																datosE,
-																console.log(datosE)
-																);
+																eliminar({editElemento:todo.id,cantidad:todo.cantidad});
 														}}
 													>
 														<Delete fontSize="inherit" />
@@ -153,7 +145,7 @@ function TablaElementosCreate({ elemento }) {
 				<TablePagination
 					rowsPerPageOptions={[ 5, 10, 25 ]}
 					component="div"
-					count={datosE.length}
+					count={nuevosE.length}
 					rowsPerPage={rowsPerPage}
 					page={page}
 					onChangePage={handleChangePage}

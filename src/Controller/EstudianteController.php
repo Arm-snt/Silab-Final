@@ -57,6 +57,7 @@ class EstudianteController extends AbstractController
             
             $todo = $this->getDoctrine()->getRepository(Estudiante::class, 'default');
             $todo = $this->estudianteRepository->Insertar($codigo, $nombre, $programa, $email, $tipodoc, $documento, $telefono, $estado);
+            $todo = $this->estudianteRepository->Mostrar();
                 
         } catch (Exception $exception) {
             return $this->json([ 
@@ -64,6 +65,7 @@ class EstudianteController extends AbstractController
                 ]);
         }  
             return $this->json([
+                'todo'=>$todo,
                 'message' => ['text'=>['El estudiante '.$nombre, 'se ha registrado!' ] , 'level'=>'success']      
                  ]);
     }

@@ -78,6 +78,8 @@ function EditarLaboratorio(data) {
 				id: editElementop,
 				laboratorio_id: editId
 			});
+			seteditElemento('');
+			seteditElementop([]);
 		}
 	};
 

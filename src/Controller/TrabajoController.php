@@ -50,6 +50,7 @@ class TrabajoController extends AbstractController
             
             $todo = $this->getDoctrine()->getRepository(Trabajo::class, 'default');
             $todo = $this->trabajoRepository->Insertar($estudiante_id,$registro,$descripcion);
+            $todo = $this->trabajoRepository->Mostrar();
                 
         } catch (Exception $exception) {
             return $this->json([ 
@@ -57,6 +58,7 @@ class TrabajoController extends AbstractController
                 ]);
         }  
             return $this->json([
+                'todo'=>$todo,
                 'message' => ['text'=>['El trabajo de '.$estudiante_id, 'se ha registrado!' ] , 'level'=>'success']      
                  ]);
     }

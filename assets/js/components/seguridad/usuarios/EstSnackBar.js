@@ -1,5 +1,6 @@
 import { Snackbar, SnackbarContent, Button } from '@material-ui/core';
 import React, { useContext, Fragment } from 'react';
+import Alert from '@material-ui/lab/Alert';
 import { TodoContext } from './TodoContext';
 
 const style = {
@@ -43,8 +44,10 @@ function EstSnackBar() {
 					style={{ backgroundColor: checkLevel(context.message.level) }}
 					message={context.message.text.map((text, index) => (
 						<Fragment key={index + ' ' + text}>
-							<span>{text}</span>
-							<br />
+							<Alert severity={context.message.level}>
+								<span>{text}</span>
+								<br />
+							</Alert>
 						</Fragment>
 					))}
 					action={[

@@ -124,7 +124,8 @@ function NuevoPrestamo() {
 				}
 			});
 			if (a) {
-				if (Stock > cantidad) {
+				console.log((parseInt(Stock)),(parseInt(cantidad)));
+				if ((parseInt(Stock)) > (parseInt(cantidad)) || (parseInt(Stock)) == (parseInt(cantidad))) {
 					editElementop.push({ editElemento, cantidad });
 					seteditElemento('');
 					setcantidad('');
@@ -140,6 +141,14 @@ function NuevoPrestamo() {
 				}
 			}
 		}
+	}
+	const eliminar = (data) => {
+		console.log(data);
+		editElementop.splice(editElementop.indexOf(data),1);
+		context.setMessage({
+			level: 'success',
+			text: [ 'Se elimino el elemento de la lista de prestamo!' ]
+		});
 	}
 
 	const agregarfechayhora = (date) => {
@@ -363,7 +372,7 @@ function NuevoPrestamo() {
 							<Divider />
 						</Grid>
 					</Grid>
-					<TablaElementosCreate elemento={editElementop} />
+					<TablaElementosCreate elemento={editElementop} eliminar={eliminar}/>
 				</form>
 			</Paper>
 		</Container>

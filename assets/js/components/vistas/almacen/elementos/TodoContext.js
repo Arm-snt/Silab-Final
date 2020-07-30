@@ -53,6 +53,7 @@ class TodoContextProvider extends Component {
 				if (response.data.message.level === 'success') {
 					let data = [ ...this.state.todos ];
 					data.push(response.data.todo);
+					
 					this.setState({
 						todos: data,
 						message: response.data.message
