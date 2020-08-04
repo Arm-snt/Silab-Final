@@ -68,21 +68,6 @@ function NuevoTrabajo() {
 		console.log(selectedDate);
 	  };
 
-	const contextdept = 
-		[{ id: 1, coddepartamento: 658875, departamento: "Departamento de Sistemas e Informática" },
-		{ id: 2, coddepartamento: 655673, departamento: "Departamento de Ingeniería Civil" },
-		{ id: 3, coddepartamento: 668035, departamento: "Departamento de Ingeniería Mecánica" }];
-	
-		const contextasig = 
-		[{ id: 1, codasignatura: 342875, asignatura: "Fisica General" },
-		{ id: 2, codasignatura: 345373, asignatura: "Electronica General" },
-		{ id: 3, codasignatura: 348035, asignatura: "Ondas y Particulas" }];
-
-		const contextpro = 
-		[{ id: 1, codprograma: 560675, programa: "Ingeniería de Sistemas" },
-		{ id: 2, codprograma: 560373, programa: "Ingeniería Civil" },
-		{ id: 3, codprograma: 560135, programa: "Ingeniería Mecánica" }];
-
 	function historyBack() {
 		window.history.back();
 	}
@@ -111,7 +96,7 @@ function NuevoTrabajo() {
 								onChange={(e, a) => {
 									setAddLaboratorio(a !== null ? a.id : '');
 								}}
-								getOptionLabel={(option) => option.coddepartamento + '-' + option.departamento}
+								getOptionLabel={(option) => option.codigo + '-' + option.nombre}
 								renderInput={(params) => <TextField {...params} label="Departamento" />}
 							/>
 						</Grid>
@@ -122,7 +107,7 @@ function NuevoTrabajo() {
 									setAddUsuario(a !== null ? a.id : '');
 								}}
 								getOptionLabel={(option) => option.codusuario + '-' + option.nombre}
-								renderInput={(params) => <TextField {...params} label="Coordinador Laboratorio" />}
+								renderInput={(params) => <TextField {...params} label="Laboratorista" />}
 							/>
 						</Grid>
 						<Grid item md={12} xs={12}>

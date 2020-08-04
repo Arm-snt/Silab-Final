@@ -12,9 +12,11 @@ class TodoContextProvider extends Component {
 			est: [],
 			lab:[],
 			usu:[],
+			facu:[],
 			message: {}
 		};
 		this.readTodo();
+		this.readFacultad();
 		this.readLaboratorios();
 		this.readUsuario();
 		this.leer();
@@ -33,6 +35,7 @@ class TodoContextProvider extends Component {
 				console.error(error);
 			});
 	}
+
 	readUsuario() {
 		axios
 			.get('api/usuario/read')
@@ -45,6 +48,20 @@ class TodoContextProvider extends Component {
 				console.error(error);
 			});
 	}
+
+	readFacultad() {
+		axios
+			.get('api/facultad/read')
+			.then((response) => {
+				this.setState({
+				facu: response.data
+				});
+			})
+			.catch((error) => {
+				console.error(error);
+			});
+	}
+
 	readLaboratorios() {
 		axios
 			.get('api/laboratorio/read')

@@ -53,6 +53,7 @@ class Laboratorio
      */
     private $elementos;
 
+    
     public function __construct()
     {
         $this->elementos = new ArrayCollection();
@@ -165,4 +166,5 @@ class Laboratorio
 
         return $this;
     }
+
 }
