@@ -9,8 +9,9 @@ import { Container, Paper } from '@material-ui/core';
 import SwipeableViews from 'react-swipeable-views';
 import TodoContextProvider from './TodoContext';
 import EstSnackBar from './EstSnackBar';
-import TodoTable from './TodoTable';
+import Trabajos from './Trabajos';
 import NuevoTrabajo from './NuevoTrabajo';
+import EditarTrabajo from './EditarTrabajo';
 //import DetallesTrabajo from "./DetallesTrabajo";
 
 function TabTrabajo(props) {
@@ -65,46 +66,49 @@ export default function SimpleTabs(onchangeTab) {
 	const classes = useStyles();
 	const theme = useTheme();
 	const [ value, setValue ] = React.useState(0);
+	const [ data, setData ] = React.useState('');
 
 	const handleChange = (event, newValue) => {
 		setValue(newValue);
 	};
 
-	const onChangeIndex = (index) => {
+	const onChangeIndex = (index, data) => {
 		setValue(index);
+		setData(data);
 	};
 
 	return (
 		<Fragment>
 			<Container className={classes.container} component="main" maxWidth="lg" justify="center">
-				<Paper className={classes.paper}>
-					<div className={classes.root}>
-						<Tabs value={value} onChange={handleChange} indicatorColor="primary" textColor="primary">
-							<Tab label="Trabajos" {...a11yProps(0)} />
-							<Tab label="Nuevo Trabajo" {...a11yProps(1)} />
-							<Tab label="Detalles Trabajo" {...a11yProps(2)} disabled />
-						</Tabs>
-						<SwipeableViews
-							axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-							index={value}
-							onChangeIndex={onChangeIndex}
-						>
-							<TabTrabajo value={value} index={0}>
-								<TodoContextProvider>
-									<TodoTable />
-									<EstSnackBar />
-								</TodoContextProvider>
-							</TabTrabajo>
-							<TabTrabajo value={value} index={1}>
-								<TodoContextProvider>
-									<NuevoTrabajo />
-									<EstSnackBar />
-								</TodoContextProvider>
-							</TabTrabajo>
-							<TabTrabajo value={value} index={2} />
-						</SwipeableViews>
-					</div>
-				</Paper>
+				<TodoContextProvider>
+					<EstSnackBar />
+					<Paper className={classes.paper}>
+						<div className={classes.root}>
+							<Tabs value={value} onChange={handleChange} indicatorColor="primary" textColor="primary">
+								<Tab label="Trabajos" {...a11yProps(0)} />
+								<Tab label="Nuevo Trabajo" {...a11yProps(1)} />
+								<Tab label="Editar Trabajo" {...a11yProps(2)} disabled />
+								<Tab label="Detalles Trabajo" {...a11yProps(3)} disabled />
+							</Tabs>
+							<SwipeableViews
+								axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
+								index={value}
+								onChangeIndex={onChangeIndex}
+							>
+								<TabTrabajo value={value} index={0}>
+									<Trabajos onChangeIndex={onChangeIndex} />
+								</TabTrabajo>
+								<TabTrabajo value={value} index={1}>
+									<NuevoTrabajo data={data} />
+								</TabTrabajo>
+								<TabTrabajo value={value} index={2}>
+									<EditarTrabajo data={data} />
+								</TabTrabajo>
+								<TabTrabajo value={value} index={3} />
+							</SwipeableViews>
+						</div>
+					</Paper>
+				</TodoContextProvider>
 			</Container>
 		</Fragment>
 	);

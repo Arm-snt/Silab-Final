@@ -67,9 +67,15 @@ class Usuario
      */
     private $laboratorios;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Trabajo", mappedBy="usuario")
+     */
+    private $trabajos;
+
     public function __construct()
     {
         $this->laboratorios = new ArrayCollection();
+        $this->trabajos = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -214,6 +220,37 @@ class Usuario
             // set the owning side to null (unless already changed)
             if ($laboratorio->getUsuario() === $this) {
                 $laboratorio->setUsuario(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Trabajo[]
+     */
+    public function getTrabajos(): Collection
+    {
+        return $this->trabajos;
+    }
+
+    public function addTrabajo(Trabajo $trabajo): self
+    {
+        if (!$this->trabajos->contains($trabajo)) {
+            $this->trabajos[] = $trabajo;
+            $trabajo->setUsuario($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTrabajo(Trabajo $trabajo): self
+    {
+        if ($this->trabajos->contains($trabajo)) {
+            $this->trabajos->removeElement($trabajo);
+            // set the owning side to null (unless already changed)
+            if ($trabajo->getUsuario() === $this) {
+                $trabajo->setUsuario(null);
             }
         }
 

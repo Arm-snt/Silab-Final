@@ -30,11 +30,6 @@ class Estudiante
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $programa;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
     private $email;
 
     /**
@@ -53,51 +48,26 @@ class Estudiante
     private $estado;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Trabajo", mappedBy="estudiante")
-     */
-    private $trabajos;
-
-    /**
      * @ORM\Column(type="string", length=255)
      */
     private $telefono;
 
-   
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Programa", inversedBy="programa")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $programa;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Trabajo", mappedBy="estudiante")
+     */
+    private $trabajos;
+
     public function __construct()
     {
         $this->trabajos = new ArrayCollection();
-    }
-
-    /**
-     * @return Collection|Trabajo[]
-     */
-    public function getTrabajos(): Collection
-    {
-        return $this->trabajos;
-    }
-
-    public function addTrabajo(Trabajo $trabajo): self
-    {
-        if (!$this->trabajos->contains($trabajo)) {
-            $this->trabajos[] = $trabajo;
-            $trabajo->setEstudiante($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTrabajo(Trabajo $trabajo): self
-    {
-        if ($this->trabajos->contains($trabajo)) {
-            $this->trabajos->removeElement($trabajo);
-            // set the owning side to null (unless already changed)
-            if ($trabajo->getEstudiante() === $this) {
-                $trabajo->setEstudiante(null);
-            }
-        }
-
-        return $this;
-    }
+    }   
+    
 
     public function getId(): ?int
     {
@@ -126,19 +96,7 @@ class Estudiante
         $this->nombre = $nombre;
 
         return $this;
-    }
-
-    public function getPrograma(): ?string
-    {
-        return $this->programa;
-    }
-
-    public function setPrograma(string $programa): self
-    {
-        $this->programa = $programa;
-
-        return $this;
-    }
+    }   
 
     public function getEmail(): ?string
     {
@@ -196,6 +154,49 @@ class Estudiante
     public function setTelefono(string $telefono): self
     {
         $this->telefono = $telefono;
+
+        return $this;
+    }
+
+    public function getPrograma(): ?Programa
+    {
+        return $this->programa;
+    }
+
+    public function setPrograma(?Programa $programa): self
+    {
+        $this->programa = $programa;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Trabajo[]
+     */
+    public function getTrabajos(): Collection
+    {
+        return $this->trabajos;
+    }
+
+    public function addTrabajo(Trabajo $trabajo): self
+    {
+        if (!$this->trabajos->contains($trabajo)) {
+            $this->trabajos[] = $trabajo;
+            $trabajo->setEstudiante($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTrabajo(Trabajo $trabajo): self
+    {
+        if ($this->trabajos->contains($trabajo)) {
+            $this->trabajos->removeElement($trabajo);
+            // set the owning side to null (unless already changed)
+            if ($trabajo->getEstudiante() === $this) {
+                $trabajo->setEstudiante(null);
+            }
+        }
 
         return $this;
     }

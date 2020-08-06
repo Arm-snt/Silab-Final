@@ -43,7 +43,7 @@ function DeleteDialog(props) {
 							id: props.todo.id,
 							codigo: props.todo.codigo,
 							nombre: props.todo.nombre,
-							programa:props.todo.programa,
+							programa_id:props.todo.programa_id,
 							email:props.todo.email,
 							tipodoc:props.todo.tipodoc,
 							documento:props.todo.documento,

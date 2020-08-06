@@ -19,6 +19,19 @@ class ProgramaRepository extends ServiceEntityRepository
         parent::__construct($registry, Programa::class);
     }
 
+    public function Mostrar(){
+        try {
+            $conn = $this->getEntityManager()->getConnection();
+            $stm = $conn->prepare(" SELECT id, departamento_id, codigo, nombre
+            FROM programa");
+            $stm->execute([]);
+            $res = $stm->fetchAll();
+            return $res;
+        } catch (Exception $e) {
+            return $e;
+        }
+    }
+
     // /**
     //  * @return Programa[] Returns an array of Programa objects
     //  */

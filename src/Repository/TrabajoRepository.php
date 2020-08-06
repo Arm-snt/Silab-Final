@@ -22,9 +22,10 @@ class TrabajoRepository extends ServiceEntityRepository
     public function Mostrar(){
         try {
             $conn = $this->getEntityManager()->getConnection();
-            $stm = $conn->prepare(" SELECT est.nombre, tra.id, tra.estudiante_id, est.codigo, tra.registro, tra.descripcion 
-            FROM trabajo tra, estudiante est
-            WHERE tra.estudiante_id=est.id");
+            $stm = $conn->prepare(" SELECT tra.id, tra.estudiante_id, tra.docente_id, tra.usuario_id, tra.particular, tra.telefono, tra.registro, 
+            tra.descripcion, tra.tipo, tra.fecha_entrada, tra.hora_entrada, tra.fecha_salida, tra.hora_salida
+            FROM trabajo tra, estudiante est, docente doc
+            WHERE tra.estudiante_id=est.id OR tra.docente_id=doc.id GROUP BY tra.id ");
             $stm->execute([]);
             $res = $stm->fetchAll();
             return $res;
@@ -33,24 +34,23 @@ class TrabajoRepository extends ServiceEntityRepository
         }
     }
 
-    public function Insertar($estudiante_id, $registro, $descripcion){
+    public function Insertar($estudiante_id,$docente_id,$particular,$telefono, $usuario_id,$registro,$descripcion,$tipo,$fecha_entrada,$hora_entrada,$fecha_salida,$hora_salida){
         try {
             $conn = $this->getEntityManager()->getConnection();
-            $stm = $conn->prepare(" INSERT INTO trabajo (estudiante_id, registro, descripcion) VALUES (:tra, :reg, :cri)");
-            $tra=$estudiante_id;
-            $reg= $registro;
-            $cri= $descripcion;
-            if($stm->execute(array(':tra'=>$tra, ':reg'=>$reg, ':cri'=>$cri)));
+            $stm = $conn->prepare(" INSERT INTO trabajo (estudiante_id, docente_id,particular,telefono,usuario_id, registro, descripcion, tipo, fecha_entrada, hora_entrada, fecha_salida, hora_salida) 
+            VALUES (:tra, :doc, :par, :tel, :usu, :reg, :cri, :tip, :fec, :hor, :fec2, :hor2)");
+            if($stm->execute(array(':tra'=>$estudiante_id, ':doc'=>$docente_id, ':par'=>$particular, ':tel'=>$telefono, ':usu'=>$usuario_id, ':reg'=>$registro, ':cri'=>$descripcion, ':tip'=>$tipo, ':fec'=>$fecha_entrada, ':hor'=>$hora_entrada, ':fec2'=>$fecha_salida, ':hor2'=>$hora_salida)));
         } catch (Exception $e) {
             return $e;
         }
     }
 
 
-    public function Buscar($id,$estudiante_id,$registro,$descripcion){
+    public function Buscar($id,$estudiante_id,$docente_id,$particular,$telefono,$usuario_id,$registro,$descripcion,$tipo,$fecha_entrada,$hora_entrada,$fecha_salida,$hora_salida){
         try {
             $conn = $this->getEntityManager()->getConnection();
-            $stm = $conn->prepare(" SELECT tra.estudiante_id, est.nombre, tra.registro, tra.descripcion 
+            $stm = $conn->prepare(" SELECT tra.estudiante_id, est.nombre, tra.docente_id, tra.particular, tra.telefono, tra.usuario_id, tra.registro, tra.descripcion, tra.tipo,
+            tra.fecha_entrada, tra.hora_entrada, tra.fecha_salida, tra.hora_salida
             FROM trabajo tra, estudiante est
             WHERE tra.id=:tra AND tra.estudiante_id=est.id");
             $tra=$id;
@@ -62,11 +62,14 @@ class TrabajoRepository extends ServiceEntityRepository
         }
     }
     
-    public function Actualizar($id,$estudiante_id,$registro,$descripcion){
+    public function Actualizar($id,$estudiante_id,$docente_id,$particular,$telefono,$usuario_id,$registro,$descripcion,$tipo,$fecha_entrada,$hora_entrada,$fecha_salida,$hora_salida){
         try {
             $conn = $this->getEntityManager()->getConnection();
-            $stm = $conn->prepare(" UPDATE trabajo SET estudiante_id = :estudiante_id, registro=:registro, descripcion=:descripcion  WHERE trabajo.id =:id");
-            if($stm->execute(array(':id'=>$id, ':estudiante_id' =>$estudiante_id, ':registro'=>$registro, ':descripcion'=>$descripcion)));
+            $stm = $conn->prepare(" UPDATE trabajo SET estudiante_id=:estudiante_id, docente_id=:docente_id, particular=:particular, telefono=:telefono, usuario_id=:usuario_id, registro=:registro, descripcion=:descripcion, 
+            tipo=:tipo, fecha_entrada=:fecha_entrada, hora_entrada=:hora_entrada, fecha_salida=:fecha_salida, hora_salida=:hora_salida  
+            WHERE trabajo.id =:id");
+            if($stm->execute(array(':id'=>$id, ':estudiante_id'=>$estudiante_id, ':docente_id'=>$docente_id, ':particular'=>$particular,  ':telefono'=>$telefono, ':usuario_id'=>$usuario_id, ':registro'=>$registro, ':descripcion'=>$descripcion, 
+            ':tipo'=>$tipo, ':fecha_entrada' =>$fecha_entrada, ':hora_entrada'=>$hora_entrada, ':fecha_salida'=>$fecha_salida, ':hora_salida'=>$hora_salida)));
         } catch (Exception $e) {
             return $e;
         }

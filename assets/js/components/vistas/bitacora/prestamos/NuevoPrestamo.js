@@ -74,7 +74,7 @@ function NuevoPrestamo() {
 
 	const onCreateSubmit = (event) => {
 		event.preventDefault();
-		if(estudiante_id=='' || registro=='' || observacion==''){
+		if (estudiante_id == '' || registro == '' || observacion == '') {
 			return context.setMessage({
 				level: 'error',
 				text: [ 'Debe llenar los campos del Prestamo' ]
@@ -86,15 +86,15 @@ function NuevoPrestamo() {
 			observacion: observacion,
 			estado: estado,
 			elemento_id: editElementop,
-			fecha_prestamo: fecha.getFullYear() + '-' + (fecha.getMonth() + 1) + '-' + fecha.getDate(),
-			hora_prestamo: fecha.getHours() + ':' + fecha.getMinutes() + ':' + fecha.getSeconds(),
-			fecha_entrega: null,
-			hora_entrega: null
+			fecha_entrada: fecha.getFullYear() + '-' + (fecha.getMonth() + 1) + '-' + fecha.getDate(),
+			hora_entrada: fecha.getHours() + ':' + fecha.getMinutes() + ':' + fecha.getSeconds(),
+			fecha_salida: null,
+			hora_salida: null
 		});
 	};
 
 	function cargar() {
-		if(editElemento==''){
+		if (editElemento == '') {
 			return context.setMessage({
 				level: 'error',
 				text: [ 'Debe seleccionar un elemento para cargar al Prestamo' ]
@@ -124,8 +124,8 @@ function NuevoPrestamo() {
 				}
 			});
 			if (a) {
-				console.log((parseInt(Stock)),(parseInt(cantidad)));
-				if ((parseInt(Stock)) > (parseInt(cantidad)) || (parseInt(Stock)) == (parseInt(cantidad))) {
+				console.log(parseInt(Stock), parseInt(cantidad));
+				if (parseInt(Stock) > parseInt(cantidad) || parseInt(Stock) == parseInt(cantidad)) {
 					editElementop.push({ editElemento, cantidad });
 					seteditElemento('');
 					setcantidad('');
@@ -144,12 +144,12 @@ function NuevoPrestamo() {
 	}
 	const eliminar = (data) => {
 		console.log(data);
-		editElementop.splice(editElementop.indexOf(data),1);
+		editElementop.splice(editElementop.indexOf(data), 1);
 		context.setMessage({
 			level: 'success',
-			text: [ 'Se elimino el elemento de la lista de prestamo!' ]
+			text: [ 'Se eliminó el elemento de la lista de prestamo!' ]
 		});
-	}
+	};
 
 	const agregarfechayhora = (date) => {
 		setFecha(date);
@@ -187,7 +187,6 @@ function NuevoPrestamo() {
 					<Grid container spacing={2}>
 						<Grid item md={6} xs={6}>
 							<Autocomplete
-								required={true}
 								options={estudiantes}
 								onChange={(e, a) => {
 									setestudiante_id(a !== null ? a.id : '');
@@ -372,7 +371,7 @@ function NuevoPrestamo() {
 							<Divider />
 						</Grid>
 					</Grid>
-					<TablaElementosCreate elemento={editElementop} eliminar={eliminar}/>
+					<TablaElementosCreate elemento={editElementop} eliminar={eliminar} />
 				</form>
 			</Paper>
 		</Container>

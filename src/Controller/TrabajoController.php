@@ -42,14 +42,23 @@ class TrabajoController extends AbstractController
     public function create(Request $request)
     {
         $content = json_decode($request->getContent(), true);
-               
+
         $estudiante_id=$content['estudiante_id'];
+        $docente_id=$content['docente_id'];
+        $particular=$content['particular'];
+        $usuario_id=$content['usuario_id'];
         $registro=$content['registro'];
         $descripcion=$content['descripcion'];
+        $tipo=$content['tipo'];
+        $fecha_entrada=$content['fecha_entrada'];
+        $hora_entrada=$content['hora_entrada'];
+        $fecha_salida=$content['fecha_salida'];
+        $hora_salida=$content['hora_salida'];
+
         try {
             
             $todo = $this->getDoctrine()->getRepository(Trabajo::class, 'default');
-            $todo = $this->trabajoRepository->Insertar($estudiante_id,$registro,$descripcion);
+            $todo = $this->trabajoRepository->Insertar($estudiante_id,$docente_id,$particular,$usuario_id,$registro,$descripcion,$tipo,$fecha_entrada,$hora_entrada,$fecha_salida,$hora_salida);
             $todo = $this->trabajoRepository->Mostrar();
                 
         } catch (Exception $exception) {
@@ -75,19 +84,36 @@ class TrabajoController extends AbstractController
         
         $id=$content->id;
         $estudiante_id=$content->estudiante_id;
+        $docente_id=$content->docente_id;
+        $particular=$content->particular;
+        $usuario_id=$content->usuario_id;
         $registro=$content->registro;
         $descripcion=$content->descripcion;
+        $tipo=$content->tipo;
+        $fecha_entrada=$content->fecha_entrada;
+        $hora_entrada=$content->hora_entrada;
+        $fecha_salida=$content->fecha_salida;
+        $hora_salida=$content->hora_salida;
         
         $todo = $this->getDoctrine()->getRepository(Trabajo::class, 'default');
-        $todo = $this->trabajoRepository->Buscar($id,$estudiante_id,$registro,$descripcion);
+        $todo = $this->trabajoRepository->Buscar($id,$estudiante_id,$docente_id,$particular,$usuario_id,$registro,$descripcion,$tipo,$fecha_entrada,$hora_entrada,$fecha_salida,$hora_salida);
         
 
         $estudiante_id_bd=$todo['estudiante_id'];
+        $docente_id_bd=$todo['docente_id'];
+        $particular_bd=$todo['particular'];
+        $usuario_id_bd=$todo['usuario_id'];
         $registro_bd=$todo['registro'];
         $descripcion_bd=$todo['descripcion'];
         $nombre_bd=$todo['nombre'];
+        $tipo_bd=$todo['tipo'];
+        $fecha_entrada_bd=$todo['fecha_entrada'];
+        $hora_entrada_bd=$todo['hora_entrada'];
+        $fecha_salida_bd=$todo['fecha_salida'];
+        $hora_salida_bd=$todo['hora_salida'];
 
-        if ($estudiante_id===$estudiante_id_bd && $registro===$registro_bd && $descripcion===$descripcion_bd) {
+        if ($estudiante_id===$estudiante_id_bd && $registro===$registro_bd && $descripcion===$descripcion_bd && $docente_id===$docente_id_bd && 
+        $particular===$particular_bd && $usuario_id===$usuario_id_bd && $tipo===$tipo_bd && $fecha_entrada===$fecha_entrada_bd && $fecha_salida===$hora_salida_bd) {
             return $this->json([
                 'message' => ['text'=>['No se realizaron cambios al estudiante: '.$nombre_bd] , 'level'=>'warning']
             ]);
@@ -95,8 +121,8 @@ class TrabajoController extends AbstractController
 
         try {
             $todo = $this->getDoctrine()->getRepository(Trabajo::class, 'default');
-            $todo = $this->trabajoRepository->Actualizar($id,$estudiante_id,$registro,$descripcion);
-            $todo = $this->trabajoRepository->Buscar($id,$estudiante_id,$registro,$descripcion);
+            $todo = $this->trabajoRepository->Actualizar($id,$estudiante_id,$docente_id,$particular,$usuario_id,$registro,$descripcion,$tipo,$fecha_entrada,$hora_entrada,$fecha_salida,$hora_salida);
+            $todo = $this->trabajoRepository->Buscar($id,$estudiante_id,$docente_id,$particular,$usuario_id,$registro,$descripcion,$tipo,$fecha_entrada,$hora_entrada,$fecha_salida,$hora_salida);
 
         } catch (Exception $exception) {
             return $this->json([ 

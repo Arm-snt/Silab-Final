@@ -61,9 +61,6 @@ const style = {
 	search: {
 		width: 400,
 		marginBottom: 20
-	},
-	estado: {
-		color: '#28B463'
 	}
 };
 
@@ -87,7 +84,7 @@ function Usuarios(props) {
 		setPage(0);
 	};
 
-	function busqueda(termino) {
+	function busqueda(termino){
 		return function(filtro) {
 			return (
 				filtro.usuario.toLowerCase().includes(termino.toLowerCase()) ||
@@ -96,9 +93,7 @@ function Usuarios(props) {
 				filtro.telefono.includes(termino.toLowerCase()) ||
 				filtro.codusuario.toString().includes(termino.toLowerCase()) ||
 				filtro.tipousuario.toLowerCase().includes(termino.toLowerCase()) ||
-				!termino
-			);
-		};
+				!termino)}											
 	}
 
 	function historyBack() {
@@ -115,8 +110,7 @@ function Usuarios(props) {
 				fullWidth
 				placeholder="Buscar..."
 				onChange={(event) => {
-					setTermino(event.target.value);
-				}}
+					setTermino(event.target.value)}}
 				value={termino}
 				style={style.search}
 				InputProps={{
@@ -125,8 +119,7 @@ function Usuarios(props) {
 							<Icon path={mdiCardSearch} size={1.5} color="red" />
 						</InputAdornment>
 					)
-				}}
-			/>
+				}}/>
 			<Container style={style.container} component="main" maxWidth="lg" justify="center">
 				<TableContainer component={Paper} style={style.space}>
 					<Table style={style.table} aria-label="customized table">
@@ -180,9 +173,7 @@ function Usuarios(props) {
 											</Typography>
 										</TableCell>
 										<TableCell align="right">
-											<Typography style={todo.estado === 'Activo' ? style.estado : null}>
-												{todo.estado}
-											</Typography>
+											<Typography style={{ whiteSpace: 'pre-wrap' }}>{todo.estado}</Typography>
 										</TableCell>
 										<TableCell align="right">
 											<Fragment>

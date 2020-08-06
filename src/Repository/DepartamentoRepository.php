@@ -19,6 +19,19 @@ class DepartamentoRepository extends ServiceEntityRepository
         parent::__construct($registry, Departamento::class);
     }
 
+    public function Mostrar(){
+        try {
+            $conn = $this->getEntityManager()->getConnection();
+            $stm = $conn->prepare(" SELECT id, facultad_id, codigo, nombre
+            FROM departamento");
+            $stm->execute([]);
+            $res = $stm->fetchAll();
+            return $res;
+        } catch (Exception $e) {
+            return $e;
+        }
+    }
+
     // /**
     //  * @return Departamento[] Returns an array of Departamento objects
     //  */

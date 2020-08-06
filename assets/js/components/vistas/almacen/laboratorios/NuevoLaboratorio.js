@@ -35,24 +35,32 @@ function NuevoLaboratorio() {
 	const [ addCodLaboratorio, setaddCodLaboratorio ] = useState('');
 	const [ addNombre, setaddNombre ] = useState('');
 	const [ addUbicacion, setaddUbicacion ] = useState('');
-	const [ addObservacion, setaddObservacion ] = useState('');
-	const [ addEstado, setAddEstado ] = useState('Activo');
+	const [ observacion, setObservacion ] = useState('');
+	const [addEstado, setAddEstado] = useState('Activo');
+	const [ error, seterror ] = useState({ addCodLaboratorio: false, addNombre: false, addUbicacion: false, observacion: false });
+	const [ textoAyuda, settextoAyuda ] = useState({ addCodLaboratorio: '', addNombre: '', addUbicacion: '', observacion: '' });
 
 	const onCreateSubmit = (event) => {
 		event.preventDefault();
+		if(addUsuario_id=='' || addCodLaboratorio=='' || addNombre=='' || addUbicacion=='' || observacion==''){
+			return context.setMessage({
+				level: 'error',
+				text: [ 'Debe llenar los campos del Laboratorio' ]
+			});
+		}
 		context.createTodo(event, {
 			usuario_id: addUsuario_id,
 			codlaboratorio: addCodLaboratorio,
 			nombre: addNombre,
 			ubicacion: addUbicacion,
-			observacion: addObservacion,
+			observacion: observacion,
 			estado: addEstado
 		});
 		setaddUsuario_id('');
 		setaddCodLaboratorio('');
 		setaddNombre('');
 		setaddUbicacion('');
-		setaddObservacion('');
+		setObservacion('');
 		
 	};
 
@@ -105,14 +113,28 @@ function NuevoLaboratorio() {
 							/>
 						</Grid>
 						<Grid item md={6} xs={6}>
-							<TextField
+						<TextField
 								type="text"
-								value={addObservacion}
+								multiline
+								error={error.observacion}
+								value={observacion}
 								onChange={(event) => {
-									setaddObservacion(event.target.value);
+									setObservacion(event.target.value);
+									if (observacion.length < 14) {
+										error.observacion = true;
+										textoAyuda.observacion = 'Minimo 8 caracteres';
+										seterror(error);
+										settextoAyuda(textoAyuda);
+									} else {
+										error.observacion = true;
+										textoAyuda.observacion = '';
+										seterror(error);
+										settextoAyuda(textoAyuda);
+									}
 								}}
+								helperText={textoAyuda.observacion}
 								fullWidth={true}
-								label="Observación"
+								label="Observaciones"
 							/>
 						</Grid>
 						<Grid item md={6} xs={6}>

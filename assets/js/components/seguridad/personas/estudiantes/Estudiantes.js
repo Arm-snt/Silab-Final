@@ -63,7 +63,9 @@ const style = {
 function Estudiantes(props) {
 	const onChangeIndex = props.onChangeIndex;
 	const context = useContext(TodoContext);
+	console.log(context.todos);
 	let filtro = {};
+	let Programa = '';
 	const [ termino, setTermino ] = useState('');
 	const [ deleteConfirmationIsShown, setDeleteConfirmationIsShown ] = useState(false);
 	const [ todoToBeDeleted, setTodoToBeDeleted ] = useState(null);
@@ -84,7 +86,7 @@ function Estudiantes(props) {
 			return (
 				filtro.codigo.toLowerCase().includes(termino.toLowerCase()) ||
 				filtro.nombre.toLowerCase().includes(termino.toLowerCase()) ||
-				filtro.programa.toLowerCase().includes(termino.toLowerCase()) ||
+				filtro.programa_id.toString().includes(termino.toLowerCase()) ||
 				filtro.tipodoc.includes(termino.toLowerCase()) ||
 				filtro.documento.toString().includes(termino.toLowerCase()) ||
 				filtro.estado.toLowerCase().includes(termino.toLowerCase()) ||
@@ -152,7 +154,12 @@ function Estudiantes(props) {
 										</TableCell>
 										{/*PROGRAMA*/}
 										<TableCell align="center">
-											<Typography style={{ whiteSpace: 'pre-wrap' }}>{todo.programa}</Typography>
+											<Typography style={{ whiteSpace: 'pre-wrap' }}>{context.pro.map((res) => {
+													if (res.id == todo.programa_id) {
+														Programa = res.codigo + ' - ' + res.nombre;
+													}
+												})}
+												{Programa}</Typography>
 										</TableCell>
 										<TableCell align="center">
 											<Typography style={{ whiteSpace: 'pre-wrap' }}>{todo.email}</Typography>

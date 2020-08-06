@@ -211,7 +211,7 @@ function EditarUsuario(data) {
 							</Button>
 						</Grid>
 					</Grid>
-					{editarTipousuario == 'Laboratorista' && editarEstado == 'Activo' ? (
+					{editarTipousuario == 'Laboratorista' ? (
 						<Grid container spacing={2} style={style.grid}>
 							<Grid item md={12} xs={12}>
 								<Divider />

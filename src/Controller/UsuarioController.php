@@ -59,7 +59,7 @@ class UsuarioController extends AbstractController
 
         return $this->json([
             'todo' => $todo->toArray(),
-            'message' => ['text'=>['El Usuario: '.$content->usuario, ', se ha registrado!'] , 'level'=>'success']
+            'message' => ['text'=>['El Usuario: '.$content->usuario,' se ha registrado!'] , 'level'=>'success']
         ]);
 
     }

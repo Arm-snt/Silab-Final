@@ -86,7 +86,9 @@ class TodoContextProvider extends Component {
 					todos.sort(function(a,b){
 						if(a.fecha_entrega>b.fecha_entrega){
 							return 1;
-						}});
+						}
+					});
+					
 					this.setState({
 						todos: todos,
 						elementospre: response.data.elementospres,

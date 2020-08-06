@@ -1,5 +1,21 @@
 import React, { useContext, useState, Fragment } from 'react';
-import { Container, Paper, Grid,Breadcrumbs, Link, Typography, TextField, IconButton, Divider, Button, Radio, RadioGroup, FormControlLabel, FormControl, FormLabel } from '@material-ui/core';
+import {
+	Container,
+	Paper,
+	Grid,
+	Breadcrumbs,
+	Link,
+	Typography,
+	TextField,
+	IconButton,
+	Divider,
+	Button,
+	Radio,
+	RadioGroup,
+	FormControlLabel,
+	FormControl,
+	FormLabel
+} from '@material-ui/core';
 import DateFnsUtils from '@date-io/date-fns';
 import { MuiPickersUtilsProvider, KeyboardTimePicker, KeyboardDatePicker } from '@material-ui/pickers';
 import { Autocomplete } from '@material-ui/lab';
@@ -42,31 +58,60 @@ const style = {
 
 function NuevoTrabajo() {
 	const context = useContext(TodoContext);
-	const [ addLaboratorio, setAddLaboratorio ] = useState('');
-	const [ addUsuario, setAddUsuario ] = useState('');
-	const [selectedDate, setSelectedDate] = useState(new Date());
-	const [ addFecha, setAddFecha ] = useState('');
-	const [ addHora, setAddHora ] = useState('');
-	const [ adddep, setAddDep ] = useState('d');
-	const [ addTodoDescripcion, setAddTodoDescripcion ] = useState('');
-	const [ addTodo, setAddTodo ] = useState('');
+	let estudiantes = [];
+	let elementoids = [];
+	let estudiantesids = [];
+	let datosE = [];
+	let nuevosE = [];
+	const [ Laboratorio, setLaboratorio ] = useState('');
+	const [ Departamento, setDepartamento ] = useState('');
+	const [ Estudiantes, setEstudiantes ] = useState([]);
+	const [ Estudiante, setEstudiante ] = useState(null);
+	const [ Docente, setDocente ] = useState(null);
+	const [ Particular, setParticular ] = useState(null);
+	const [ Telefono, setTelefono ] = useState(null);
+	const [ User, setUser ] = useState('');
+	const [ Programa, setPrograma ] = useState('');
+	const [ Registro, setRegistro ] = useState('');
+	const [ Descripcion, setDescripcion ] = useState('');
+	const [ Tipo, setTipo ] = useState('Estudiante');
+	const [ fecha, setFecha ] = useState(new Date());
 
 	const onCreateSubmit = (event) => {
 		event.preventDefault();
+		if (Estudiante == '' || Tipo == '' || Registro == '') {
+			return context.setMessage({
+				level: 'error',
+				text: [ 'Debe llenar los campos del Prestamo' ]
+			});
+		}
 		context.createTodo(event, {
-			estudiante_id: addTodo,
-			registro: addUsuario,
-			descripcion: addTodoDescripcion
+			estudiante_id: Estudiante,
+			docente_id: Docente,
+			particular: Particular,
+			telefono: Telefono,
+			usuario_id: User,
+			registro: Registro,
+			descripcion: Descripcion,
+			tipo: Tipo,
+			fecha_entrada: fecha.getFullYear() + '-' + (fecha.getMonth() + 1) + '-' + fecha.getDate(),
+			hora_entrada: fecha.getHours() + ':' + fecha.getMinutes() + ':' + fecha.getSeconds(),
+			fecha_salida: null,
+			hora_salida: null
 		});
-		setAddTodo('');
-		setAddTodoRegistro('');
-		setAddTodoDescripcion('');
+		setEstudiante('');
+		setDocente('');
+		setParticular('');
+		setTelefono('');
+		setUser('');
+		setRegistro('');
+		setDescripcion('');
+		setTipo('');
 	};
 
-	const handleDateChange = (date) => {
-		setSelectedDate(date);
-		console.log(selectedDate);
-	  };
+	const agregarfechayhora = (date) => {
+		setFecha(date);
+	};
 
 	function historyBack() {
 		window.history.back();
@@ -76,37 +121,37 @@ function NuevoTrabajo() {
 		<Container style={style.container} component="main" maxWidth="lg" justify="center">
 			<Paper style={style.paper}>
 				<form style={style.form}>
-				<Grid container spacing={2} style={style.grid}>
+					<Grid container spacing={2} style={style.grid}>
 						<Grid item md={12} xs={12}>
 							<Divider />
 						</Grid>
 						<Grid item xs={12} md={4}>
 							<Autocomplete
-								options={context.lab}
+								options={context.dep}
 								onChange={(e, a) => {
-									setAddLaboratorio(a !== null ? a.id : '');
+									setDepartamento(a !== null ? a.id : '');
 								}}
-								getOptionLabel={(option) => option.codlaboratorio + '-' + option.nombre}
-								renderInput={(params) => <TextField {...params} label="Laboratorio" />}
+								getOptionLabel={(option) => option.codigo + ' - ' + option.nombre}
+								renderInput={(params) => <TextField {...params} label="Departamento" />}
 							/>
 						</Grid>
 						<Grid item xs={12} md={4}>
 							<Autocomplete
-								options={contextdept}
+								options={context.lab}
 								onChange={(e, a) => {
-									setAddLaboratorio(a !== null ? a.id : '');
+									setLaboratorio(a !== null ? a.id : '');
 								}}
-								getOptionLabel={(option) => option.codigo + '-' + option.nombre}
-								renderInput={(params) => <TextField {...params} label="Departamento" />}
+								getOptionLabel={(option) => option.codlaboratorio + ' - ' + option.nombre}
+								renderInput={(params) => <TextField {...params} label="Laboratorio" />}
 							/>
 						</Grid>
 						<Grid item xs={12} md={4}>
 							<Autocomplete
 								options={context.usu}
 								onChange={(e, a) => {
-									setAddUsuario(a !== null ? a.id : '');
+									setUser(a !== null ? a.id : '');
 								}}
-								getOptionLabel={(option) => option.codusuario + '-' + option.nombre}
+								getOptionLabel={(option) => option.codusuario + ' - ' + option.nombre}
 								renderInput={(params) => <TextField {...params} label="Laboratorista" />}
 							/>
 						</Grid>
@@ -115,89 +160,171 @@ function NuevoTrabajo() {
 						</Grid>
 					</Grid>
 					<Grid container spacing={2}>
-						<Grid item md={4} xs={6}>
-							<MuiPickersUtilsProvider utils={DateFnsUtils}>
-							<KeyboardDatePicker
-								margin="normal"
-								id="date-picker-dialog"
-								label="Fecha Entrada"
-								format="MM/dd/yyyy"
-								value={selectedDate}
-								onChange={handleDateChange}
-								KeyboardButtonProps={{
-									'aria-label': 'change date',
-								}}/>
-							</MuiPickersUtilsProvider>
-						</Grid>
-						<Grid item md={4} xs={6} >
-							<MuiPickersUtilsProvider utils={DateFnsUtils}>
-							<KeyboardTimePicker
-								margin="normal"
-								id="time-picker"
-								label="Hora Entrada"
-								value={selectedDate}
-								onChange={handleDateChange}
-								KeyboardButtonProps={{
-									'aria-label': 'change time',
-								}}
-								/>
-							</MuiPickersUtilsProvider>
-						</Grid>
-						<Grid item md={4} xs={6}>
+						<Grid item md={4} xs={8}>
 							<FormControl component="fieldset">
 								<FormLabel component="legend">Seleccione opción</FormLabel>
-								<RadioGroup name="dep" value={adddep} onChange={(event) => {
-									setAddDep(event.target.value);
-									}}>
-									<FormControlLabel value="d" control={<Radio color="primary"/>} label="D" labelPlacement="start"/>
-									<FormControlLabel value="e" control={<Radio color="primary"/>} label="E" labelPlacement="start"/>
-									<FormControlLabel value="p" control={<Radio color="primary"/>} label="P" labelPlacement="start"/>
+								<RadioGroup
+									name="Tipo"
+									value={Tipo}
+									onChange={(event) => {
+										setTipo(event.target.value);
+									}}
+								>
+									<FormControlLabel
+										value="Estudiante"
+										control={<Radio color="primary" />}
+										label="Estudiante"
+										labelPlacement="start"
+									/>
+									<FormControlLabel
+										value="Docente"
+										control={<Radio color="primary" />}
+										label="Docente"
+										labelPlacement="start"
+									/>
+									<FormControlLabel
+										value="Particular"
+										control={<Radio color="primary" />}
+										label="Particular"
+										labelPlacement="start"
+									/>
 								</RadioGroup>
 							</FormControl>
 						</Grid>
-						<Grid item md={4} xs={6}>
-							<Autocomplete
-								options={context.est}
-								onChange={(e, a) => {
-									setAddTodo(a !== null ? a.id : '');
-								}}
-								getOptionLabel={(option) => option.codigo + ' - ' + option.nombre}
-								renderInput={(params) => <TextField {...params} label="Estudiante" />}
-							/>
+						<Grid item md={4} xs={4}>
+							<MuiPickersUtilsProvider utils={DateFnsUtils}>
+								<KeyboardDatePicker
+									margin="normal"
+									id="date-picker-dialog"
+									label="Fecha Entrada"
+									format="dd/MM/yyyy"
+									value={fecha}
+									onChange={agregarfechayhora}
+									KeyboardButtonProps={{
+										'aria-label': 'change date'
+									}}
+								/>
+							</MuiPickersUtilsProvider>
 						</Grid>
-						<Grid item md={4} xs={6}>
-							<Autocomplete
-								options={contextpro}
-								onChange={(e, a) => {
-									setAddTodo(a !== null ? a.id : '');
-								}}
-								getOptionLabel={(option) => option.codprograma + ' - ' + option.programa}
-								renderInput={(params) => <TextField {...params} label="Programa" />}
-							/>
+						<Grid item md={4} xs={4}>
+							<MuiPickersUtilsProvider utils={DateFnsUtils}>
+								<KeyboardTimePicker
+									margin="normal"
+									id="time-picker"
+									label="Hora Entrada"
+									value={fecha}
+									onChange={agregarfechayhora}
+									KeyboardButtonProps={{
+										'aria-label': 'change time'
+									}}
+								/>
+							</MuiPickersUtilsProvider>
 						</Grid>
-						<Grid item md={4} xs={6}>
-							<Autocomplete
-								options={contextasig}
-								onChange={(e, a) => {
-									setAddTodo(a !== null ? a.id : '');
-								}}
-								getOptionLabel={(option) => option.codasignatura + ' - ' + option.asignatura}
-								renderInput={(params) => <TextField {...params} label="Asignatura" />}
-							/>
+					</Grid>
+					{Tipo == 'Estudiante' ? (
+						<Grid container spacing={2}>
+							<Grid item md={4} xs={6}>
+								<Autocomplete
+									options={context.pro}
+									onChange={(e, a) => {
+										console.log(Estudiantes);
+										setPrograma(a !== null ? a.id : '');
+										context.est.map((res)=>{
+											if(res.programa_id==Programa){
+												Estudiantes.push(res);
+											}
+										});
+										setEstudiantes(Estudiantes);
+										}
+									}
+									getOptionLabel={(option) => option.codigo + ' - ' + option.nombre}
+									renderInput={(params) => <TextField {...params} label="Programa Académico" />}
+								/>
+							</Grid>
+							<Grid item md={4} xs={6}>
+								<Autocomplete
+									options={Estudiantes}
+									onChange={(e, a) => {
+										setEstudiante(a !== null ? a.id : '');
+									}}
+									getOptionLabel={(option) => option.codigo + ' - ' + option.nombre}
+									renderInput={(params) => <TextField {...params} label="Estudiante" />}
+								/>
+							</Grid>
+							<Grid item md={3} xs={3}>
+								<TextField
+									type="text"
+									value={Telefono}
+									onChange={(event) => {
+										setTelefono(event.target.value);
+									}}
+									label="Teléfono"
+									fullWidth={true}
+								/>
+							</Grid>
 						</Grid>
-						<Grid item md={6} xs={6}>
+					) : Tipo == 'Docente' ? (
+						<Grid container spacing={2}>
+							<Grid item md={4} xs={6}>
+								<Autocomplete
+									options={context.doc}
+									onChange={(e, a) => {
+										setDocente(a !== null ? a.id : '');
+									}}
+									getOptionLabel={(option) => option.codigo + ' - ' + option.nombre}
+									renderInput={(params) => <TextField {...params} label="Docente" />}
+								/>
+							</Grid>
+							<Grid item md={3} xs={3}>
+								<TextField
+									type="text"
+									value={Telefono}
+									onChange={(event) => {
+										setTelefono(event.target.value);
+									}}
+									label="Teléfono"
+									fullWidth={true}
+								/>
+							</Grid>
+						</Grid>
+					) : (
+						<Grid container spacing={2}>
+							<Grid item md={4} xs={4}>
+								<TextField
+									type="text"
+									value={Particular}
+									onChange={(event) => {
+										setParticular(event.target.value);
+									}}
+									label="Particular"
+									fullWidth={true}
+								/>
+							</Grid>
+							<Grid item md={3} xs={3}>
+								<TextField
+									type="text"
+									value={Telefono}
+									onChange={(event) => {
+										setTelefono(event.target.value);
+									}}
+									label="Teléfono"
+									fullWidth={true}
+								/>
+							</Grid>
+						</Grid>
+					)}
+					<Grid container spacing={2}>
+						<Grid item md={8} xs={6}>
 							<TextField
 								type="text"
-								value={addTodoDescripcion}
+								value={Descripcion}
 								onChange={(event) => {
-									setAddTodoDescripcion(event.target.value);
+									setDescripcion(event.target.value);
 								}}
 								label="Descripción Asesoria"
 								fullWidth={true}
 							/>
 						</Grid>
-					</Grid>
-					<Grid container spacing={2}>
 						<Grid item xs={6} md={2}>
 							<Button
 								variant="contained"

@@ -46,7 +46,7 @@ class EstudianteController extends AbstractController
                
         $codigo=$content['codigo'];
         $nombre=$content['nombre'];
-        $programa=$content['programa'];
+        $programa_id=$content['programa_id'];
         $email=$content['email'];
         $tipodoc=$content['tipodoc'];
         $documento=$content['documento'];
@@ -56,7 +56,7 @@ class EstudianteController extends AbstractController
         try {
             
             $todo = $this->getDoctrine()->getRepository(Estudiante::class, 'default');
-            $todo = $this->estudianteRepository->Insertar($codigo, $nombre, $programa, $email, $tipodoc, $documento, $telefono, $estado);
+            $todo = $this->estudianteRepository->Insertar($codigo, $nombre, $programa_id, $email, $tipodoc, $documento, $telefono, $estado);
             $todo = $this->estudianteRepository->Mostrar();
                 
         } catch (Exception $exception) {
@@ -83,7 +83,7 @@ class EstudianteController extends AbstractController
         $id=$content->id;
         $codigo=$content->codigo;
         $nombre=$content->nombre;
-        $programa=$content->programa;
+        $programa_id=$content->programa_id;
         $email=$content->email;
         $tipodoc=$content->tipodoc;
         $documento=$content->documento;
@@ -96,14 +96,14 @@ class EstudianteController extends AbstractController
         
         $codigo_bd=$todo['codigo'];
         $nombre_bd=$todo['nombre'];
-        $programa_bd=$todo['programa'];
+        $programa_bd=$todo['programa_id'];
         $email_bd=$todo['email'];
         $tipodoc_bd=$todo['tipodoc'];
         $documento_bd=$todo['documento'];
         $telefono_bd=$todo['telefono'];
         $estado_bd=$todo['estado'];
 
-        if ($codigo===$codigo_bd && $nombre===$nombre_bd && $programa===$programa_bd && $email===$email_bd && $tipodoc===$tipodoc_bd && $documento===$documento_bd && $telefono===$telefono_bd && $estado===$estado_bd) {
+        if ($codigo===$codigo_bd && $nombre===$nombre_bd && $programa_id===$programa_bd && $email===$email_bd && $tipodoc===$tipodoc_bd && $documento===$documento_bd && $telefono===$telefono_bd && $estado===$estado_bd) {
             return $this->json([
                 'message' => ['text'=>['No se realizaron cambios al estudiante: '.$nombre_bd] , 'level'=>'warning']
             ]);
@@ -111,7 +111,7 @@ class EstudianteController extends AbstractController
         
         try {
             $todo = $this->getDoctrine()->getRepository(Estudiante::class, 'default');
-            $todo = $this->estudianteRepository->Actualizar($id, $codigo, $nombre, $programa, $email, $tipodoc, $documento, $telefono, $estado);
+            $todo = $this->estudianteRepository->Actualizar($id, $codigo, $nombre, $programa_id, $email, $tipodoc, $documento, $telefono, $estado);
             $todo = $this->estudianteRepository->Buscar($id);
 
         } catch (Exception $exception) {

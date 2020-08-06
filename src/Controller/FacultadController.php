@@ -31,7 +31,7 @@ class FacultadController extends AbstractController
     public function read()
     {
         $todos = $this->getDoctrine()->getRepository(Facultad::class, 'default');
-        $todos = $this->prestamoRepository->Mostrar();
+        $todos = $this->facultadRepository->Mostrar();
         return $this->json($todos);
     }
 }

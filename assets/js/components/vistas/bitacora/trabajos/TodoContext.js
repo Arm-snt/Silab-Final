@@ -12,13 +12,19 @@ class TodoContextProvider extends Component {
 			est: [],
 			lab:[],
 			usu:[],
+			doc:[],
 			facu:[],
+			dep:[],
+			pro:[],
 			message: {}
 		};
 		this.readTodo();
 		this.readFacultad();
+		this.readDepartamento();
+		this.readPrograma();
 		this.readLaboratorios();
 		this.readUsuario();
+		this.readDocente();
 		this.leer();
 	}
 
@@ -29,6 +35,19 @@ class TodoContextProvider extends Component {
 			.then((response) => {
 				this.setState({
 					todos: response.data
+				});
+			})
+			.catch((error) => {
+				console.error(error);
+			});
+	}
+
+	readDocente() {
+		axios
+			.get('api/docente/read')
+			.then((response) => {
+				this.setState({
+					doc: response.data
 				});
 			})
 			.catch((error) => {
@@ -55,6 +74,32 @@ class TodoContextProvider extends Component {
 			.then((response) => {
 				this.setState({
 				facu: response.data
+				});
+			})
+			.catch((error) => {
+				console.error(error);
+			});
+	}
+
+	readDepartamento() {
+		axios
+			.get('api/departamento/read')
+			.then((response) => {
+				this.setState({
+				dep: response.data
+				});
+			})
+			.catch((error) => {
+				console.error(error);
+			});
+	}
+
+	readPrograma() {
+		axios
+			.get('api/programa/read')
+			.then((response) => {
+				this.setState({
+				pro: response.data
 				});
 			})
 			.catch((error) => {
@@ -89,16 +134,18 @@ class TodoContextProvider extends Component {
 	}
 
 	//create
-	createTodo(event, todo) {
+	createTodo(event, data) {
+		console.log(data);
 		event.preventDefault();
 		axios
-			.post('api/trabajo/create', todo)
+			.post('api/trabajo/create', data)
 			.then((response) => {
 				if (response.data.message.level === 'success') {
-					let data = [ ...this.state.todos ];
-					data.push(response.data.todo);
+					let todos = [ ...this.state.todos ];
+					todos.push(response.data.todo);
+
 					this.setState({
-						todos: data,
+						todos: todos,
 						message: response.data.message
 					});
 				} else {
@@ -122,6 +169,7 @@ class TodoContextProvider extends Component {
 					let todo = todos.find((todo) => {
 						return todo.id === data.id;
 					});
+					
 					todo.estudiante_id = response.data.todo.estudiante_id;
 					todo.registro = response.data.todo.registro;
 					todo.descripcion = response.data.todo.descripcion;

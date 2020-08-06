@@ -1,13 +1,18 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import { DialogTitle, Dialog, DialogContent, DialogActions, Button } from '@material-ui/core';
+import { DialogTitle, Dialog, DialogContent, DialogContentText, DialogActions, Button, Slide } from '@material-ui/core';
+import { Cached, Cancel } from '@material-ui/icons';
 import { TodoContext } from './TodoContext';
+
+const Transicion = React.forwardRef(function Transition(props, ref) {
+	return <Slide direction="up" ref={ref} {...props} />;
+});
 
 function DeleteDialog(props) {
 	const context = useContext(TodoContext);
 
 	const hide = () => {
-		props.setDeleteConfirmationIsShown(false);
+		props.setEliminarVisible(false);
 	};
 
 	return (
@@ -17,6 +22,11 @@ function DeleteDialog(props) {
 			<DialogActions>
 				<Button onClick={hide}>Cancelar</Button>
 				<Button
+					variant="contained"
+					color="primary"
+					size="small"
+					endIcon={<Cached />}
+					autoFocus
 					onClick={() => {
 						context.deleteTodo({
 							id: props.todo.id,
@@ -34,7 +44,7 @@ function DeleteDialog(props) {
 
 DeleteDialog.propTypes = {
 	open: PropTypes.bool.isRequired,
-	setDeleteConfirmationIsShown: PropTypes.func.isRequired,
+	setEliminarVisible: PropTypes.func.isRequired,
 	todo: PropTypes.object
 };
 

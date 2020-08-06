@@ -56,9 +56,38 @@ function NuevoUsuario() {
 	const [ addTelefono, setAddTelefono ] = useState('');
 	const [ addTipousuario, setAddTipousuario ] = useState('');
 	const [ addEstado, setAddEstado ] = useState('Activo');
+	const [ error, seterror ] = useState({
+		addCodusuario: false,
+		addUsuario: false,
+		addNombre: false,
+		addApellido: false,
+		addCorreo: false,
+		addPassword: false,
+		addTelefono: false,
+		addTipousuario: false
+	});
+	const [ textoAyuda, settextoAyuda ] = useState({
+		addCodusuario: '',
+		addUsuario: '',
+		addNombre: '',
+		addApellido: '',
+		addCorreo: '',
+		addPassword: '',
+		addTelefono: '',
+		addTipousuario: ''
+	});
 
 	const onCreateSubmit = (event) => {
 		event.preventDefault();
+		if (
+			(addCodusuario == '' || addUsuario == '' || addNombre == '',
+			addApellido == '' || addCorreo == '' || addPassword == '' || addTelefono == '' || addTipousuario == '')
+		) {
+			return context.setMessage({
+				level: 'error',
+				text: [ 'Debe llenar los campos del Usuario' ]
+			});
+		}
 		context.createTodo(event, {
 			codusuario: addCodusuario,
 			usuario: addUsuario,
@@ -137,14 +166,29 @@ function NuevoUsuario() {
 						</Grid>
 						<Grid item md={4} xs={6}>
 							<TextField
+								error={error.addCorreo}
 								type="text"
 								value={addCorreo}
 								onChange={(event) => {
 									setAddCorreo(event.target.value);
+									if (addCorreo.length > 15 || !/^[A-Za-z\s]+$/.test(addCorreo)) {
+										error.addCorreo = true;
+										textoAyuda.addCorreo = 'Utilice un correo institucional';
+										seterror(error);
+										settextoAyuda(textoAyuda);
+									} else {
+										error.addCorreo = false;
+										textoAyuda.addCorreo = '';
+										seterror(error);
+										settextoAyuda(textoAyuda);
+									}
 								}}
-								InputProps={{endAdornment: <InputAdornment position="end">@ufpso.edu.co</InputAdornment>,}}
-								label="Ingrese su Correo"
+								helperText={textoAyuda.addCorreo}
 								fullWidth={true}
+								label="Ingrese su Correo"
+								InputProps={{
+									endAdornment: <InputAdornment position="end">@ufpso.edu.co</InputAdornment>
+								}}
 							/>
 						</Grid>
 						<Grid item md={4} xs={6}>

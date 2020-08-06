@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -30,6 +32,16 @@ class Programa
      * @ORM\ManyToOne(targetEntity="App\Entity\Departamento", inversedBy="programa")
      */
     private $departamento;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Estudiante", mappedBy="programa")
+     */
+    private $programa;
+
+    public function __construct()
+    {
+        $this->programa = new ArrayCollection();
+    }
 
     
     public function getId(): ?int
@@ -69,6 +81,37 @@ class Programa
     public function setDepartamento(?Departamento $departamento): self
     {
         $this->departamento = $departamento;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Estudiante[]
+     */
+    public function getPrograma(): Collection
+    {
+        return $this->programa;
+    }
+
+    public function addPrograma(Estudiante $programa): self
+    {
+        if (!$this->programa->contains($programa)) {
+            $this->programa[] = $programa;
+            $programa->setPrograma($this);
+        }
+
+        return $this;
+    }
+
+    public function removePrograma(Estudiante $programa): self
+    {
+        if ($this->programa->contains($programa)) {
+            $this->programa->removeElement($programa);
+            // set the owning side to null (unless already changed)
+            if ($programa->getPrograma() === $this) {
+                $programa->setPrograma(null);
+            }
+        }
 
         return $this;
     }

@@ -42,6 +42,12 @@ function NuevoElemento (){
 
   const onCreateSubmit = (event) =>{
     event.preventDefault();
+    if(CodElemento=='' || Elemento=='' || Stock=='' || HoraUso=='' || Categoria==''){
+			return context.setMessage({
+				level: 'error',
+				text: [ 'Debe llenar los campos del Elemento' ]
+			});
+		}
     context.createTodo(event, {
       codelemento: CodElemento,
       elemento: Elemento,

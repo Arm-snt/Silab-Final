@@ -5,7 +5,7 @@ import { TodoContext } from './TodoContext';
 
 const style = {
 	snack: {
-		padding: '20px'
+		padding: '65px'
 	}
 };
 
@@ -16,49 +16,42 @@ function checkLevel(level) {
 		case 'error':
 			return '#e2001A';
 		case 'warning':
-			return '#F1C40F';
+			return '#FF9800';
 		default:
 			return '#e8E8E8';
 	}
 }
 
 function EstSnackBar() {
-
 	const context = useContext(TodoContext);
-	const handleClose = () =>{
+	const handleClose = () => {
 		context.setMessage({});
-	}
+	};
 
 	return (
-		<Snackbar 
-		open={context.message.text !== undefined} 
-		onClose={handleClose} 
-		autoHideDuration={5000} 
-		anchorOrigin={{
-			vertical: "top",
-			horizontal: "right"
-		  }}
-		style={style.snack}>
+		<Snackbar
+			open={context.message.text !== undefined}
+			onClose={handleClose}
+			autoHideDuration={4000}
+			anchorOrigin={{
+				vertical: 'top',
+				horizontal: 'center'
+			}}
+			style={style.snack}
+		>
 			{context.message.text && (
-				<SnackbarContent
+				<Alert
+					severity={context.message.level}
 					style={{ backgroundColor: checkLevel(context.message.level) }}
-					message={context.message.text.map((text, index) => (
-						<Fragment key={index + ' ' + text}>
-							<Alert severity={context.message.level}>
-								<span>{text}</span>
-								<br />
-							</Alert>
-						</Fragment>
-					))}
+					variant="filled"
 					action={[
-						<Button
-							onClick={handleClose}
-							key="dissmiss"
-							color="inherit">
+						<Button onClick={handleClose} key="dissmiss" color="inherit">
 							Cerrar
 						</Button>
 					]}
-				/>
+				>
+					{context.message.text}
+				</Alert>
 			)}
 		</Snackbar>
 	);

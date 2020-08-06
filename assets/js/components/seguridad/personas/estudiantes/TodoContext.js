@@ -9,9 +9,11 @@ class TodoContextProvider extends Component {
 		super(props);
 		this.state = {
 			todos: [],
+			pro: [],
 			message: {}
 		};
 		this.readTodo();
+		this.readPrograma();
 	}
 
 	//read
@@ -28,6 +30,19 @@ class TodoContextProvider extends Component {
 			});
 	}
 
+	readPrograma() {
+		axios
+			.get('api/programa/read')
+			.then((response) => {
+				this.setState({
+				pro: response.data
+				});
+			})
+			.catch((error) => {
+				console.error(error);
+			});
+	}
+
 	//create
 	createTodo(event, todo) {
 		event.preventDefault();
@@ -37,10 +52,12 @@ class TodoContextProvider extends Component {
 				if (response.data.message.level === 'success') {
 					let data = [ ...this.state.todos ];
 					data.push(response.data.todo);
+					
 					this.setState({
 						todos: data,
 						message: response.data.message
 					});
+
 				} else {
 					this.setState({
 						message: response.data.message
@@ -65,7 +82,7 @@ class TodoContextProvider extends Component {
 					});
 					todo.codigo = response.data.todo.codigo;
 					todo.nombre = response.data.todo.nombre;
-					todo.programa = response.data.todo.programa;
+					todo.programa_id = response.data.todo.programa_id;
 					todo.email = response.data.todo.email;
 					todo.tipodoc = response.data.todo.tipodoc;
 					todo.documento = response.data.todo.documento;

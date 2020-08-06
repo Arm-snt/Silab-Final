@@ -22,8 +22,9 @@ class EstudianteRepository extends ServiceEntityRepository
     public function Mostrar(){
         try {
             $conn = $this->getEntityManager()->getConnection();
-            $stm = $conn->prepare(" SELECT est.id, est.codigo, est.nombre, est.programa, est.email, est.tipodoc, est.documento, est.telefono, est.estado
-            FROM estudiante est ORDER BY est.id");
+            $stm = $conn->prepare(" SELECT est.id, est.codigo, est.nombre, est.programa_id, est.email, est.tipodoc, est.documento, est.telefono, est.estado
+            FROM estudiante est, programa pro 
+            WHERE est.programa_id=pro.id ORDER BY est.id");
             $stm->execute([]);
             $res = $stm->fetchAll();
             return $res;
@@ -32,11 +33,11 @@ class EstudianteRepository extends ServiceEntityRepository
         }
     }
 
-    public function Insertar($codigo, $nombre, $programa, $email, $tipodoc, $documento, $telefono, $estado){
+    public function Insertar($codigo, $nombre, $programa_id, $email, $tipodoc, $documento, $telefono, $estado){
         try {
             $conn = $this->getEntityManager()->getConnection();
-            $stm = $conn->prepare(" INSERT INTO estudiante (codigo, nombre, programa, email, tipodoc, documento, telefono, estado) VALUES (:cod, :nom, :pro, :ema, :tip, :doc, :tel, :est)");
-            if($stm->execute(array(':cod'=>$codigo, ':nom'=>$nombre, ':pro'=>$programa, ':ema'=>$email, ':tip'=>$tipodoc, ':doc'=>$documento, ':tel'=>$telefono, ':est'=>$estado)));
+            $stm = $conn->prepare(" INSERT INTO estudiante (codigo, nombre, programa_id, email, tipodoc, documento, telefono, estado) VALUES (:cod, :nom, :pro, :ema, :tip, :doc, :tel, :est)");
+            if($stm->execute(array(':cod'=>$codigo, ':nom'=>$nombre, ':pro'=>$programa_id, ':ema'=>$email, ':tip'=>$tipodoc, ':doc'=>$documento, ':tel'=>$telefono, ':est'=>$estado)));
         } catch (Exception $e) {
             return $e;
         }
@@ -46,7 +47,7 @@ class EstudianteRepository extends ServiceEntityRepository
     public function Buscar($id){
         try {
             $conn = $this->getEntityManager()->getConnection();
-            $stm = $conn->prepare(" SELECT est.id, est.codigo, est.nombre, est.programa, est.email, est.tipodoc, est.documento, est.telefono, est.estado
+            $stm = $conn->prepare(" SELECT est.id, est.codigo, est.nombre, est.programa_id, est.email, est.tipodoc, est.documento, est.telefono, est.estado
             FROM estudiante est
             WHERE est.id=:est ORDER BY est.id");
             $est=$id;
@@ -59,11 +60,11 @@ class EstudianteRepository extends ServiceEntityRepository
     }
     
     
-    public function Actualizar($id, $codigo, $nombre, $programa, $email, $tipodoc, $documento, $telefono, $estado){
+    public function Actualizar($id, $codigo, $nombre, $programa_id, $email, $tipodoc, $documento, $telefono, $estado){
         try {
             $conn = $this->getEntityManager()->getConnection();
-            $stm = $conn->prepare(" UPDATE estudiante SET  codigo=:codigo, nombre=:nombre, programa=:programa, email=:email, tipodoc=:tipodoc, documento=:documento, telefono=:telefono, estado=:estado WHERE estudiante.id =:id");
-            if($stm->execute(array(':id'=>$id, ':codigo' =>$codigo, ':nombre' =>$nombre, ':programa' =>$programa, ':email'=>$email, ':tipodoc'=>$tipodoc, ':documento'=>$documento, ':telefono'=>$telefono, ':estado'=>$estado)));
+            $stm = $conn->prepare(" UPDATE estudiante SET  codigo=:codigo, nombre=:nombre, programa_id=:programa_id, email=:email, tipodoc=:tipodoc, documento=:documento, telefono=:telefono, estado=:estado WHERE estudiante.id =:id");
+            if($stm->execute(array(':id'=>$id, ':codigo' =>$codigo, ':nombre' =>$nombre, ':programa_id' =>$programa_id, ':email'=>$email, ':tipodoc'=>$tipodoc, ':documento'=>$documento, ':telefono'=>$telefono, ':estado'=>$estado)));
         } catch (Exception $e) {
             return $e;
         }

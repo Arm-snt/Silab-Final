@@ -47,7 +47,7 @@ function EditarEstudiante(data) {
   const [editId, seteditId] = useState(data['data'].id)
   const [editCodigo, seteditCodigo] = useState(data['data'].codigo)
   const [editNombre, seteditNombre] = useState(data['data'].nombre)
-  const [editPrograma, seteditPrograma] = useState(data['data'].programa)
+  const [editPrograma, seteditPrograma] = useState(data['data'].programa_id)
   const [editEmail, seteditEmail] = useState(data['data'].email)
   const [editTipodoc, seteditTipodoc] = useState(data['data'].tipodoc)
   const [editDocumento, seteditDocumento] = useState(data['data'].documento)
@@ -60,7 +60,7 @@ function EditarEstudiante(data) {
       id: editId,
       codigo: editCodigo,
       nombre: editNombre,
-      programa: editPrograma,
+      programa_id: editPrograma,
 	  email: editEmail,
 	  tipodoc: editTipodoc,
       documento: editDocumento,
@@ -72,12 +72,6 @@ function EditarEstudiante(data) {
   function historyBack() {
     window.history.back()
   }
-
-  const programas = [
-    { state: 'Ingeniería Civil' },
-    { state: 'Ingeniería Mecánica' },
-    { state: 'Ingeniería de Sistemas' },
-  ]
 
   const tipos = [{ state: "CC" }, { state: "TI" }];
 
@@ -116,13 +110,13 @@ function EditarEstudiante(data) {
             <Grid item md={4} xs={6}>
               <Autocomplete
                 id="combo-box-demo"
-                options={programas}
+                options={context.pro}
                 onChange={(e, a) => {
-                  seteditPrograma(a !== null ? a.state : '')
+                  seteditPrograma(a !== null ? a.id : '')
                 }}
-                getOptionLabel={(option) => option.state}
+                getOptionLabel={(option) => option.codigo + ' - ' + option.nombre}
                 renderInput={(params) => (
-                  <TextField {...params} label="Programa" />
+                  <TextField {...params} label="Programa Académico" />
                 )}
               />
             </Grid>

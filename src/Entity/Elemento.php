@@ -158,10 +158,6 @@ class Elemento
         return $this;
     }
 
-    public function toArray(){
-        return ['id'=>$this->id,'laboratorio_id'=>$this->laboratorio_id,'codelemento'=>$this->codelemento,'elemento'=>$this->elemento,'stock'=>$this->stock,'horauso'=>$this->horauso,'categoria'=>$this->categoria,'estado'=>$this->estado];
-    }
-
     /**
      * @return Collection|Prestamo[]
      */
@@ -188,5 +184,8 @@ class Elemento
         }
 
         return $this;
+    }
+    public function toArray(){
+        return ['id'=>$this->id,'laboratorio_id'=>$this->laboratorio_id,'codelemento'=>$this->codelemento,'elemento'=>$this->elemento,'stock'=>$this->stock,'horauso'=>$this->horauso,'categoria'=>$this->categoria,'estado'=>$this->estado];
     }
 }
