@@ -69,7 +69,8 @@ function NuevoTrabajo() {
 	const [ Estudiante, setEstudiante ] = useState(null);
 	const [ Docente, setDocente ] = useState(null);
 	const [ Particular, setParticular ] = useState(null);
-	const [ Telefono, setTelefono ] = useState(null);
+	const [ Telefono, setTelefono ] = useState('');
+	const [ TelefonoEst, setTelefonoEst ] = useState('');
 	const [ User, setUser ] = useState('');
 	const [ Programa, setPrograma ] = useState('');
 	const [ Registro, setRegistro ] = useState('');
@@ -85,7 +86,7 @@ function NuevoTrabajo() {
 				text: [ 'Debe llenar los campos del Prestamo' ]
 			});
 		}
-		context.createTodo(event, {
+		console.log({
 			estudiante_id: Estudiante,
 			docente_id: Docente,
 			particular: Particular,
@@ -99,14 +100,29 @@ function NuevoTrabajo() {
 			fecha_salida: null,
 			hora_salida: null
 		});
-		setEstudiante('');
-		setDocente('');
-		setParticular('');
-		setTelefono('');
-		setUser('');
-		setRegistro('');
-		setDescripcion('');
-		setTipo('');
+		/*context.createTodo(event, {
+			estudiante_id: Estudiante,
+			docente_id: Docente,
+			particular: Particular,
+			telefono: Telefono,
+			usuario_id: User,
+			registro: Registro,
+			descripcion: Descripcion,
+			tipo: Tipo,
+			fecha_entrada: fecha.getFullYear() + '-' + (fecha.getMonth() + 1) + '-' + fecha.getDate(),
+			hora_entrada: fecha.getHours() + ':' + fecha.getMinutes() + ':' + fecha.getSeconds(),
+			fecha_salida: null,
+			hora_salida: null
+		});
+			setEstudiante('');
+			setDocente('');
+			setParticular('');
+			setTelefono('');
+			setUser('');
+			setRegistro('');
+			setDescripcion('');
+			setTipo('');
+		*/
 	};
 
 	const agregarfechayhora = (date) => {
@@ -136,13 +152,14 @@ function NuevoTrabajo() {
 							/>
 						</Grid>
 						<Grid item xs={12} md={4}>
-							<Autocomplete
-								options={context.lab}
-								onChange={(e, a) => {
-									setLaboratorio(a !== null ? a.id : '');
+							<TextField
+								type="text"
+								value={Registro}
+								onChange={(event) => {
+									setRegistro(event.target.value);
 								}}
-								getOptionLabel={(option) => option.codlaboratorio + ' - ' + option.nombre}
-								renderInput={(params) => <TextField {...params} label="Laboratorio" />}
+								label="Registrado Por"
+								fullWidth={true}
 							/>
 						</Grid>
 						<Grid item xs={12} md={4}>
@@ -168,6 +185,11 @@ function NuevoTrabajo() {
 									value={Tipo}
 									onChange={(event) => {
 										setTipo(event.target.value);
+										setPrograma('');
+										setEstudiante('');
+										setTelefonoEst('');
+										setDocente('');
+										setTelefono('');
 									}}
 								>
 									<FormControlLabel
@@ -229,14 +251,13 @@ function NuevoTrabajo() {
 									onChange={(e, a) => {
 										console.log(Estudiantes);
 										setPrograma(a !== null ? a.id : '');
-										context.est.map((res)=>{
-											if(res.programa_id==Programa){
+										context.est.map((res) => {
+											if (res.programa_id == Programa) {
 												Estudiantes.push(res);
 											}
 										});
 										setEstudiantes(Estudiantes);
-										}
-									}
+									}}
 									getOptionLabel={(option) => option.codigo + ' - ' + option.nombre}
 									renderInput={(params) => <TextField {...params} label="Programa Académico" />}
 								/>
@@ -246,20 +267,19 @@ function NuevoTrabajo() {
 									options={Estudiantes}
 									onChange={(e, a) => {
 										setEstudiante(a !== null ? a.id : '');
+										setTelefonoEst(a !== null ? a.telefono : '');
 									}}
 									getOptionLabel={(option) => option.codigo + ' - ' + option.nombre}
 									renderInput={(params) => <TextField {...params} label="Estudiante" />}
 								/>
 							</Grid>
-							<Grid item md={3} xs={3}>
+							<Grid item xs={4} md={3}>
 								<TextField
-									type="text"
-									value={Telefono}
-									onChange={(event) => {
-										setTelefono(event.target.value);
-									}}
+									disabled
+									fullWidth
+									value={TelefonoEst}
 									label="Teléfono"
-									fullWidth={true}
+									style={{ whiteSpace: 'pre-wrap' }}
 								/>
 							</Grid>
 						</Grid>
@@ -270,20 +290,19 @@ function NuevoTrabajo() {
 									options={context.doc}
 									onChange={(e, a) => {
 										setDocente(a !== null ? a.id : '');
+										setTelefonoEst(a !== null ? a.telefono : '');
 									}}
 									getOptionLabel={(option) => option.codigo + ' - ' + option.nombre}
 									renderInput={(params) => <TextField {...params} label="Docente" />}
 								/>
 							</Grid>
-							<Grid item md={3} xs={3}>
+							<Grid item xs={4} md={3}>
 								<TextField
-									type="text"
-									value={Telefono}
-									onChange={(event) => {
-										setTelefono(event.target.value);
-									}}
+									disabled
+									fullWidth
+									value={TelefonoEst}
 									label="Teléfono"
-									fullWidth={true}
+									style={{ whiteSpace: 'pre-wrap' }}
 								/>
 							</Grid>
 						</Grid>
@@ -300,7 +319,7 @@ function NuevoTrabajo() {
 									fullWidth={true}
 								/>
 							</Grid>
-							<Grid item md={3} xs={3}>
+							<Grid item xs={4} md={3}>
 								<TextField
 									type="text"
 									value={Telefono}

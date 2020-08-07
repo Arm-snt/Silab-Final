@@ -33,6 +33,11 @@ class Docente
      */
     private $trabajos;
 
+    /**
+     * @ORM\Column(type="string", length=50, nullable=true)
+     */
+    private $telefono;
+
     public function __construct()
     {
         $this->trabajos = new ArrayCollection();
@@ -94,6 +99,18 @@ class Docente
                 $trabajo->setDocente(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getTelefono(): ?string
+    {
+        return $this->telefono;
+    }
+
+    public function setTelefono(?string $telefono): self
+    {
+        $this->telefono = $telefono;
 
         return $this;
     }

@@ -25,7 +25,7 @@ class TrabajoRepository extends ServiceEntityRepository
             $stm = $conn->prepare(" SELECT tra.id, tra.estudiante_id, tra.docente_id, tra.usuario_id, tra.particular, tra.telefono, tra.registro, 
             tra.descripcion, tra.tipo, tra.fecha_entrada, tra.hora_entrada, tra.fecha_salida, tra.hora_salida
             FROM trabajo tra, estudiante est, docente doc
-            WHERE tra.estudiante_id=est.id OR tra.docente_id=doc.id GROUP BY tra.id ");
+            WHERE tra.estudiante_id=est.id OR tra.docente_id=doc.id OR tra.particular IS NOT NULL GROUP BY tra.id ");
             $stm->execute([]);
             $res = $stm->fetchAll();
             return $res;

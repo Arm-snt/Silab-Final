@@ -57,7 +57,7 @@ const style = {
 	tableCell: {
 		color: '#ffffff'
 	},
-	estado:{
+	estado: {
 		color: '#28B463'
 	}
 };
@@ -65,10 +65,11 @@ const style = {
 function Trabajos(props) {
 	const onChangeIndex = props.onChangeIndex;
 	const context = useContext(TodoContext);
-	console.log(context.todos)
+	console.log(context.todos);
 	let Fecha;
 	let filtro = {};
 	let Nombre = '';
+	let tipo = '';
 	const [ termino, setTermino ] = useState('');
 	const [ eliminarVisible, setEliminarVisible ] = useState(false);
 	const [ trabajoEliminar, setTrabajoEliminar ] = useState(null);
@@ -83,14 +84,33 @@ function Trabajos(props) {
 		setRowsPerPage(parseInt(event.target.value, 10));
 		setPage(0);
 	};
-	
 
-	function busqueda(termino){		
+	function busqueda(termino) {
 		return function(filtro) {
-			return (				
+			return (
 				filtro.registro.toLowerCase().includes(termino.toLowerCase()) ||
 				filtro.descripcion.toLowerCase().includes(termino.toLowerCase()) ||
-				!termino)}											
+				!termino
+			);
+		};
+	}
+
+	function MostrarEst(data, tipo) {
+		if (tipo == 'estudiante') {
+			context.est.map((res) => {
+				if (res.id == data) {
+					Nombre = res.codigo + '-' + res.nombre;
+				}
+			});
+			return Nombre;
+		} else if (tipo == 'docente') {
+			context.doc.map((res) => {
+				if (res.id == data) {
+					Nombre = res.codigo + '-' + res.nombre;
+				}
+			});
+			return Nombre;
+		}
 	}
 
 	function historyBack() {
@@ -105,7 +125,8 @@ function Trabajos(props) {
 				fullWidth
 				placeholder="Buscar..."
 				onChange={(event) => {
-					setTermino(event.target.value)}}
+					setTermino(event.target.value);
+				}}
 				value={termino}
 				style={style.search}
 				InputProps={{
@@ -114,7 +135,8 @@ function Trabajos(props) {
 							<Icon path={mdiCardSearch} size={1.5} color="red" />
 						</InputAdornment>
 					)
-				}}/>
+				}}
+			/>
 			<Container style={style.container} component="main" maxWidth="lg" justify="center">
 				<TableContainer component={Paper}>
 					<Table style={style.table} aria-label="customized table">
@@ -122,7 +144,7 @@ function Trabajos(props) {
 						<TableHead style={style.tableHead}>
 							<TableRow>
 								<TableCell style={style.tableCell} align="center">
-									Estudiante
+									Encargado
 								</TableCell>
 								<TableCell style={style.tableCell} align="center">
 									Registro
@@ -146,25 +168,23 @@ function Trabajos(props) {
 										{/*NOMBRE*/}
 										<TableCell align="left">
 											<Typography style={{ whiteSpace: 'pre-wrap' }}>
-												{()=>{
-													if(todo.estudiante_id!=null){
-														Nombre= todo.estudiante_id;
-													}else if(todo.docente_id!=null){
-														Nombre= todo.docente_id;
-													}else{
-														Nombre= todo.particular;
-													}}}
-												{Nombre}
+												{todo.estudiante_id != null ? (
+													MostrarEst(todo.estudiante_id, (tipo = 'estudiante'))
+												) : todo.docente_id != null ? (
+													MostrarEst(todo.docente_id, (tipo = 'docente'))
+												) : (
+													(Nombre = todo.particular)
+												)}
 											</Typography>
 										</TableCell>
 										{/*OBSERVACIÓN*/}
 										<TableCell align="center">
-											<Typography style={{ whiteSpace: 'pre-wrap' }}>
-												{todo.registro}
-											</Typography>
+											<Typography style={{ whiteSpace: 'pre-wrap' }}>{todo.registro}</Typography>
 										</TableCell>
 										<TableCell align="center">
-											<Typography style={{ whiteSpace: 'pre-wrap' }}>{todo.descripcion}</Typography>
+											<Typography style={{ whiteSpace: 'pre-wrap' }}>
+												{todo.descripcion}
+											</Typography>
 										</TableCell>
 										<TableCell align="center">
 											<Fragment>

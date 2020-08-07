@@ -22,7 +22,7 @@ class DocenteRepository extends ServiceEntityRepository
     public function Mostrar(){
         try {
             $conn = $this->getEntityManager()->getConnection();
-            $stm = $conn->prepare(" SELECT id, codigo, nombre
+            $stm = $conn->prepare(" SELECT id, codigo, nombre, telefono
             FROM docente");
             $stm->execute([]);
             $res = $stm->fetchAll();
