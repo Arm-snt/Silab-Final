@@ -58,36 +58,47 @@ const style = {
 
 function NuevoTrabajo() {
 	const context = useContext(TodoContext);
-	let estudiantes = [];
-	let elementoids = [];
-	let estudiantesids = [];
-	let datosE = [];
-	let nuevosE = [];
-	const [ Laboratorio, setLaboratorio ] = useState('');
-	const [ Departamento, setDepartamento ] = useState('');
-	const [ Estudiantes, setEstudiantes ] = useState([]);
-	const [ Estudiante, setEstudiante ] = useState(null);
-	const [ Docente, setDocente ] = useState(null);
-	const [ Particular, setParticular ] = useState(null);
+	const [ Laboratorio, setLaboratorio ] = useState([]);
+	const [ Departamento, setDepartamento ] = useState([]);
+	const [ Estudiante, setEstudiante ] = useState([]);
+	const [ IdEstudiante, setIdEstudiante ] = useState([]);
+	const [ Docente, setDocente ] = useState([]);
+	const [ Particular, setParticular ] = useState('');
 	const [ Telefono, setTelefono ] = useState('');
 	const [ TelefonoEst, setTelefonoEst ] = useState('');
-	const [ User, setUser ] = useState('');
-	const [ Programa, setPrograma ] = useState('');
+	const [ User, setUser ] = useState([]);
+	const [ Programa, setPrograma ] = useState([]);
 	const [ Registro, setRegistro ] = useState('');
+	const [ Mensaje, setMensaje ] = useState('');
 	const [ Descripcion, setDescripcion ] = useState('');
 	const [ Tipo, setTipo ] = useState('Estudiante');
 	const [ fecha, setFecha ] = useState(new Date());
 
 	const onCreateSubmit = (event) => {
 		event.preventDefault();
-		if (Estudiante == '' || Tipo == '' || Registro == '') {
+		if ((IdEstudiante == '' || Programa == '')  && Docente =='' && (Particular=='' || Telefono == '')) {
 			return context.setMessage({
 				level: 'error',
-				text: [ 'Debe llenar los campos del Prestamo' ]
+				text: [ 'Debe Seleccionar el encargado del del Trabajo' ]
+			});
+		} else if(Registro == '' || User == '' || Descripcion == '') {
+			return context.setMessage({
+				level: 'error',
+				text: [ 'Debe llenar los campos del trabajo' ]
 			});
 		}
+		if(IdEstudiante!=[]){
+			setParticular(null);
+			setDocente(null);
+		}else if(Docente!=[]){
+			setIdEstudiante(null);
+			setParticular(null);
+		}else{
+			setDocente(null);
+			setIdEstudiante(null);
+		}
 		console.log({
-			estudiante_id: Estudiante,
+			estudiante_id: IdEstudiante,
 			docente_id: Docente,
 			particular: Particular,
 			telefono: Telefono,
@@ -100,6 +111,18 @@ function NuevoTrabajo() {
 			fecha_salida: null,
 			hora_salida: null
 		});
+		setIdEstudiante([]);
+		setDocente([]);
+		setPrograma([]);
+		setUser([]);
+		setLaboratorio([]);
+		setDepartamento([]);
+		setParticular('');
+		setTelefono('');
+		setRegistro('');
+		setDescripcion('');
+		setTipo('Estudiante');
+		setMensaje('');
 		/*context.createTodo(event, {
 			estudiante_id: Estudiante,
 			docente_id: Docente,
@@ -122,6 +145,7 @@ function NuevoTrabajo() {
 			setRegistro('');
 			setDescripcion('');
 			setTipo('');
+			setMensaje('');
 		*/
 	};
 
@@ -148,7 +172,7 @@ function NuevoTrabajo() {
 									setDepartamento(a !== null ? a.id : '');
 								}}
 								getOptionLabel={(option) => option.codigo + ' - ' + option.nombre}
-								renderInput={(params) => <TextField {...params} label="Departamento" />}
+								renderInput={(params) => <TextField {...params} value={Mensaje} label="Departamento" />}
 							/>
 						</Grid>
 						<Grid item xs={12} md={4}>
@@ -169,7 +193,7 @@ function NuevoTrabajo() {
 									setUser(a !== null ? a.id : '');
 								}}
 								getOptionLabel={(option) => option.codusuario + ' - ' + option.nombre}
-								renderInput={(params) => <TextField {...params} label="Laboratorista" />}
+								renderInput={(params) => <TextField {...params} value={Mensaje} label="Laboratorista" />}
 							/>
 						</Grid>
 						<Grid item md={12} xs={12}>
@@ -185,11 +209,11 @@ function NuevoTrabajo() {
 									value={Tipo}
 									onChange={(event) => {
 										setTipo(event.target.value);
-										setPrograma('');
-										setEstudiante('');
-										setTelefonoEst('');
-										setDocente('');
+										setPrograma([]);
+										setEstudiante([]);
 										setTelefono('');
+										setTelefonoEst('');
+										setDocente([]);
 									}}
 								>
 									<FormControlLabel
@@ -249,28 +273,28 @@ function NuevoTrabajo() {
 								<Autocomplete
 									options={context.pro}
 									onChange={(e, a) => {
-										console.log(Estudiantes);
+										let estudiantes = [];
 										setPrograma(a !== null ? a.id : '');
 										context.est.map((res) => {
-											if (res.programa_id == Programa) {
-												Estudiantes.push(res);
+											if (res.programa_id == a.id) {
+												estudiantes.push(res);
 											}
 										});
-										setEstudiantes(Estudiantes);
+										setEstudiante(estudiantes);
 									}}
 									getOptionLabel={(option) => option.codigo + ' - ' + option.nombre}
-									renderInput={(params) => <TextField {...params} label="Programa Académico" />}
+									renderInput={(params) => <TextField {...params} value={Mensaje} label="Programa Académico" />}
 								/>
 							</Grid>
 							<Grid item md={4} xs={6}>
 								<Autocomplete
-									options={Estudiantes}
+									options={Estudiante}
 									onChange={(e, a) => {
-										setEstudiante(a !== null ? a.id : '');
+										setIdEstudiante(a !== null ? a.id : '');
 										setTelefonoEst(a !== null ? a.telefono : '');
 									}}
 									getOptionLabel={(option) => option.codigo + ' - ' + option.nombre}
-									renderInput={(params) => <TextField {...params} label="Estudiante" />}
+									renderInput={(params) => <TextField {...params} value={Mensaje} label="Estudiante" />}
 								/>
 							</Grid>
 							<Grid item xs={4} md={3}>
@@ -293,7 +317,7 @@ function NuevoTrabajo() {
 										setTelefonoEst(a !== null ? a.telefono : '');
 									}}
 									getOptionLabel={(option) => option.codigo + ' - ' + option.nombre}
-									renderInput={(params) => <TextField {...params} label="Docente" />}
+									renderInput={(params) => <TextField {...params} value={Mensaje} label="Docente" />}
 								/>
 							</Grid>
 							<Grid item xs={4} md={3}>

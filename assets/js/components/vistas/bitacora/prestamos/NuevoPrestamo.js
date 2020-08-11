@@ -278,13 +278,13 @@ function NuevoPrestamo() {
 						</Grid>
 						<Grid item xs={3} md={2}>
 							<Button
-								type="submit"
 								variant="contained"
 								fullWidth
 								size="medium"
 								color="primary"
 								style={style.submit}
 								onClick={onCreateSubmit}
+								endIcon={<Save />}
 							>
 								Guardar
 							</Button>
@@ -297,6 +297,7 @@ function NuevoPrestamo() {
 								color="secondary"
 								style={style.submit}
 								onClick={historyBack}
+								startIcon={<Cancel />}
 							>
 								Cancelar
 							</Button>

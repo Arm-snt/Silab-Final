@@ -148,7 +148,7 @@ function NuevoLaboratorio() {
 								renderInput={(params) => <TextField {...params} label="Laboratorista" />}
 							/>
 						</Grid>
-						<Grid item xs={6} md={2}>
+						<Grid item xs={3} md={2}>
 							<Button
 								variant="contained"
 								fullWidth
@@ -161,7 +161,7 @@ function NuevoLaboratorio() {
 								Guardar
 							</Button>
 						</Grid>
-						<Grid item xs={2} md={2}>
+						<Grid item xs={3} md={2}>
 							<Button
 								variant="contained"
 								fullWidth

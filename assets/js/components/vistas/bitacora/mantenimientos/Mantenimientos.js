@@ -1,26 +1,13 @@
-import React, { Component } from 'react';
-//import { makeStyles } from "@material-ui/core/styles";
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import {
-	Container,
-	Paper,
-	Grid,
-	Breadcrumbs,
-	Link,
-	Typography,
-	TextField,
-	IconButton,
-	Divider,
-	InputAdornment
-} from '@material-ui/core';
+import React, { useContext, useState, Fragment } from 'react';
+import { Table, TableHead, TableRow, TableCell, TableBody, TableContainer, TablePagination } from '@material-ui/core';
+import { Container, Paper, Grid, Link, Typography, IconButton, TextField, InputAdornment } from '@material-ui/core';
+import { Autocomplete } from '@material-ui/lab';
 import Icon from '@mdi/react';
-import { mdiEye, mdiCircleEditOutline, mdiCardSearch } from '@mdi/js';
-import HomeIcon from '@material-ui/icons/Home';
+import { mdiFileDocumentEdit, mdiEyeCheck, mdiFileCancel, mdiCardSearch } from '@mdi/js';
+import DoneIcon from '@material-ui/icons/Done';
+import CloseIcon from '@material-ui/icons/Close';
+import { TodoContext } from './TodoContext';
+import DeleteDialog from './DeleteDialog';
 
 const style = {
 	table: {
@@ -46,6 +33,13 @@ const style = {
 		height: 20,
 		marginRight: '4px'
 	},
+	form: {
+		width: '100%'
+	},
+	submit: {
+		marginTop: 20,
+		marginBottom: 20
+	},
 	space: {
 		paddingTop: '20px'
 	},
@@ -55,128 +49,172 @@ const style = {
 	search: {
 		width: 400,
 		marginBottom: 20
+	},
+	tableHead: {
+		color: '#ffffff',
+		backgroundColor: '#E2001A'
+	},
+	tableCell: {
+		color: '#ffffff'
+	},
+	estado:{
+		color: '#28B463'
 	}
 };
 
-function createData(elemento, stock, horas_uso, categoria, estado) {
-	return { elemento, stock, horas_uso, categoria, estado };
-}
+function Mantenimientos(props) {
+	const onChangeIndex = props.onChangeIndex;
+	const context = useContext(TodoContext);
+	let Fecha;
+	let filtro = {};
+	const [ termino, setTermino ] = useState('');
+	const [ eliminarVisible, setEliminarVisible ] = useState(false);
+	const [ mantenimientoEliminar, setMantenimientoEliminar ] = useState(null);
+	const [ entregar, setEntregar ]= useState(false);
+	const [ page, setPage ] = React.useState(0);
+	const [ rowsPerPage, setRowsPerPage ] = React.useState(5);
 
-const rows = [
-	createData('23546 - Arduino Nano', '12', '20', 'A', 'Activo'),
-	createData('35484 - Arduino Mega', '10', '5', 'A', 'Activo'),
-	createData('56842 - Tester Hx12', '7', '45', 'B', 'Activo'),
-	createData('74325 - Alineador estatio', '13', '100', 'C', 'Activo'),
-	createData('29886 - Teodolito', '20', '200', 'C', 'Activo'),
-	createData('12325 - Osciloscopio', '4', '150', 'C', 'Activo')
-];
-
-function searchingFor(term) {
-	return function(x) {
-		return (
-			x.elemento.toLowerCase().includes(term.toLowerCase()) ||
-			x.stock.toLowerCase().includes(term.toLowerCase()) ||
-			x.horas_uso.toLowerCase().includes(term.toLowerCase()) ||
-			x.categoria.toLowerCase().includes(term.toLowerCase()) ||
-			x.estado.toLowerCase().includes(term.toLowerCase()) ||
-			!term
-		);
+	const handleChangePage = (event, newPage) => {
+		setPage(newPage);
 	};
-}
 
-export default class Mantenimientos extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			rows: rows,
-			term: ''
-		};
-		console.log(rows);
-		this.searchHandler = this.searchHandler.bind(this);
+	const handleChangeRowsPerPage = (event) => {
+		setRowsPerPage(parseInt(event.target.value, 10));
+		setPage(0);
+	};
+	
+
+	function busqueda(termino){		
+		return function(filtro) {
+			return (				
+				filtro.tipo.toLowerCase().includes(termino.toLowerCase()) ||
+				filtro.observacion.toLowerCase().includes(termino.toLowerCase()) ||
+				filtro.fecha_solicitud.toString().includes(termino.toLowerCase()) ||
+				filtro.hora_solicitud.toLowerCase().includes(termino.toLowerCase()) ||
+				filtro.estado.toLowerCase().includes(termino.toLowerCase()) ||
+				!termino)}											
 	}
-	searchHandler(event) {
-		this.setState({ term: event.target.value });
+
+	function historyBack() {
+		window.history.back();
 	}
 
-	render() {
-		const { term, rows } = this.state;
+	const emptyRows = rowsPerPage - Math.min(rowsPerPage, context.todos.length - page * rowsPerPage);
 
-		return (
+	return (
+		<Fragment>
+			<TextField
+				fullWidth
+				placeholder="Buscar..."
+				onChange={(event) => {
+					setTermino(event.target.value)}}
+				value={termino}
+				style={style.search}
+				InputProps={{
+					startAdornment: (
+						<InputAdornment position="start">
+							<Icon path={mdiCardSearch} size={1.5} color="red" />
+						</InputAdornment>
+					)
+				}}/>
 			<Container style={style.container} component="main" maxWidth="lg" justify="center">
-				<Paper style={style.paper}>
-					<Grid container spacing={2}>
-						<Grid item xs={12} md={12}>
-							<Breadcrumbs aria-label="breadcrumb">
-								<Link color="inherit" style={style.link} href="">
-									<HomeIcon style={style.homeIcon} />
-									Mantenimientos
-								</Link>
-								<Link color="inherit" style={style.link} href="/mantenimiento/nuevo">
-									<Typography color="textPrimary">Nuevo Mantenimiento</Typography>
-								</Link>
-							</Breadcrumbs>
-						</Grid>
-						<Grid item md={12} xs={12}>
-							<Divider style={style.divider} />
-						</Grid>
-					</Grid>
-
-					<div className="App">
-						<form>
-							<TextField
-								fullWidth
-								placeholder="Buscar..."
-								onChange={this.searchHandler}
-								value={term}
-								style={style.search}
-								InputProps={{
-									startAdornment: (
-										<InputAdornment position="start">
-											<Icon path={mdiCardSearch} size={1.5} color="red" />
-										</InputAdornment>
-									)
-								}}
-							/>
-						</form>
-					</div>
-
-					<TableContainer component={Paper} style={style.space}>
-						<Table style={style.table} aria-label="customized table">
-							<TableHead>
-								<TableRow>
-									<TableCell align="center">Elemento</TableCell>
-									<TableCell align="center">Tipo</TableCell>
-									<TableCell align="center">Observación</TableCell>
-									<TableCell align="center">Registardo por</TableCell>
-									<TableCell align="center">Solicitud</TableCell>
-									<TableCell align="center">Opciones</TableCell>
-								</TableRow>
-							</TableHead>
-							<TableBody>
-								{rows.filter(searchingFor(term)).map((person) => (
-									<TableRow key={person.elemento}>
-										<TableCell component="th" scope="row" align="left">
-											{person.elemento}
+				<TableContainer component={Paper}>
+					<Table style={style.table} aria-label="customized table">
+						{/*HEAD*/}
+						<TableHead style={style.tableHead}>
+							<TableRow>
+								<TableCell style={style.tableCell} align="center">
+									Tipo de Mantenimiento
+								</TableCell>
+								<TableCell style={style.tableCell} align="center">
+									Observación
+								</TableCell>
+								<TableCell style={style.tableCell} align="center">
+									Fecha
+								</TableCell>
+								<TableCell style={style.tableCell} align="center">
+									Estado
+								</TableCell>
+								<TableCell style={style.tableCell} align="center">
+									Opciones
+								</TableCell>
+							</TableRow>
+						</TableHead>
+						{/*BODY*/}
+						<TableBody>
+							{context.todos
+								.filter(busqueda(termino))
+								.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+								.reverse()
+								.map((todo, index) => (
+									<TableRow key={'todo ' + index}>
+										{/*NOMBRE*/}
+										<TableCell align="left">
+											<Typography style={{ whiteSpace: 'pre-wrap' }}>
+												{todo.tipo}
+											</Typography>
 										</TableCell>
-										<TableCell align="center">{person.horas_uso}</TableCell>
-										<TableCell align="center">{person.estado}</TableCell>
-										<TableCell align="center">{person.categoria}</TableCell>
-										<TableCell align="center">{person.stock}</TableCell>
+										{/*OBSERVACIÓN*/}
 										<TableCell align="center">
-											<IconButton>
-												<Icon path={mdiEye} size={1} color="red" />
-											</IconButton>
-											<IconButton>
-												<Icon path={mdiCircleEditOutline} size={1} color="red" />
-											</IconButton>
+											<Typography style={{ whiteSpace: 'pre-wrap' }}>
+												{todo.observacion}
+											</Typography>
+										</TableCell>
+										<TableCell align="center">
+											<Typography style={{ whiteSpace: 'pre-wrap' }}>
+												{todo.fecha_solicitud + ' // ' + todo.hora_solicitud}
+											</Typography>
+										</TableCell>
+										<TableCell align="center">
+											<Typography style={todo.estado==='Activo' ? style.estado:null}>{todo.estado}</Typography>
+										</TableCell>
+										<TableCell align="center">
+											<Fragment>
+												<IconButton
+													onClick={(e) => {
+														onChangeIndex(2, todo, e);
+													}}
+												>
+													<Icon path={mdiFileDocumentEdit} size={1} color="red" />
+												</IconButton>
+												<IconButton
+													onClick={(e) => {
+														onChangeIndex(3, todo, e);
+													}}
+												>
+													<Icon path={mdiEyeCheck} size={1} color="red" />
+												</IconButton>
+												<IconButton
+													onClick={() => {
+														setEliminarVisible(true);
+														setMantenimientoEliminar(todo);
+														setEntregar(true);
+													}}
+												>
+													<Icon path={mdiFileCancel} size={1} color="gray" />
+												</IconButton>
+											</Fragment>
 										</TableCell>
 									</TableRow>
 								))}
-							</TableBody>
-						</Table>
-					</TableContainer>
-				</Paper>
+						</TableBody>
+					</Table>
+				</TableContainer>
+				<TablePagination
+					rowsPerPageOptions={[ 5, 10, 25 ]}
+					component="div"
+					count={context.todos.length}
+					rowsPerPage={rowsPerPage}
+					page={page}
+					onChangePage={handleChangePage}
+					onChangeRowsPerPage={handleChangeRowsPerPage}
+				/>
 			</Container>
-		);
-	}
+			{eliminarVisible && (
+				<DeleteDialog todo={mantenimientoEliminar} open={eliminarVisible} setEliminarVisible={setEliminarVisible} entregar={entregar} setEntregar={setEntregar}/>
+			)}
+		</Fragment>
+	);
 }
+
+export default Mantenimientos;

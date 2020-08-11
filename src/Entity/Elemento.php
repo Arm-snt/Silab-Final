@@ -64,9 +64,15 @@ class Elemento
      */
     private $prestamos;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Mantenimiento", mappedBy="elemento")
+     */
+    private $mantenimientos;
+
     public function __construct()
     {
         $this->prestamos = new ArrayCollection();
+        $this->mantenimientos = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -187,5 +193,33 @@ class Elemento
     }
     public function toArray(){
         return ['id'=>$this->id,'laboratorio_id'=>$this->laboratorio_id,'codelemento'=>$this->codelemento,'elemento'=>$this->elemento,'stock'=>$this->stock,'horauso'=>$this->horauso,'categoria'=>$this->categoria,'estado'=>$this->estado];
+    }
+
+    /**
+     * @return Collection|Mantenimiento[]
+     */
+    public function getMantenimientos(): Collection
+    {
+        return $this->mantenimientos;
+    }
+
+    public function addMantenimiento(Mantenimiento $mantenimiento): self
+    {
+        if (!$this->mantenimientos->contains($mantenimiento)) {
+            $this->mantenimientos[] = $mantenimiento;
+            $mantenimiento->addElemento($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMantenimiento(Mantenimiento $mantenimiento): self
+    {
+        if ($this->mantenimientos->contains($mantenimiento)) {
+            $this->mantenimientos->removeElement($mantenimiento);
+            $mantenimiento->removeElemento($this);
+        }
+
+        return $this;
     }
 }

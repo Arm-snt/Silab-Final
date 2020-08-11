@@ -125,6 +125,7 @@ function FormEstudiante() {
 
 						<Grid item md={4} xs={6}>
 							<Autocomplete
+								clearOnEscape={true}
 								id="combo-box-demo"
 								options={context.pro}
 								onChange={(e, a) => {
@@ -164,6 +165,7 @@ function FormEstudiante() {
 
 						<Grid item md={4} xs={6}>
 							<Autocomplete
+								clearOnEscape={true}
 								id="combo-box-demo"
 								options={tipos}
 								onChange={(e, a) => {

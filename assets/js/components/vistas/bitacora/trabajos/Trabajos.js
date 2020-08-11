@@ -65,7 +65,6 @@ const style = {
 function Trabajos(props) {
 	const onChangeIndex = props.onChangeIndex;
 	const context = useContext(TodoContext);
-	console.log(context.todos);
 	let Fecha;
 	let filtro = {};
 	let Nombre = '';
