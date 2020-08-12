@@ -68,40 +68,30 @@ function NuevoTrabajo() {
 	const [ TelefonoEst, setTelefonoEst ] = useState('');
 	const [ User, setUser ] = useState([]);
 	const [ Programa, setPrograma ] = useState([]);
-	const [ Registro, setRegistro ] = useState('');
+	const [ Registro, setRegistro ] = useState('Pedro');
 	const [ Mensaje, setMensaje ] = useState('');
-	const [ Descripcion, setDescripcion ] = useState('');
+	const [ Descripcion, setDescripcion ] = useState('Probando Todo');
 	const [ Tipo, setTipo ] = useState('Estudiante');
 	const [ fecha, setFecha ] = useState(new Date());
 
 	const onCreateSubmit = (event) => {
 		event.preventDefault();
-		if ((IdEstudiante == '' || Programa == '')  && Docente =='' && (Particular=='' || Telefono == '')) {
+		if ((IdEstudiante == '' || Programa == '') && Docente == '' && (Particular == '' || Telefono == '')) {
 			return context.setMessage({
 				level: 'error',
 				text: [ 'Debe Seleccionar el encargado del del Trabajo' ]
 			});
-		} else if(Registro == '' || User == '' || Descripcion == '') {
+		} else if (Registro == '' || User == '' || Descripcion == '') {
 			return context.setMessage({
 				level: 'error',
 				text: [ 'Debe llenar los campos del trabajo' ]
 			});
 		}
-		if(IdEstudiante!=[]){
-			setParticular(null);
-			setDocente(null);
-		}else if(Docente!=[]){
-			setIdEstudiante(null);
-			setParticular(null);
-		}else{
-			setDocente(null);
-			setIdEstudiante(null);
-		}
-		console.log({
-			estudiante_id: IdEstudiante,
-			docente_id: Docente,
-			particular: Particular,
-			telefono: Telefono,
+		context.createTodo(event, {
+			estudiante_id: Array.isArray(IdEstudiante) ? null : IdEstudiante,
+			docente_id: Array.isArray(Docente) ? null : Docente,
+			particular: Particular == '' ? null : Particular,
+			telefono: Telefono == '' ? null : Telefono,
 			usuario_id: User,
 			registro: Registro,
 			descripcion: Descripcion,
@@ -113,21 +103,21 @@ function NuevoTrabajo() {
 		});
 		setIdEstudiante([]);
 		setDocente([]);
+		setParticular('');
 		setPrograma([]);
 		setUser([]);
 		setLaboratorio([]);
 		setDepartamento([]);
-		setParticular('');
 		setTelefono('');
 		setRegistro('');
 		setDescripcion('');
 		setTipo('Estudiante');
 		setMensaje('');
 		/*context.createTodo(event, {
-			estudiante_id: Estudiante,
-			docente_id: Docente,
-			particular: Particular,
-			telefono: Telefono,
+			estudiante_id: Array.isArray(IdEstudiante) ? null : IdEstudiante,
+			docente_id: Array.isArray(Docente) ? null : Docente,
+			particular: Particular == '' ? null : Particular,
+			telefono: Telefono == '' ? null : Telefono,
 			usuario_id: User,
 			registro: Registro,
 			descripcion: Descripcion,
@@ -137,15 +127,18 @@ function NuevoTrabajo() {
 			fecha_salida: null,
 			hora_salida: null
 		});
-			setEstudiante('');
-			setDocente('');
-			setParticular('');
-			setTelefono('');
-			setUser('');
-			setRegistro('');
-			setDescripcion('');
-			setTipo('');
-			setMensaje('');
+			setIdEstudiante([]);
+		setDocente([]);
+		setParticular('');
+		setPrograma([]);
+		setUser([]);
+		setLaboratorio([]);
+		setDepartamento([]);
+		setTelefono('');
+		setRegistro('');
+		setDescripcion('');
+		setTipo('Estudiante');
+		setMensaje('');
 		*/
 	};
 
@@ -193,7 +186,9 @@ function NuevoTrabajo() {
 									setUser(a !== null ? a.id : '');
 								}}
 								getOptionLabel={(option) => option.codusuario + ' - ' + option.nombre}
-								renderInput={(params) => <TextField {...params} value={Mensaje} label="Laboratorista" />}
+								renderInput={(params) => (
+									<TextField {...params} value={Mensaje} label="Laboratorista" />
+								)}
 							/>
 						</Grid>
 						<Grid item md={12} xs={12}>
@@ -283,7 +278,9 @@ function NuevoTrabajo() {
 										setEstudiante(estudiantes);
 									}}
 									getOptionLabel={(option) => option.codigo + ' - ' + option.nombre}
-									renderInput={(params) => <TextField {...params} value={Mensaje} label="Programa Académico" />}
+									renderInput={(params) => (
+										<TextField {...params} value={Mensaje} label="Programa Académico" />
+									)}
 								/>
 							</Grid>
 							<Grid item md={4} xs={6}>
@@ -294,7 +291,9 @@ function NuevoTrabajo() {
 										setTelefonoEst(a !== null ? a.telefono : '');
 									}}
 									getOptionLabel={(option) => option.codigo + ' - ' + option.nombre}
-									renderInput={(params) => <TextField {...params} value={Mensaje} label="Estudiante" />}
+									renderInput={(params) => (
+										<TextField {...params} value={Mensaje} label="Estudiante" />
+									)}
 								/>
 							</Grid>
 							<Grid item xs={4} md={3}>

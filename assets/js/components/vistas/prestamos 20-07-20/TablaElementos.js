@@ -63,13 +63,12 @@ function TablaElementos({ data, elemento }) {
 			datosE.push(res);
 		}		
 	});
-	console.log(datosE)
 
 	context.ele.map((res) => {
 		elementoscarga.forEach((elementoscarga) => {
 			if (res.id == elementoscarga) {
 				elemento.forEach((elementos) => {
-					if (elementos.editElemento == elementoscarga) {
+					if (elementos.editElemento == elementoscarga && res.stock >= elementos.cantidad) {
 						cantidad = elementos.cantidad;
 						check = true;
 					}
@@ -80,6 +79,7 @@ function TablaElementos({ data, elemento }) {
 							prestamo_id: data,
 							elemento_id: res.id,
 							cantidad: cantidad,
+							stock: res.stock,
 							elemento: res.elemento,
 							codelemento: res.codelemento,
 							fecha_prestamo: fecha.getFullYear() + '-' + (fecha.getMonth() + 1) + '-' + fecha.getDate(),
@@ -94,8 +94,6 @@ function TablaElementos({ data, elemento }) {
 			}
 		});
 	});
-	
-	console.log(nuevosE)
 
 	for (var index = 0; index < nuevosE.length; index++) {
 		datosE.push(nuevosE[index]);

@@ -86,10 +86,10 @@ function NuevoPrestamo() {
 			observacion: observacion,
 			estado: estado,
 			elemento_id: editElementop,
-			fecha_entrada: fecha.getFullYear() + '-' + (fecha.getMonth() + 1) + '-' + fecha.getDate(),
-			hora_entrada: fecha.getHours() + ':' + fecha.getMinutes() + ':' + fecha.getSeconds(),
-			fecha_salida: null,
-			hora_salida: null
+			fecha_prestamo: fecha.getFullYear() + '-' + (fecha.getMonth() + 1) + '-' + fecha.getDate(),
+			hora_prestamo: fecha.getHours() + ':' + fecha.getMinutes() + ':' + fecha.getSeconds(),
+			fecha_entrega: null,
+			hora_entrega: null
 		});
 	};
 
@@ -187,7 +187,7 @@ function NuevoPrestamo() {
 					<Grid container spacing={2}>
 						<Grid item md={6} xs={6}>
 							<Autocomplete
-								options={estudiantes}
+								options={context.est}
 								onChange={(e, a) => {
 									setestudiante_id(a !== null ? a.id : '');
 								}}

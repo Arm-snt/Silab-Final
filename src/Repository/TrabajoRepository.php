@@ -23,7 +23,7 @@ class TrabajoRepository extends ServiceEntityRepository
         try {
             $conn = $this->getEntityManager()->getConnection();
             $stm = $conn->prepare(" SELECT tra.id, tra.estudiante_id, tra.docente_id, tra.usuario_id, tra.particular, tra.telefono, tra.registro, 
-            tra.descripcion, tra.tipo, tra.fecha_entrada, tra.hora_entrada, tra.fecha_salida, tra.hora_salida
+            tra.descripcion, tra.tipo, tra.fecha_entrada, tra.hora_entrada, tra.fecha_salida, tra.hora_salida, est.nombre
             FROM trabajo tra, estudiante est, docente doc
             WHERE tra.estudiante_id=est.id OR tra.docente_id=doc.id OR tra.particular IS NOT NULL GROUP BY tra.id ");
             $stm->execute([]);
@@ -55,6 +55,35 @@ class TrabajoRepository extends ServiceEntityRepository
             WHERE tra.id=:tra AND tra.estudiante_id=est.id");
             $tra=$id;
             if($stm->execute(array(':tra'=>$tra)))
+            $res = $stm->fetch();
+            return $res;
+        } catch (Exception $e) {
+            return $e;
+        }
+    }
+
+    public function BuscarEst($estudiante_id){
+        try {
+            $conn = $this->getEntityManager()->getConnection();
+            $stm = $conn->prepare(" SELECT est.nombre
+            FROM estudiante est
+            WHERE est.id=:est");
+            if($stm->execute(array(':est'=>$estudiante_id)))
+            $res = $stm->fetch();
+            return $res;
+        } catch (Exception $e) {
+            return $e;
+        }
+    }
+
+    
+    public function BuscarDoc($docente_id){
+        try {
+            $conn = $this->getEntityManager()->getConnection();
+            $stm = $conn->prepare(" SELECT doc.nombre
+            FROM docente doc
+            WHERE doc.id=:doc");
+            if($stm->execute(array(':doc'=>$docente_id)))
             $res = $stm->fetch();
             return $res;
         } catch (Exception $e) {

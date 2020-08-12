@@ -32,7 +32,7 @@ class MantenimientoController extends AbstractController
     public function readMantenimientoElemento()
     {
         $todos = $this->getDoctrine()->getRepository(Mantenimiento::class, 'default');
-        $todos = $this->mantenimientoRepository->MostrarMantetotoEle();
+        $todos = $this->mantenimientoRepository->MostrarMantetoEle();
         return $this->json($todos);
     }
 
@@ -84,19 +84,19 @@ class MantenimientoController extends AbstractController
                     $informacion = $this->mantenimientoRepository->UpdateStock($idelemento, $nuevacantidad);
 
                 }
-                $infoestudiante = $this->mantenimientoRepository->BuscarEstudiante($tipo); 
+                //$infoestudiante = $this->mantenimientoRepository->BuscarEstudiante($tipo); 
                 $todo = $this->mantenimientoRepository->Buscar($id);
                 $elementospres = $this->mantenimientoRepository->MostrarMantetoEle();
                 
             } catch (Exception $exception) {
                 return $this->json([ 
-                    'message' => ['text'=>['El Mantenimiento no se ha podido registrar!'] , 'level'=>'error']
+                    'message' => ['text'=>['La lista de Mantenimiento de elementos no se ha podido registrar!'] , 'level'=>'error']
                     ]);
                 }  
             return $this->json([
                 'todo'=>$todo,
                 'elementospres'=>$elementospres,
-                'message' => ['text'=>['Se realizo con exito el Mantenimiento de '.$nelementos,' elementos al estudiante : '.$infoestudiante['nombre'],] , 'level'=>'success']      
+                'message' => ['text'=>['Se añadió con exito a la lista de Mantenimiento '.$nelementos,' elementos'] , 'level'=>'success']      
             ]);
     }
 
@@ -141,13 +141,13 @@ class MantenimientoController extends AbstractController
         $todo = $this->mantenimientoRepository->Buscar($id);
         $tipo_bd=$todo['tipo'];
         $observacion_bd=$todo['observacion'];
-        $nombre_bd=$todo['nombre'];
+        //$nombre_bd=$todo['nombre'];
         $estado_bd=$todo['estado'];
 
         //se compara la información obtenida de la base de datos con los registros obtenidos del formulario para saber si hubo un cambio
         if ($tipo===$tipo_bd && $observacion===$observacion_bd && $estado===$estado_bd && $check==false) {
             return $this->json([
-                'message' => ['text'=>['No se realizaron cambios al Mantenimiento realizado a: '.$nombre_bd] , 'level'=>'warning']
+                'message' => ['text'=>['No se realizaron cambios a la lista de Mantenimiento de elementos'] , 'level'=>'warning']
             ]);
         }
              
@@ -176,17 +176,17 @@ class MantenimientoController extends AbstractController
             //se devuelve la informción del mantenimiento actualizado
             $todo = $this->mantenimientoRepository->Buscar($id);
             // $elementospres = $this->mantenimientoRepository->TraerElemento($id, $idelemento);
-            $elementospres = $this->mantenimientoRepository->MostrarMantetotoEle();
+            $elementospres = $this->mantenimientoRepository->MostrarMantetoEle();
             
         } catch (Exception $exception) {
             return $this->json([ 
-                'message' => ['text'=>['No se pudo acceder a la Base de datos mientras se actualizaba el mantenimiento!'.$exception] , 'level'=>'error']
+                'message' => ['text'=>['No se pudo acceder a la Base de datos mientras se actualizaba la lista de Mantenimiento de elementos!'.$exception] , 'level'=>'error']
                 ]);
             }
             return $this->json([            
             'todo'    => $todo,
             'elementospres'=>$elementospres,
-            'message' => ['text'=>['La información del mantenimiento del estudiante '.$nombre_bd,' se ha actualizado' ] , 'level'=>'success']      
+            'message' => ['text'=>['La información de la lista de Mantenimiento de elementos se ha actualizado' ] , 'level'=>'success']      
         ]);
  
     }
@@ -244,14 +244,14 @@ class MantenimientoController extends AbstractController
 
         } catch(Exception $exception){
             return $this->json([ 
-                'message' => ['text'=>['No se pudo acceder a la Base de datos mientras se actualizaba el mantenimiento!'.$exception] , 'level'=>'error']
+                'message' => ['text'=>['No se pudo acceder a la Base de datos mientras se actualizaba la lista de Mantenimientos!'.$exception] , 'level'=>'error']
                 ]);
         }
 
         return $this->json([
             'todo'=>$todo,
             'elementospres'=>$elementospres,
-            'message' => ['text'=>['Se ha entregado el elemento '.$nombre,' del mantenimiento al almacen' ] , 'level'=>'success']      
+            'message' => ['text'=>['Se ha entregado el elemento '.$nombre,' del Mantenimiento al almacén' ] , 'level'=>'success']      
         ]);
 
     }

@@ -46,6 +46,7 @@ class TrabajoController extends AbstractController
         $estudiante_id=$content['estudiante_id'];
         $docente_id=$content['docente_id'];
         $particular=$content['particular'];
+        $telefono=$content['telefono'];
         $usuario_id=$content['usuario_id'];
         $registro=$content['registro'];
         $descripcion=$content['descripcion'];
@@ -58,7 +59,19 @@ class TrabajoController extends AbstractController
         try {
             
             $todo = $this->getDoctrine()->getRepository(Trabajo::class, 'default');
-            $todo = $this->trabajoRepository->Insertar($estudiante_id,$docente_id,$particular,$usuario_id,$registro,$descripcion,$tipo,$fecha_entrada,$hora_entrada,$fecha_salida,$hora_salida);
+            $todo = $this->trabajoRepository->Insertar($estudiante_id,$docente_id,$particular,$telefono,$usuario_id,$registro,$descripcion,$tipo,$fecha_entrada,$hora_entrada,$fecha_salida,$hora_salida);
+            if($estudiante_id!=null){
+                $todo = $this->trabajoRepository->BuscarEst($estudiante_id);
+                $nombre_bd=$todo['nombre'];                
+            } 
+            if($docente_id!=null){
+                $todo = $this->trabajoRepository->BuscarDoc($docente_id);
+                $nombre_bd=$todo['nombre'];
+            }
+            if($particular!=null){
+                $nombre_bd=$particular;
+            }
+
             $todo = $this->trabajoRepository->Mostrar();
                 
         } catch (Exception $exception) {
@@ -68,7 +81,7 @@ class TrabajoController extends AbstractController
         }  
             return $this->json([
                 'todo'=>$todo,
-                'message' => ['text'=>['El trabajo de '.$estudiante_id, 'se ha registrado!' ] , 'level'=>'success']      
+                'message' => ['text'=>['El trabajo de '.$nombre_bd, ' se ha registrado!' ] , 'level'=>'success']      
                  ]);
     }
 
@@ -86,6 +99,7 @@ class TrabajoController extends AbstractController
         $estudiante_id=$content->estudiante_id;
         $docente_id=$content->docente_id;
         $particular=$content->particular;
+        $telefono=$content->telefono;
         $usuario_id=$content->usuario_id;
         $registro=$content->registro;
         $descripcion=$content->descripcion;
@@ -96,12 +110,13 @@ class TrabajoController extends AbstractController
         $hora_salida=$content->hora_salida;
         
         $todo = $this->getDoctrine()->getRepository(Trabajo::class, 'default');
-        $todo = $this->trabajoRepository->Buscar($id,$estudiante_id,$docente_id,$particular,$usuario_id,$registro,$descripcion,$tipo,$fecha_entrada,$hora_entrada,$fecha_salida,$hora_salida);
+        $todo = $this->trabajoRepository->Buscar($id,$estudiante_id,$docente_id,$particular,$telefono,$usuario_id,$registro,$descripcion,$tipo,$fecha_entrada,$hora_entrada,$fecha_salida,$hora_salida);
         
 
         $estudiante_id_bd=$todo['estudiante_id'];
         $docente_id_bd=$todo['docente_id'];
         $particular_bd=$todo['particular'];
+        $telefono_bd=$todo['telefono'];
         $usuario_id_bd=$todo['usuario_id'];
         $registro_bd=$todo['registro'];
         $descripcion_bd=$todo['descripcion'];
@@ -113,7 +128,7 @@ class TrabajoController extends AbstractController
         $hora_salida_bd=$todo['hora_salida'];
 
         if ($estudiante_id===$estudiante_id_bd && $registro===$registro_bd && $descripcion===$descripcion_bd && $docente_id===$docente_id_bd && 
-        $particular===$particular_bd && $usuario_id===$usuario_id_bd && $tipo===$tipo_bd && $fecha_entrada===$fecha_entrada_bd && $fecha_salida===$hora_salida_bd) {
+        $particular===$particular_bd && $telefono===$telefono_bd && $usuario_id===$usuario_id_bd && $tipo===$tipo_bd && $fecha_entrada===$fecha_entrada_bd && $fecha_salida===$hora_salida_bd) {
             return $this->json([
                 'message' => ['text'=>['No se realizaron cambios al estudiante: '.$nombre_bd] , 'level'=>'warning']
             ]);
@@ -121,8 +136,8 @@ class TrabajoController extends AbstractController
 
         try {
             $todo = $this->getDoctrine()->getRepository(Trabajo::class, 'default');
-            $todo = $this->trabajoRepository->Actualizar($id,$estudiante_id,$docente_id,$particular,$usuario_id,$registro,$descripcion,$tipo,$fecha_entrada,$hora_entrada,$fecha_salida,$hora_salida);
-            $todo = $this->trabajoRepository->Buscar($id,$estudiante_id,$docente_id,$particular,$usuario_id,$registro,$descripcion,$tipo,$fecha_entrada,$hora_entrada,$fecha_salida,$hora_salida);
+            $todo = $this->trabajoRepository->Actualizar($id,$estudiante_id,$docente_id,$particular,$telefono,$usuario_id,$registro,$descripcion,$tipo,$fecha_entrada,$hora_entrada,$fecha_salida,$hora_salida);
+            $todo = $this->trabajoRepository->Buscar($id,$estudiante_id,$docente_id,$particular,$telefono,$usuario_id,$registro,$descripcion,$tipo,$fecha_entrada,$hora_entrada,$fecha_salida,$hora_salida);
 
         } catch (Exception $exception) {
             return $this->json([ 

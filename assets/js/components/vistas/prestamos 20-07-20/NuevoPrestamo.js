@@ -55,12 +55,13 @@ const style = {
 	}
 };
 
-function NuevoMantenimiento() {
+function NuevoPrestamo() {
 	const context = useContext(TodoContext);
 	//console.log(data);
 	let a = true;
-	//let elementos = [];
-	const [ tipo, setTipo ] = useState('');
+	let estudiantes = [];
+	const [ estudiante_id, setestudiante_id ] = useState('');
+	const [ registro, setregistro ] = useState('');
 	const [ observacion, setobservacion ] = useState('');
 	const [ estado, setestado ] = useState('Activo');
 	const [ fecha, setFecha ] = useState(new Date());
@@ -68,54 +69,40 @@ function NuevoMantenimiento() {
 	const [ Stock, setStock ] = useState('');
 	const [ editElemento, seteditElemento ] = useState('');
 	const [ editElementop, seteditElementop ] = useState([ { editElemento: null, cantidad: null } ]);
-	const [ error, seterror ] = useState({ tipo: false, cantidad: false, observacion: false });
-	const [ textoAyuda, settextoAyuda ] = useState({ tipo: '', cantidad: '', observacion: '' });
+	const [ error, seterror ] = useState({ registro: false, cantidad: false, observacion: false });
+	const [ textoAyuda, settextoAyuda ] = useState({ registro: '', cantidad: '', observacion: '' });
 
 	const onCreateSubmit = (event) => {
 		event.preventDefault();
-		if (tipo == '' || observacion == '') {
+		if(estudiante_id=='' || registro=='' || observacion==''){
 			return context.setMessage({
 				level: 'error',
-				text: [ 'Debe llenar los campos del Mantenimiento' ]
+				text: [ 'Debe llenar los campos del Prestamo' ]
 			});
 		}
-
-		/*console.log({
-			tipo: tipo,
+		context.createPrestamo(event, {
+			estudiante_id: estudiante_id,
+			registro: registro + '@ufpso.edu.co',
 			observacion: observacion,
 			estado: estado,
 			elemento_id: editElementop,
-			fecha_solicitud: fecha.getFullYear() + '-' + (fecha.getMonth() + 1) + '-' + fecha.getDate(),
-			hora_solicitud: fecha.getHours() + ':' + fecha.getMinutes() + ':' + fecha.getSeconds(),
-			fecha_entrega: null,
-			hora_entrega: null
-		})*/
-
-		context.createMantenimiento(event, {
-			tipo: tipo,
-			observacion: observacion,
-			estado: estado,
-			elemento_id: editElementop,
-			fecha_solicitud: fecha.getFullYear() + '-' + (fecha.getMonth() + 1) + '-' + fecha.getDate(),
-			hora_solicitud: fecha.getHours() + ':' + fecha.getMinutes() + ':' + fecha.getSeconds(),
+			fecha_prestamo: fecha.getFullYear() + '-' + (fecha.getMonth() + 1) + '-' + fecha.getDate(),
+			hora_prestamo: fecha.getHours() + ':' + fecha.getMinutes() + ':' + fecha.getSeconds(),
 			fecha_entrega: null,
 			hora_entrega: null
 		});
-		setTipo('');
-		setobservacion('');
-		
 	};
 
 	function cargar() {
-		if (editElemento == '') {
+		if(editElemento==''){
 			return context.setMessage({
 				level: 'error',
-				text: [ 'Debe seleccionar un elemento para añadir a la lista de Mantenimiento' ]
+				text: [ 'Debe seleccionar un elemento para cargar al Prestamo' ]
 			});
 		} else if (cantidad == '') {
 			return context.setMessage({
 				level: 'error',
-				text: [ 'Debe agregar una cantidad al elemento seleccionado' ]
+				text: [ 'Debe agregar una cantidad al elemento del Prestamo' ]
 			});
 		} else {
 			editElementop.forEach((elemento) => {
@@ -125,7 +112,7 @@ function NuevoMantenimiento() {
 						a,
 						context.setMessage({
 							level: 'error',
-							text: [ 'El elemento que intenta cargar ya se encuentra en la lista de Mantenimiento' ]
+							text: [ 'El elemento que intenta cargar ya se encuentra en el Prestamo' ]
 						}),
 						seteditElemento(''),
 						setcantidad(''),
@@ -137,8 +124,7 @@ function NuevoMantenimiento() {
 				}
 			});
 			if (a) {
-				console.log(parseInt(Stock), parseInt(cantidad));
-				if (parseInt(Stock) > parseInt(cantidad) || parseInt(Stock) == parseInt(cantidad)) {
+				if (Stock > cantidad) {
 					editElementop.push({ editElemento, cantidad });
 					seteditElemento('');
 					setcantidad('');
@@ -155,14 +141,6 @@ function NuevoMantenimiento() {
 			}
 		}
 	}
-	const eliminar = (data) => {
-		console.log(data);
-		editElementop.splice(editElementop.indexOf(data), 1);
-		context.setMessage({
-			level: 'success',
-			text: [ 'Se eliminó el elemento de la lista de Mantenimiento!' ]
-		});
-	};
 
 	const agregarfechayhora = (date) => {
 		setFecha(date);
@@ -170,32 +148,73 @@ function NuevoMantenimiento() {
 
 	function historyBack() {
 		window.history.back();
-		setTipo('');
+		setestudiante_id('');
+		setregistro('');
 		setobservacion('');
 		seteditElemento('');
 		seteditElementop([]);
 	}
 
-	const tipos = [ { state: 'Preventivo' }, { state: 'Correctivo' }, { state: 'Calibración' } ];
+	//compara la informacion de los estudiantes con la de prestamos
+	//si el estudiante no existe en la base de datos prestamo o si existe que la fecha de entrega de su prestamo ya este asignada
+	let yaentrego = false;
+	let noexiste = false;
+	context.est.map((estudiante) => {
+		context.todos.map((prestamos) => {
+			if (estudiante.id == prestamos.estudiante_id && prestamos.fecha_entrega != null) {
+				return (yaentrego = true);
+			}
+		});
+		if (yaentrego) {
+			estudiantes.push(estudiante);
+			yaentrego = false;
+		}
+	});
 
 	return (
 		<Container style={style.container} component="main" maxWidth="lg" justify="center">
 			<Paper style={style.paper}>
 				<form style={style.form}>
 					<Grid container spacing={2}>
-						<Grid item xs={6} md={5}>
+						<Grid item md={6} xs={6}>
 							<Autocomplete
-								options={tipos}
+								required={true}
+								options={estudiantes}
 								onChange={(e, a) => {
-									setTipo(a !== null ? a.state : '');
+									setestudiante_id(a !== null ? a.id : '');
 								}}
-								getOptionLabel={(option) => option.state}
-								renderInput={(params) => (
-									<TextField {...params} label="Tipo de Mantenimiento" />
-								)}
+								getOptionLabel={(option) => option.codigo + '-' + option.nombre}
+								renderInput={(params) => <TextField {...params} label="Estudiante" />}
 							/>
 						</Grid>
-						<Grid item md={5} xs={5}>
+						<Grid item md={6} xs={6}>
+							<TextField
+								error={error.registro}
+								type="text"
+								value={registro}
+								onChange={(event) => {
+									setregistro(event.target.value);
+									if (registro.length > 15 || !/^[A-Za-z\s]+$/.test(registro)) {
+										error.registro = true;
+										textoAyuda.registro = 'Utilice un correo institucional';
+										seterror(error);
+										settextoAyuda(textoAyuda);
+									} else {
+										error.registro = false;
+										textoAyuda.registro = '';
+										seterror(error);
+										settextoAyuda(textoAyuda);
+									}
+								}}
+								helperText={textoAyuda.registro}
+								fullWidth={true}
+								label="Registrado Por:"
+								InputProps={{
+									endAdornment: <InputAdornment position="end">@ufpso.edu.co</InputAdornment>
+								}}
+							/>
+						</Grid>
+						<Grid item md={4} xs={4}>
 							<TextField
 								type="text"
 								multiline
@@ -251,13 +270,13 @@ function NuevoMantenimiento() {
 						</Grid>
 						<Grid item xs={3} md={2}>
 							<Button
+								type="submit"
 								variant="contained"
 								fullWidth
 								size="medium"
 								color="primary"
 								style={style.submit}
 								onClick={onCreateSubmit}
-								endIcon={<Save />}
 							>
 								Guardar
 							</Button>
@@ -270,7 +289,6 @@ function NuevoMantenimiento() {
 								color="secondary"
 								style={style.submit}
 								onClick={historyBack}
-								startIcon={<Cancel />}
 							>
 								Cancelar
 							</Button>
@@ -345,11 +363,11 @@ function NuevoMantenimiento() {
 							<Divider />
 						</Grid>
 					</Grid>
-					<TablaElementosCreate elemento={editElementop} eliminar={eliminar} />
+					<TablaElementosCreate elemento={editElementop} />
 				</form>
 			</Paper>
 		</Container>
 	);
 }
 
-export default NuevoMantenimiento;
+export default NuevoPrestamo;

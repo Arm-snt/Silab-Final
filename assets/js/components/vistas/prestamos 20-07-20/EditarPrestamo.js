@@ -47,8 +47,8 @@ function EditarPrestamo(data) {
 	const [ fecha, setFecha ] = useState(new Date());
 	const [ editElemento, seteditElemento ] = useState('');
 	const [ editElementop, seteditElementop ] = useState([]);
-	const [ error, seterror ] = useState({ registro: false, cantidad: false, observacion: false });
-	const [ textoAyuda, settextoAyuda ] = useState({ registro: '', cantidad: '', observacion: '' });
+	const [error, seterror ] = useState({registro:false,cantidad:false,observacion:false});
+	const [textoAyuda, settextoAyuda ]= useState({registro:'',cantidad:'',observacion:''})
 	let datosE = [];
 
 	const onEditSubmit = (editId, event) => {
@@ -75,49 +75,34 @@ function EditarPrestamo(data) {
 	});
 
 	function cargar() {
-		if (editElemento == '') {
-			return context.setMessage({
-				level: 'error',
-				text: [ 'Debe seleccionar un elemento para cargar al Prestamo' ]
-			});
-		} else if (cantidad == '') {
-			return context.setMessage({
-				level: 'error',
-				text: [ 'Debe agregar una cantidad al elemento del Prestamo' ]
-			});
-		} else {
-			let a = true;
-			datosE.map((res) => {
-				if (res.prestamo_id == editId && res.elemento_id == editElemento) {
-					a = false;
-					return (
-						a,
+		let a = true;
+		datosE.map((res) => {
+			if (res.prestamo_id == editId && res.elemento_id == editElemento) {
+				a = false;
+				return ( a,
 						context.setMessage({
-							level: 'error',
-							text: [ 'El elemento que intenta cargar ya se encuentra en el Prestamo' ]
-						}),
-						seteditElemento(''),
-						setcantidad(''),
-						setStock('')
-					);
-				}
-			});
-			if (a) {
-				console.log(parseInt(Stock), parseInt(cantidad));
-				if (parseInt(Stock) > parseInt(cantidad) || parseInt(Stock) == parseInt(cantidad)) {
-					editElementop.push({ editElemento, cantidad });
-					seteditElemento('');
-					setcantidad('');
-					setStock('');
-				} else {
-					context.setMessage({
-						level: 'error',
-						text: [ 'La cantidad solicitada del elemento supera el stock disponible!' ]
-					});
-					seteditElemento('');
-					setcantidad('');
-					setStock('');
-				}
+						level:'error',
+						text: ['El elemento que intenta cargar ya se encuentra en el Prestamo']
+					}))
+			}
+		});
+		if (a) {
+			if(Stock>cantidad){			
+				editElementop.push({
+					editElemento,
+					cantidad
+				});
+				seteditElemento('');
+				setcantidad('');
+				setStock('');
+			}else{
+				context.setMessage({
+					level:'error',
+					text: ['La cantidad solicitada del elemento supera el stock disponible!']
+				});
+				seteditElemento('');
+				setcantidad('');
+				setStock('');
 			}
 		}
 	}
@@ -150,18 +135,15 @@ function EditarPrestamo(data) {
 								value={editregistro}
 								onChange={(event) => {
 									seteditregistro(event.target.value);
-									console.log(error);
-									if (
-										editregistro.length < 25 &&
-										editObservacion.match(/^\w+([\.-]?\w+)*@ufpso.edu.co+$/)
-									) {
-										error.registro = true;
-										textoAyuda.registro = 'Utilice un correo institucional';
+									console.log(error)
+									if(editregistro.length<25 && editObservacion.match(/^\w+([\.-]?\w+)*@ufpso.edu.co+$/)){
+										error.registro=true;
+										textoAyuda.registro='Utilice un correo institucional';
 										seterror(error);
 										settextoAyuda(textoAyuda);
-									} else {
-										error.registro = false;
-										textoAyuda.registro = '';
+									}else{
+										error.registro=false;
+										textoAyuda.registro='';
 										seterror(error);
 										settextoAyuda(textoAyuda);
 									}
@@ -178,14 +160,14 @@ function EditarPrestamo(data) {
 								value={editObservacion}
 								onChange={(event) => {
 									seteditObservacion(event.target.value);
-									if (editObservacion.length < 14) {
-										error.observacion = true;
-										textoAyuda.observacion = 'Minimo 8 caracteres';
+									if(editObservacion.length<14){
+										error.observacion=true;
+										textoAyuda.observacion='Minimo 8 caracteres';
 										seterror(error);
 										settextoAyuda(textoAyuda);
-									} else {
-										error.observacion = true;
-										textoAyuda.observacion = '';
+									}else{
+										error.observacion=true;
+										textoAyuda.observacion='';
 										seterror(error);
 										settextoAyuda(textoAyuda);
 									}
@@ -256,17 +238,17 @@ function EditarPrestamo(data) {
 									value={cantidad}
 									onChange={(event) => {
 										setcantidad(event.target.value);
-										if (cantidad.length > 1) {
-											error.cantidad = true;
-											textoAyuda.cantidad = 'La cantidad debe ser de 2 digitos';
+										if(cantidad.length>1){
+											error.cantidad=true;
+											textoAyuda.cantidad='La cantidad debe ser de 2 digitos';
 											seterror(error);
 											settextoAyuda(textoAyuda);
-										} else {
-											error.cantidad = true;
-											textoAyuda.cantidad = '';
+										}else{
+											error.cantidad=true;
+											textoAyuda.cantidad='';
 											seterror(error);
 											settextoAyuda(textoAyuda);
-										}
+										}										
 									}}
 									helperText={textoAyuda.cantidad}
 									label="Cantidad Solicitada"

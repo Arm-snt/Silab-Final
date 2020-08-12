@@ -1,10 +1,9 @@
 import React, { useContext, useState, useEffect, Fragment } from 'react';
 import { Table, TableHead, TableRow, TableCell, TableBody, TableContainer, TablePagination } from '@material-ui/core';
-import { Container, Paper, Typography, IconButton, Button } from '@material-ui/core';
-import Icon from '@mdi/react';
+import { Container, Grid, Paper, Typography, IconButton, TextField, Button } from '@material-ui/core';
+import { Delete } from '@material-ui/icons';
 import { TodoContext } from './TodoContext';
 import DeleteDialog from './DeleteDialog';
-import { mdiCheckCircle, mdiTrashCan } from '@mdi/js';
 
 const style = {
 	table: {
@@ -38,79 +37,47 @@ const style = {
 	}
 };
 
-function TablaElementos({ data, elemento }) {
+function TablaElementosCreate({ elemento }) {
 	let elementoids = [];
 	elemento.forEach((elementos) => {
 		elementoids.push(elementos.editElemento);
 	});
 	const context = useContext(TodoContext);
 	const elementoscarga = [ ...new Set(elementoids) ];
+	const [ array, setarray ] = useState([]); 
 	let datosE = [];
 	let nuevosE = [];
 	let cantidad = '';
-	let texto = 'Por entregar';
 	let check = false;
-	const [ fecha, setFecha ] = useState(new Date());
 	const [ eliminarVisible, setEliminarVisible ] = useState(false);
 	const [ elementosDelete, setElementosDelete ] = useState([]);
-	const [ entregar, setEntregar ] = useState(false);
-	const [ Color, setColor ] = useState('gray');
 	const [ page, setPage ] = React.useState(0);
 	const [ rowsPerPage, setRowsPerPage ] = React.useState(5);
-
-	context.elementospre.map((res) => {
-		if (res.prestamo_id == data) {
-			datosE.push(res);
-		}		
-	});
-	console.log(datosE)
 
 	context.ele.map((res) => {
 		elementoscarga.forEach((elementoscarga) => {
 			if (res.id == elementoscarga) {
 				elemento.forEach((elementos) => {
-					if (elementos.editElemento == elementoscarga) {
+					if (elementos.editElemento == elementoscarga && res.stock >= elementos.cantidad) {
 						cantidad = elementos.cantidad;
 						check = true;
 					}
 				});
 				if (check) {
-					nuevosE.push(
-						Object.assign({
-							prestamo_id: data,
-							elemento_id: res.id,
-							cantidad: cantidad,
-							elemento: res.elemento,
-							codelemento: res.codelemento,
-							fecha_prestamo: fecha.getFullYear() + '-' + (fecha.getMonth() + 1) + '-' + fecha.getDate(),
-							hora_prestamo: fecha.getHours() + ':' + fecha.getMinutes() + ':' + fecha.getSeconds(),
-							fecha_entrega: null,
-							hora_entrega: null
-						})
-					);
+					nuevosE.push(Object.assign(res, { cantidad: cantidad }));
 					cantidad = '';
 					check = false;
 				}
 			}
 		});
 	});
-	
-	console.log(nuevosE)
 
 	for (var index = 0; index < nuevosE.length; index++) {
 		datosE.push(nuevosE[index]);
 	}
-
-	function eliminar(elementosDelete) {
-		setEliminarVisible(true);
-	}
-
-	function entrega() {
-		setEntregar(true);
-	}
-
+	
 	const handleChangePage = (event, newPage) => {
-		setPage(newPage);
+	setPage(newPage);
 	};
 
 	const handleChangeRowsPerPage = (event) => {
@@ -121,6 +88,7 @@ function TablaElementos({ data, elemento }) {
 	function historyBack() {
 		window.history.back();
 	}
+
 	return (
 		<Fragment>
 			<Container style={style.container} component="main" maxWidth="lg" justify="center">
@@ -134,12 +102,6 @@ function TablaElementos({ data, elemento }) {
 								</TableCell>
 								<TableCell style={style.tableCell} align="center">
 									Cantidad Solicitada
-								</TableCell>
-								<TableCell style={style.tableCell} align="center">
-									Fecha Prestamo
-								</TableCell>
-								<TableCell style={style.tableCell} align="center">
-									Fecha Entrega
 								</TableCell>
 								<TableCell style={style.tableCell} align="center">
 									Acciones
@@ -165,43 +127,20 @@ function TablaElementos({ data, elemento }) {
 												</Typography>
 											</TableCell>
 											<TableCell align="center">
-												<Typography style={{ whiteSpace: 'pre-wrap' }}>
-													{todo.fecha_prestamo}
-												</Typography>
-											</TableCell>
-											<TableCell align="center">
-												<Typography style={{ whiteSpace: 'pre-wrap' }}>
-													{todo.fecha_entrega === null ? texto : todo.fecha_entrega}
-												</Typography>
-											</TableCell>
-											<TableCell align="center">
 												<Fragment>
-													<IconButton
-														color="secondary"
-														aria-label="upload picture"
-														component="span"
-														onClick={() => {
-															setElementosDelete(todo);
-															eliminar();
-															entrega();
-														}}
-													>
-														<Icon
-															path={mdiCheckCircle}
-															size={1}
-															color={todo.fecha_entrega === null ? 'gray' : 'green'}
-														/>
-													</IconButton>
 													<IconButton
 														color="primary"
 														aria-label="upload picture"
 														component="span"
 														onClick={() => {
-															setElementosDelete(todo);
-															eliminar();
+															return (															
+																datosE.splice(datosE.indexOf(todo),1),
+																datosE,
+																console.log(datosE)
+																);
 														}}
 													>
-														<Icon path={mdiTrashCan} size={1} color="red" />
+														<Delete fontSize="inherit" />
 													</IconButton>
 												</Fragment>
 											</TableCell>
@@ -222,16 +161,10 @@ function TablaElementos({ data, elemento }) {
 				/>
 			</Container>
 			{eliminarVisible && (
-				<DeleteDialog
-					todo={elementosDelete}
-					open={eliminarVisible}
-					entregar={entregar}
-					setEntregar={setEntregar}
-					setEliminarVisible={setEliminarVisible}
-				/>
+				<DeleteDialog todo={elementosDelete} open={eliminarVisible} setEliminarVisible={setEliminarVisible} />
 			)}
 		</Fragment>
 	);
 }
 
-export default TablaElementos;
+export default TablaElementosCreate;
