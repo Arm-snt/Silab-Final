@@ -137,7 +137,7 @@ class TrabajoController extends AbstractController
         try {
             $todo = $this->getDoctrine()->getRepository(Trabajo::class, 'default');
             $todo = $this->trabajoRepository->Actualizar($id,$estudiante_id,$docente_id,$particular,$telefono,$usuario_id,$registro,$descripcion,$tipo,$fecha_entrada,$hora_entrada,$fecha_salida,$hora_salida);
-            $todo = $this->trabajoRepository->Buscar($id,$estudiante_id,$docente_id,$particular,$telefono,$usuario_id,$registro,$descripcion,$tipo,$fecha_entrada,$hora_entrada,$fecha_salida,$hora_salida);
+            $todo = $this->trabajoRepository->Buscar($id);
 
         } catch (Exception $exception) {
             return $this->json([ 

@@ -58,8 +58,6 @@ const style = {
 
 function NuevoTrabajo() {
 	const context = useContext(TodoContext);
-	const [ Laboratorio, setLaboratorio ] = useState([]);
-	const [ Departamento, setDepartamento ] = useState([]);
 	const [ Estudiante, setEstudiante ] = useState([]);
 	const [ IdEstudiante, setIdEstudiante ] = useState([]);
 	const [ Docente, setDocente ] = useState([]);
@@ -113,33 +111,6 @@ function NuevoTrabajo() {
 		setDescripcion('');
 		setTipo('Estudiante');
 		setMensaje('');
-		/*context.createTodo(event, {
-			estudiante_id: Array.isArray(IdEstudiante) ? null : IdEstudiante,
-			docente_id: Array.isArray(Docente) ? null : Docente,
-			particular: Particular == '' ? null : Particular,
-			telefono: Telefono == '' ? null : Telefono,
-			usuario_id: User,
-			registro: Registro,
-			descripcion: Descripcion,
-			tipo: Tipo,
-			fecha_entrada: fecha.getFullYear() + '-' + (fecha.getMonth() + 1) + '-' + fecha.getDate(),
-			hora_entrada: fecha.getHours() + ':' + fecha.getMinutes() + ':' + fecha.getSeconds(),
-			fecha_salida: null,
-			hora_salida: null
-		});
-			setIdEstudiante([]);
-		setDocente([]);
-		setParticular('');
-		setPrograma([]);
-		setUser([]);
-		setLaboratorio([]);
-		setDepartamento([]);
-		setTelefono('');
-		setRegistro('');
-		setDescripcion('');
-		setTipo('Estudiante');
-		setMensaje('');
-		*/
 	};
 
 	const agregarfechayhora = (date) => {
@@ -159,16 +130,6 @@ function NuevoTrabajo() {
 							<Divider />
 						</Grid>
 						<Grid item xs={12} md={4}>
-							<Autocomplete
-								options={context.dep}
-								onChange={(e, a) => {
-									setDepartamento(a !== null ? a.id : '');
-								}}
-								getOptionLabel={(option) => option.codigo + ' - ' + option.nombre}
-								renderInput={(params) => <TextField {...params} value={Mensaje} label="Departamento" />}
-							/>
-						</Grid>
-						<Grid item xs={12} md={4}>
 							<TextField
 								type="text"
 								value={Registro}
@@ -179,24 +140,41 @@ function NuevoTrabajo() {
 								fullWidth={true}
 							/>
 						</Grid>
-						<Grid item xs={12} md={4}>
-							<Autocomplete
-								options={context.usu}
-								onChange={(e, a) => {
-									setUser(a !== null ? a.id : '');
-								}}
-								getOptionLabel={(option) => option.codusuario + ' - ' + option.nombre}
-								renderInput={(params) => (
-									<TextField {...params} value={Mensaje} label="Laboratorista" />
-								)}
-							/>
+						<Grid item md={4} xs={4}>
+							<MuiPickersUtilsProvider utils={DateFnsUtils}>
+								<KeyboardDatePicker
+									margin="normal"
+									id="date-picker-dialog"
+									label="Fecha Entrada"
+									format="dd/MM/yyyy"
+									value={fecha}
+									onChange={agregarfechayhora}
+									KeyboardButtonProps={{
+										'aria-label': 'change date'
+									}}
+								/>
+							</MuiPickersUtilsProvider>
+						</Grid>
+						<Grid item md={4} xs={4}>
+							<MuiPickersUtilsProvider utils={DateFnsUtils}>
+								<KeyboardTimePicker
+									margin="normal"
+									id="time-picker"
+									label="Hora Entrada"
+									value={fecha}
+									onChange={agregarfechayhora}
+									KeyboardButtonProps={{
+										'aria-label': 'change time'
+									}}
+								/>
+							</MuiPickersUtilsProvider>
 						</Grid>
 						<Grid item md={12} xs={12}>
 							<Divider />
 						</Grid>
 					</Grid>
 					<Grid container spacing={2}>
-						<Grid item md={4} xs={8}>
+						<Grid item md={4} xs={6}>
 							<FormControl component="fieldset">
 								<FormLabel component="legend">Seleccione opción</FormLabel>
 								<RadioGroup
@@ -232,34 +210,17 @@ function NuevoTrabajo() {
 								</RadioGroup>
 							</FormControl>
 						</Grid>
-						<Grid item md={4} xs={4}>
-							<MuiPickersUtilsProvider utils={DateFnsUtils}>
-								<KeyboardDatePicker
-									margin="normal"
-									id="date-picker-dialog"
-									label="Fecha Entrada"
-									format="dd/MM/yyyy"
-									value={fecha}
-									onChange={agregarfechayhora}
-									KeyboardButtonProps={{
-										'aria-label': 'change date'
-									}}
-								/>
-							</MuiPickersUtilsProvider>
-						</Grid>
-						<Grid item md={4} xs={4}>
-							<MuiPickersUtilsProvider utils={DateFnsUtils}>
-								<KeyboardTimePicker
-									margin="normal"
-									id="time-picker"
-									label="Hora Entrada"
-									value={fecha}
-									onChange={agregarfechayhora}
-									KeyboardButtonProps={{
-										'aria-label': 'change time'
-									}}
-								/>
-							</MuiPickersUtilsProvider>
+						<Grid item md={8} xs={6}>
+							<TextField
+								multiline
+								type="text"
+								value={Descripcion}
+								onChange={(event) => {
+									setDescripcion(event.target.value);
+								}}
+								label="Descripción Asesoria"
+								fullWidth={true}
+							/>
 						</Grid>
 					</Grid>
 					{Tipo == 'Estudiante' ? (
@@ -356,17 +317,6 @@ function NuevoTrabajo() {
 						</Grid>
 					)}
 					<Grid container spacing={2}>
-						<Grid item md={8} xs={6}>
-							<TextField
-								type="text"
-								value={Descripcion}
-								onChange={(event) => {
-									setDescripcion(event.target.value);
-								}}
-								label="Descripción Asesoria"
-								fullWidth={true}
-							/>
-						</Grid>
 						<Grid item xs={6} md={2}>
 							<Button
 								variant="contained"

@@ -59,6 +59,12 @@ const style = {
 	},
 	estado: {
 		color: '#28B463'
+	},
+	grid: {
+		marginBottom: 20,
+		marginTop: 30,
+		backgroundColor: '#fff',
+		borderRadius: '5px'
 	}
 };
 
@@ -69,6 +75,7 @@ function Trabajos(props) {
 	let filtro = {};
 	let Nombre = '';
 	let tipo = '';
+	const [ Departamento, setDepartamento ] = useState('');
 	const [ termino, setTermino ] = useState('');
 	const [ eliminarVisible, setEliminarVisible ] = useState(false);
 	const [ trabajoEliminar, setTrabajoEliminar ] = useState(null);
@@ -116,6 +123,8 @@ function Trabajos(props) {
 		window.history.back();
 	}
 
+	const Dep = [ { state: 'Sistemas e Informática' } ];
+
 	const emptyRows = rowsPerPage - Math.min(rowsPerPage, context.todos.length - page * rowsPerPage);
 
 	return (
@@ -136,6 +145,29 @@ function Trabajos(props) {
 					)
 				}}
 			/>
+			<Grid container spacing={2} style={style.grid}>
+				<Grid item xs={4} md={4}>
+					<TextField
+						disabled
+						type="text"
+						value="Sistemas e Informática"
+						label="Departamento"
+						fullWidth={true}
+					/>
+				</Grid>
+				<Grid item xs={4} md={4}>
+					<TextField
+						disabled
+						type="text"
+						value="Laboratorio de Física"
+						label="Laboratorio"
+						fullWidth={true}
+					/>
+				</Grid>
+				<Grid item xs={4} md={4}>
+					<TextField disabled type="text" value="Armando Santana" label="Laboratorista" fullWidth={true} />
+				</Grid>
+			</Grid>
 			<Container style={style.container} component="main" maxWidth="lg" justify="center">
 				<TableContainer component={Paper}>
 					<Table style={style.table} aria-label="customized table">
@@ -144,6 +176,9 @@ function Trabajos(props) {
 							<TableRow>
 								<TableCell style={style.tableCell} align="center">
 									Encargado
+								</TableCell>
+								<TableCell style={style.tableCell} align="center">
+									Tipo
 								</TableCell>
 								<TableCell style={style.tableCell} align="center">
 									Registro
@@ -177,6 +212,9 @@ function Trabajos(props) {
 											</Typography>
 										</TableCell>
 										{/*OBSERVACIÓN*/}
+										<TableCell align="center">
+											<Typography style={{ whiteSpace: 'pre-wrap' }}>{todo.tipo}</Typography>
+										</TableCell>
 										<TableCell align="center">
 											<Typography style={{ whiteSpace: 'pre-wrap' }}>{todo.registro}</Typography>
 										</TableCell>

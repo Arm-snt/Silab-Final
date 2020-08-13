@@ -143,7 +143,6 @@ function NuevoPrestamo() {
 		}
 	}
 	const eliminar = (data) => {
-		console.log(data);
 		editElementop.splice(editElementop.indexOf(data), 1);
 		context.setMessage({
 			level: 'success',

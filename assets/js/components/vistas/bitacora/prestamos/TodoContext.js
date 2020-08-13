@@ -83,12 +83,12 @@ class TodoContextProvider extends Component {
 				if (response.data.message.level === 'success') {
 					let todos = [ ...this.state.todos ];
 					todos.push(response.data.todo);
-					todos.sort(function(a,b){
-						if(a.fecha_entrega>b.fecha_entrega){
+					todos.sort(function(a, b) {
+						if (a.fecha_entrega > b.fecha_entrega) {
 							return 1;
 						}
 					});
-					
+
 					this.setState({
 						todos: todos,
 						elementospre: response.data.elementospres,
@@ -113,20 +113,9 @@ class TodoContextProvider extends Component {
 				if (response.data.message.level === 'success') {
 					console.log(response.data);
 					let todos = [ ...this.state.todos ];
-					let todo = todos.find((todo) => {
-						return todo.id === data.id;
-					});
-					todo.estudiante_id = response.data.todo.estudiante_id;
-					todo.registro = response.data.todo.registro;
-					todo.observacion = response.data.todo.observacion;
-					todo.estado = response.data.todo.estado;
-					todo.fecha_prestamo = response.data.todo.fecha_prestamo;
-					todo.hora_prestamo = response.data.todo.hora_prestamo;
-					todo.fecha_entrega = response.data.todo.fecha_entrega;
-					todo.hora_entrega = response.data.todo.hora_entrega;
 
 					this.setState({
-						todos: todos,
+						todos: response.data.todo,
 						elementospre: response.data.elementospres,
 						message: response.data.message
 					});
@@ -161,7 +150,10 @@ class TodoContextProvider extends Component {
 
 					let elementospre = [ ...this.state.elementospre ];
 					let elementospres = elementospre.find((elementospres) => {
-						return elementospres.prestamo_id === data.prestamo_id && elementospres.elemento_id === data.elemento_id;
+						return (
+							elementospres.prestamo_id === data.prestamo_id &&
+							elementospres.elemento_id === data.elemento_id
+						);
 					});
 					elementospres.prestamo_id = response.data.elementospres.prestamo_id;
 					elementospres.elemento_id = response.data.elementospres.elemento_id;
@@ -170,8 +162,7 @@ class TodoContextProvider extends Component {
 					elementospres.hora_prestamo = response.data.elementospres.hora_prestamo;
 					elementospres.fecha_entrega = response.data.elementospres.fecha_entrega;
 					elementospres.hora_entrega = response.data.elementospres.hora_entrega;
-					
-					
+
 					this.setState({
 						todos: todos,
 						elementospre: elementospre,

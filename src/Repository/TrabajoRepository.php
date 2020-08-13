@@ -46,7 +46,7 @@ class TrabajoRepository extends ServiceEntityRepository
     }
 
 
-    public function Buscar($id,$estudiante_id,$docente_id,$particular,$telefono,$usuario_id,$registro,$descripcion,$tipo,$fecha_entrada,$hora_entrada,$fecha_salida,$hora_salida){
+    public function Buscar($id){
         try {
             $conn = $this->getEntityManager()->getConnection();
             $stm = $conn->prepare(" SELECT tra.estudiante_id, est.nombre, tra.docente_id, tra.particular, tra.telefono, tra.usuario_id, tra.registro, tra.descripcion, tra.tipo,

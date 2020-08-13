@@ -177,7 +177,7 @@ class PrestamoController extends AbstractController
                 $informacion = $this->prestamoRepository->UpdateStock($idelemento, $nuevacantidad);
             }
             //se devuelve la informción del prestamo actualizado
-            $todo = $this->prestamoRepository->Buscar($id);
+            $todo = $this->prestamoRepository->Mostrar();
             // $elementospres = $this->prestamoRepository->TraerElemento($id, $idelemento);
             $elementospres = $this->prestamoRepository->MostrarPrestatoEle();
             
