@@ -99,10 +99,10 @@ export default function SimpleTabs(onchangeTab) {
 									<Trabajos onChangeIndex={onChangeIndex} />
 								</TabTrabajo>
 								<TabTrabajo value={value} index={1}>
-									<NuevoTrabajo data={data} />
+									<NuevoTrabajo data={data} onChangeIndex={onChangeIndex}/>
 								</TabTrabajo>
 								<TabTrabajo value={value} index={2}>
-									<EditarTrabajo data={data} />
+									<EditarTrabajo data={data} onChangeIndex={onChangeIndex}/>
 								</TabTrabajo>
 								<TabTrabajo value={value} index={3} />
 							</SwipeableViews>

@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { useContext, useState, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -65,8 +65,8 @@ const useStyles = makeStyles((theme) => ({
 export default function SimpleTabs(onchangeTab) {
 	const classes = useStyles();
 	const theme = useTheme();
-	const [ value, setValue ] = React.useState(0);
-	const [ data, setData ] = React.useState('');
+	const [ value, setValue ] = useState(0);
+	const [ data, setData ] = useState('');
 
 	const handleChange = (event, newValue) => {
 		setValue(newValue);

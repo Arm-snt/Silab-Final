@@ -49,10 +49,18 @@ const style = {
 		marginTop: 30,
 		backgroundColor: '#fff',
 		borderRadius: '5px'
-	}
+	},
+	group: {
+        width: 'auto',
+        height: 'auto',
+        display: 'flex',
+        flexWrap: 'nowrap',
+        flexDirection: 'row',
+    }
 };
 
 function EditarTrabajo(data) {
+	const onChangeIndex = props.onChangeIndex;
 	const context = useContext(TodoContext);
 	let telefon = '';
 	let info = '';
@@ -65,38 +73,39 @@ function EditarTrabajo(data) {
 	const [ Tipo, setTipo ] = useState(data['data'].tipo);
 	const [ Telefono, setTelefono ] = useState(data['data'].telefono);
 	const [ TelefonoEst, setTelefonoEst ] = useState(
-		Tipo=='Estudiante' ? (
-			context.est.map((res) => {
-				if (res.id == IdEstudiante) {
-					telefon = res.telefono;
-				}
-			}),
-			telefon
-		) : Tipo=='Docente' ? (
-			context.doc.map((res) => {
-				if (res.id == Docente) {
-					telefon = res.telefono;
-				}
-			}), telefon
-		) : ''
+		Tipo == 'Estudiante'
+			? (context.est.map((res) => {
+					if (res.id == IdEstudiante) {
+						telefon = res.telefono;
+					}
+				}),
+				telefon)
+			: Tipo == 'Docente'
+				? (context.doc.map((res) => {
+						if (res.id == Docente) {
+							telefon = res.telefono;
+						}
+					}),
+					telefon)
+				: ''
 	);
 	const [ User, setUser ] = useState(data['data'].usuario_id);
 	const [ Programa, setPrograma ] = useState(
-		Tipo=='Estudiante' ? (
-			context.est.map((res) => {
-				if (res.id == IdEstudiante) {
-					programa_id = res.programa_id;
-				}
-			}),
-			programa_id
-		) : ''
+		Tipo == 'Estudiante'
+			? (context.est.map((res) => {
+					if (res.id == IdEstudiante) {
+						programa_id = res.programa_id;
+					}
+				}),
+				programa_id)
+			: ''
 	);
 	const [ Registro, setRegistro ] = useState(data['data'].registro);
 	const [ Mensaje, setMensaje ] = useState('');
 	const [ Descripcion, setDescripcion ] = useState(data['data'].descripcion);
 	const [ fecha, setFecha ] = useState(new Date());
 
-	console.log(data)
+	console.log(data);
 	const onEditSubmit = (editId, event) => {
 		event.preventDefault();
 		context.updateTodo({
@@ -117,36 +126,39 @@ function EditarTrabajo(data) {
 	};
 
 	function historyBack() {
-		window.history.back();
+		setIdEstudiante([]);
+		setDocente([]);
+		setParticular('');
+		setPrograma([]);
+		setUser([]);
+		setTelefono('');
+		setRegistro('');
+		setDescripcion('');
+		setTipo('Estudiante');
+		setMensaje('');
+		onChangeIndex(0, '');
 	}
 
-	function busqueda(data){
-		if(data.busqueda == 'programa'){
-			const item = context.pro.find((opt)=>{
-				if(opt.id == Programa)
-					info = opt.codigo+'-'+opt.nombre;
-					return info;
-				
-			})
+	function busqueda(data) {
+		if (data.busqueda == 'programa') {
+			const item = context.pro.find((opt) => {
+				if (opt.id == Programa) info = opt.codigo + '-' + opt.nombre;
+				return info;
+			});
 			return item || {};
-		} else if(data.busqueda=='estudiante'){
-			const item = context.est.find((opt)=>{
-				if(opt.id == IdEstudiante)
-					info = opt.codigo+'-'+opt.nombre;
-					return info;
-				
-			})
+		} else if (data.busqueda == 'estudiante') {
+			const item = context.est.find((opt) => {
+				if (opt.id == IdEstudiante) info = opt.codigo + '-' + opt.nombre;
+				return info;
+			});
 			return item || {};
-		}else if(data.busqueda=='docente'){
-			const item = context.doc.find((opt)=>{
-				if(opt.id == Docente)
-					info = opt.codigo+'-'+opt.nombre;
-					return info;
-				
-			})
+		} else if (data.busqueda == 'docente') {
+			const item = context.doc.find((opt) => {
+				if (opt.id == Docente) info = opt.codigo + '-' + opt.nombre;
+				return info;
+			});
 			return item || {};
 		}
-		
 	}
 
 	const agregarfechayhora = (date) => {
@@ -208,12 +220,13 @@ function EditarTrabajo(data) {
 						</Grid>
 					</Grid>
 					<Grid container spacing={2}>
-						<Grid item md={4} xs={6}>
+						<Grid item md={6} xs={6}>
 							<FormControl component="fieldset">
 								<FormLabel component="legend">Seleccione opción</FormLabel>
 								<RadioGroup
 									name="Tipo"
 									value={Tipo}
+									style={style.group}
 									onChange={(event) => {
 										setTipo(event.target.value);
 										setPrograma([]);
@@ -244,7 +257,7 @@ function EditarTrabajo(data) {
 								</RadioGroup>
 							</FormControl>
 						</Grid>
-						<Grid item md={8} xs={6}>
+						<Grid item md={6} xs={6}>
 							<TextField
 								multiline
 								type="text"
@@ -261,7 +274,7 @@ function EditarTrabajo(data) {
 						<Grid container spacing={2}>
 							<Grid item md={4} xs={6}>
 								<Autocomplete
-									value={busqueda({busqueda:'programa'})}
+									value={busqueda({ busqueda: 'programa' })}
 									options={context.pro}
 									onChange={(e, a) => {
 										let estudiantes = [];
@@ -274,14 +287,12 @@ function EditarTrabajo(data) {
 										setEstudiante(estudiantes);
 									}}
 									getOptionLabel={(option) => option.codigo + ' - ' + option.nombre}
-									renderInput={(params) => (
-										<TextField {...params} label="Programa Académico" />
-									)}
+									renderInput={(params) => <TextField {...params} label="Programa Académico" />}
 								/>
 							</Grid>
 							<Grid item md={4} xs={6}>
 								<Autocomplete
-									value={busqueda({busqueda:'estudiante'})}
+									value={busqueda({ busqueda: 'estudiante' })}
 									options={context.est}
 									onChange={(e, a) => {
 										setIdEstudiante(a !== null ? a.id : '');
@@ -307,7 +318,7 @@ function EditarTrabajo(data) {
 						<Grid container spacing={2}>
 							<Grid item md={4} xs={6}>
 								<Autocomplete
-									value={busqueda({busqueda:'docente'})}
+									value={busqueda({ busqueda: 'docente' })}
 									options={context.doc}
 									onChange={(e, a) => {
 										setDocente(a !== null ? a.id : '');

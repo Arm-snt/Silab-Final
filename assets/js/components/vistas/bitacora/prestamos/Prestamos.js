@@ -4,8 +4,7 @@ import { Container, Paper, Grid, Link, Typography, IconButton, TextField, InputA
 import { Autocomplete } from '@material-ui/lab';
 import Icon from '@mdi/react';
 import { mdiFileDocumentEdit, mdiEyeCheck, mdiFileCancel, mdiCardSearch } from '@mdi/js';
-import DoneIcon from '@material-ui/icons/Done';
-import CloseIcon from '@material-ui/icons/Close';
+import Tooltip from '@material-ui/core/Tooltip';
 import { TodoContext } from './TodoContext';
 import DeleteDialog from './DeleteDialog';
 
@@ -170,7 +169,7 @@ function Prestamos(props) {
 										</TableCell>
 										<TableCell align="center">
 											<Typography style={{ whiteSpace: 'pre-wrap' }}>
-												{todo.fecha_prestamo + ' // ' + todo.hora_prestamo}
+												{todo.fecha_prestamo + ' || ' + todo.hora_prestamo}
 											</Typography>
 										</TableCell>
 										<TableCell align="center">
@@ -178,29 +177,35 @@ function Prestamos(props) {
 										</TableCell>
 										<TableCell align="center">
 											<Fragment>
-												<IconButton
-													onClick={(e) => {
-														onChangeIndex(2, todo, e);
-													}}
-												>
-													<Icon path={mdiFileDocumentEdit} size={1} color="red" />
-												</IconButton>
-												<IconButton
-													onClick={(e) => {
-														onChangeIndex(3, todo, e);
-													}}
-												>
-													<Icon path={mdiEyeCheck} size={1} color="red" />
-												</IconButton>
-												<IconButton
-													onClick={() => {
-														setEliminarVisible(true);
-														setPrestamoEliminar(todo);
-														setEntregar(true);
-													}}
-												>
-													<Icon path={mdiFileCancel} size={1} color="gray" />
-												</IconButton>
+												<Tooltip title="Editar" placement="bottom" arrow>
+													<IconButton
+														onClick={(e) => {
+															onChangeIndex(2, todo, e);
+														}}
+														>
+														<Icon path={mdiFileDocumentEdit} size={1} color="red" />
+													</IconButton>
+												</Tooltip>
+												<Tooltip title="Detalles" placement="bottom" arrow>
+													<IconButton
+														onClick={(e) => {
+															onChangeIndex(3, todo, e);
+														}}
+														>
+														<Icon path={mdiEyeCheck} size={1} color="red" />
+													</IconButton>
+												</Tooltip>
+												<Tooltip title="Cambiar Estado" placement="bottom" arrow>													
+													<IconButton
+														onClick={() => {
+															setEliminarVisible(true);
+															setPrestamoEliminar(todo);
+															setEntregar(true);
+														}}
+														>
+														<Icon path={mdiFileCancel} size={1} color="gray" />
+													</IconButton>
+												</Tooltip>
 											</Fragment>
 										</TableCell>
 									</TableRow>
@@ -215,8 +220,7 @@ function Prestamos(props) {
 					rowsPerPage={rowsPerPage}
 					page={page}
 					onChangePage={handleChangePage}
-					onChangeRowsPerPage={handleChangeRowsPerPage}
-				/>
+					onChangeRowsPerPage={handleChangeRowsPerPage}/>
 			</Container>
 			{eliminarVisible && (
 				<DeleteDialog todo={prestamoEliminar} open={eliminarVisible} setEliminarVisible={setEliminarVisible} entregar={entregar} setEntregar={setEntregar}/>

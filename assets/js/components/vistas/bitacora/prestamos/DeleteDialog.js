@@ -27,6 +27,9 @@ function DeleteDialog(props) {
 		}
 		update = {
 			id: props.todo.id,
+			//consulta elementos asociados
+			//de esos cuales no tienen fecha de entrag
+			//los ids los mando al controlador
 			estudiante_id: props.todo.estudiante_id,
 			registro: props.todo.registro,
 			observacion: props.todo.observacion,

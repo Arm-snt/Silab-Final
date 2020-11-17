@@ -119,10 +119,6 @@ function Trabajos(props) {
 		}
 	}
 
-	function historyBack() {
-		window.history.back();
-	}
-
 	const Dep = [ { state: 'Sistemas e Informática' } ];
 
 	const emptyRows = rowsPerPage - Math.min(rowsPerPage, context.todos.length - page * rowsPerPage);

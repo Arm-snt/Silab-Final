@@ -13,6 +13,7 @@ import Prestamos from './Prestamos';
 import NuevoPrestamo from './NuevoPrestamo';
 import EditarPrestamo from './EditarPrestamo';
 import DetallesPrestamo from './DetallesPrestamo';
+import Tooltip from '@material-ui/core/Tooltip';
 
 function TabPrestamo(props) {
 	const { children, value, index, ...other } = props;
@@ -86,8 +87,16 @@ export default function SimpleTabs(onchangeTab) {
 							<Tabs value={value} onChange={handleChange} indicatorColor="primary" textColor="primary">
 								<Tab label="Préstamos" {...a11yProps(0)} />
 								<Tab label="Nuevo Préstamo" {...a11yProps(1)} />
-								<Tab label="Editar Préstamo" {...a11yProps(2)} disabled />
-								<Tab label="Detalle Préstamo" {...a11yProps(3)} disabled />
+								<Tooltip title="Seleccione un préstamo" placement="bottom" arrow>
+									<span>
+										<Tab label="Editar Préstamo" {...a11yProps(2)} disabled />
+									</span>
+								</Tooltip>
+								<Tooltip title="Seleccione un préstamo" placement="bottom" arrow>
+									<span>
+										<Tab label="Detalle Préstamo" {...a11yProps(3)} disabled />
+									</span>
+								</Tooltip>
 							</Tabs>
 							<SwipeableViews
 								axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}

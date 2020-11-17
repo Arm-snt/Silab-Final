@@ -56,7 +56,8 @@ const style = {
 	}
 };
 
-function NuevoTrabajo() {
+function NuevoTrabajo(props) {
+	const onChangeIndex = props.onChangeIndex;
 	const context = useContext(TodoContext);
 	const [ Estudiante, setEstudiante ] = useState([]);
 	const [ IdEstudiante, setIdEstudiante ] = useState([]);
@@ -104,8 +105,6 @@ function NuevoTrabajo() {
 		setParticular('');
 		setPrograma([]);
 		setUser([]);
-		setLaboratorio([]);
-		setDepartamento([]);
 		setTelefono('');
 		setRegistro('');
 		setDescripcion('');
@@ -118,7 +117,17 @@ function NuevoTrabajo() {
 	};
 
 	function historyBack() {
-		window.history.back();
+		setIdEstudiante([]);
+		setDocente([]);
+		setParticular('');
+		setPrograma([]);
+		setUser([]);
+		setTelefono('');
+		setRegistro('');
+		setDescripcion('');
+		setTipo('Estudiante');
+		setMensaje('');
+		onChangeIndex(0, '');
 	}
 
 	return (

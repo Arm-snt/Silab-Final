@@ -31,7 +31,7 @@ const styles = (theme) => ({
 	},
 	listItemText: {
 		fontSize: '14px',
-		fontWeight: 200,
+		fontWeight: 400,
 		paddingLeft: '5px',
 		color: '#212121'
 	},

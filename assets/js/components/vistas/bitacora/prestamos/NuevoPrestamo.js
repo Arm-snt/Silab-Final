@@ -55,7 +55,8 @@ const style = {
 	}
 };
 
-function NuevoPrestamo() {
+function NuevoPrestamo(props) {
+	const onChangeIndex = props.onChangeIndex;
 	const context = useContext(TodoContext);
 	//console.log(data);
 	let a = true;
@@ -155,12 +156,12 @@ function NuevoPrestamo() {
 	};
 
 	function historyBack() {
-		window.history.back();
 		setestudiante_id('');
 		setregistro('');
 		setobservacion('');
 		seteditElemento('');
 		seteditElementop([]);
+		onChangeIndex(0, '', e);
 	}
 
 	//compara la informacion de los estudiantes con la de prestamos
